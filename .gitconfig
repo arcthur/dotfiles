@@ -1,0 +1,138 @@
+[color]
+    ui = true
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
+[core]
+    excludesfile = /Users/arcthur/.gitignore
+    editor = vim
+    pager = less
+    filemode = true
+    bare = false
+    logallrefupdates = true
+    ignorecase = false
+[merge]
+    summary = true
+    verbosity = 1
+    tool = Kaleidoscope
+[mergetool]
+    keepBackup = true
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[mergetool "Kaleidoscope"]
+    cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+    trustExitCode = true
+[diff]
+    # Git diff will use (i)ndex, (w)ork tree, (c)ommit and (o)bject
+    # instead of a/b/c/d as prefixes for patches
+    mnemonicprefix = true
+    algorithm = patience
+    tool = Kaleidoscope
+[difftool "mvim"]
+    cmd = mvim -d $LOCAL $REMOTE
+[difftool "Kaleidoscope"]
+    cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path =
+[alias]
+    # add
+    a = add                           # add
+    aa = add --all
+    chunkyadd = add --patch           # stage commits chunk by chunk
+
+    # branch
+    b = branch -v                     # branch (verbose)
+
+    # commit
+    c = commit -m                     # commit with message
+    ca = commit -am                   # commit all with message
+    ci = commit                       # commit
+    amend = commit --amend            # ammend your last commit
+    ammend = commit --amend           # ammend your last commit
+
+    # checkout
+    co = checkout                     # checkout
+    nb = checkout -b                  # create and switch to a new branch (mnemonic: "git new branch branchname...")
+
+    # cherry-pick
+    cp = cherry-pick -x               # grab a change from a branch
+
+    # diff
+    d = diff                          # diff unstaged changes
+    dc = diff --cached                # diff staged changes
+    last = diff @^                 # diff last committed change
+
+    # log
+    lo = log --date=local --pretty=full --stat
+    changes = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\" --name-status
+    short = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
+    changelog = log --pretty=format:\" * %s\"
+    shortnocolor = log --pretty=format:\"%h %cr %cn %s\"
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
+    # pull
+    pl = pull                         # pull
+
+    # push
+    ps = push                         # push
+    pu = push origin master
+
+    # rebase
+    rc = rebase --continue            # continue rebase
+    rs = rebase --skip                # skip rebase
+
+    # remote
+    r = remote -v                     # show remotes (verbose)
+
+    # reset
+    unstage = reset @                 # remove files from index (tracking)
+    uncommit = reset --soft @^        # go back before last commit, with files in uncommitted state
+    filelog = log -u                  # show changes to a file
+    mt = mergetool                    # fire up the merge tool
+    untrack = rm -r --cached
+    merge-branch-file = checkout --merge
+
+    # stash
+    ss = stash                        # stash changes
+    sl = stash list                   # list stashes
+    sa = stash apply                  # apply stash (restore changes)
+    sd = stash drop                   # drop stashes (destory changes)
+
+    # status
+    s = status                        # status
+    st = status                       # status
+    stat = status                     # status
+
+    # tag
+    t = tag -n                        # show tags with <n> lines of each tag message
+
+    # svn helpers
+    svnr = svn rebase
+    svnd = svn dcommit
+    svnl = svn log --oneline --show-commit
+
+    # submodule
+    su = submodule foreach git pull origin master
+[push]
+    default = matching
+[apply]
+    whitespace = nowarn
+[rerere]
+    enabled = true
+[github]
+    user = arcthur
+    token = 15784636dd1861dc032ac95f4796b516
+[credential]
+    helper = store
