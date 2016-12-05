@@ -1,6 +1,6 @@
 " Author: Arcthur <arthurtemptation@gmail.com>
 " Description: Arcthur's vim config
-" Last Change: 2014/10/04
+" Last Change: 2016/12/05
 
 " Preamble {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -19,8 +19,22 @@ augroup END
 
 " Utils {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! s:current_git()
-  return unite#util#path2project_directory(getcwd())
+function! s:current_git() "{{{
+  let current_dir = getcwd()
+  let s:git_root_cache = get(s:, 'git_root_cache', {})
+  if has_key(s:git_root_cache, current_dir)
+    return s:git_root_cache[current_dir]
+  endif
+
+  let git_root = system('git rev-parse --show-toplevel')
+  if git_root =~ 'fatal: Not a git repository'
+    " throw "No a git repository."
+    return ''
+  endif
+
+  let s:git_root_cache[current_dir] = substitute(git_root, '\n', '', 'g')
+
+  return s:git_root_cache[current_dir]
 endfunction
 
 function! s:complement_delimiter_of_directory(path)
@@ -136,9 +150,14 @@ if neobundle#load_cache()
         \   'unix': 'make -f make_unix.mak',
         \ }}
 
-  NeoBundle "editorconfig/editorconfig-vim"
+  " NeoBundle "editorconfig/editorconfig-vim"
 
   " Languages {{
+  NeoBundleLazy 'elixir-lang/vim-elixir', {
+        \ 'autoload': {
+        \   'filetypes': 'ex'
+        \ }}
+
   " Ruby
   NeoBundleLazy "vim-ruby/vim-ruby.git", {
         \ 'autoload': {
@@ -222,11 +241,11 @@ if neobundle#load_cache()
         \     'GitLog', 'GitCommit', 'GitBlame', 'GitPush']
         \ }}
   " Git viewer
-  NeoBundleLazy 'gregsexton/gitv', {
-        \ 'depends': [ 'tpope/vim-fugitive' ],
-        \ 'autoload': {
-        \   'commands': 'Gitv'
-        \ }}
+  " NeoBundleLazy 'gregsexton/gitv', {
+  "       \ 'depends': [ 'tpope/vim-fugitive' ],
+  "       \ 'autoload': {
+  "       \   'commands': 'Gitv'
+  "       \ }}
   " Github Gist
   NeoBundleLazy 'mattn/gist-vim', {
         \ 'depends': [ 'mattn/webapi-vim' ],
@@ -284,7 +303,6 @@ if neobundle#load_cache()
   " Snippet
   NeoBundle "SirVer/ultisnips.git"
   NeoBundle "honza/vim-snippets"
-  NeoBundle "matthewsimo/angular-vim-snippets"
   NeoBundle "justinj/vim-react-snippets"
 
   " Substitute
@@ -341,11 +359,23 @@ if neobundle#load_cache()
         \   'function_prefix': 'webapi'
         \ }}
   NeoBundleLazy 'scrooloose/nerdtree', {
-      \ 'autoload' : {
-      \   'commands' : [
-      \     'NERDTreeToggle', 'NERDTreeFind'
-      \   ]},
-      \ }
+        \ 'autoload' : {
+        \   'commands' : [
+        \     'NERDTreeToggle', 'NERDTreeFind'
+        \   ]},
+        \ }
+
+  NeoBundleLazy 'Xuyuanp/nerdtree-git-plugin', {
+        \ 'depends' : [ 'scrooloose/nerdtree' ],
+        \ 'autoload' : {
+        \   'commands' : [
+        \     'NERDTreeToggle', 'NERDTreeFind'
+        \   ]},
+        \ }
+
+  NeoBundleLazy 'Shougo/denite.nvim', {
+        \ 'depends' : [ 'Shougo/unite.vim' ]
+        \ }
 
   NeoBundleLazy 'Shougo/vimfiler.vim', {
         \ 'depends' : [ 'Shougo/unite.vim' ],
@@ -368,10 +398,7 @@ if neobundle#load_cache()
         \ }}
 
   " Syntax checker
-  " \ 'build' : {
-  " \   'mac' : join(['npm install -g csslint', 'npm install -g jshint', 'sudo gem install rubocop'], ' && ')
-  " \ }}
-  NeoBundleLazy 'scrooloose/syntastic', {
+  NeoBundleLazy 'w0rp/ale', {
         \ 'autoload': {
         \   'filetypes' : g:my.ft.program_files
         \ }}
@@ -424,15 +451,15 @@ if neobundle#load_cache()
   " Unite Sources
   NeoBundleLazy 'Shougo/neomru.vim', {
         \ 'autoload': {
-        \   'unite_sources': ['file_mru', 'directory_mru']
+        \   'on_source': 'unite.vim'
         \ }}
   NeoBundleLazy 'Shougo/unite-outline', {
         \ 'autoload': {
-        \   'unite_sources': 'outline'
+        \   'on_source': 'unite.vim'
         \ }}
   NeoBundleLazy 'tsukkee/unite-help', {
         \ 'autoload': {
-        \   'unite_sources': 'help'
+        \   'on_source': 'unite.vim'
         \ }}
   function! GetUniteSessionPath(arglead, cmdline, cursorpos)
     call unite#util#set_default('g:unite_source_session_path', g:my.dir.unite . '/session')
@@ -444,7 +471,7 @@ if neobundle#load_cache()
 
   NeoBundleLazy 'Shougo/unite-session', {
         \ 'autoload': {
-        \   'unite_sources': 'session',
+        \   'on_source': 'unite.vim',
         \   'commands' : [
         \     { 'name' : 'UniteSessionSave',
         \       'complete' : 'customlist,GetUniteSessionPath' },
@@ -454,23 +481,19 @@ if neobundle#load_cache()
         \ }}
   NeoBundleLazy 'osyo-manga/unite-quickfix', {
         \ 'autoload' : {
-        \   'unite_sources' : 'quickfix'
+        \   'on_source': 'unite.vim'
         \ }}
   NeoBundleLazy 'thinca/vim-unite-history', {
         \ 'autoload' : {
-        \   'unite_sources': ['history/command', 'history/search']
+        \   'on_source': 'unite.vim'
         \ }}
   NeoBundleLazy 'tacroe/unite-mark', {
         \ 'autoload': {
-        \   'unite_sources': 'mark'
+        \   'on_source': 'unite.vim'
         \ }}
   NeoBundleLazy 'kmnk/vim-unite-giti', {
         \ 'autoload': {
-        \   'unite_sources': [
-        \     'giti', 'giti/branch', 'giti/branch/new', 'giti/branch_all',
-        \     'giti/pull_request/base', 'giti/pull_request/head',
-        \     'giti/config', 'giti/log', 'giti/remote', 'giti/status'
-        \   ]
+        \   'on_source': 'unite.vim'
         \ }}
   " }}
 
@@ -1506,33 +1529,25 @@ endif
 
 " }}}
 
-" Syntastic {{{
+" AlE {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <F5> :<C-u>SyntasticToggleMode<CR>
-
-if neobundle#tap('syntastic')
+" Write this in your vimrc file
+if neobundle#tap('ale')
   function! neobundle#tapped.hooks.on_source(bundle)
-    let g:syntastic_always_populate_loc_list = 1
-    let g:synsastic_auto_loc_list            = 1
-    let g:syntastic_check_on_open            = 1
-    let g:syntastic_check_on_wq              = 0
-    let g:syntastic_quiet_messages       = { 'level': 'warnings',
-                                           \ 'type':  'style',
-                                           \ 'regex': '\m\[C03\d\d\]',
-                                           \ 'file':  ['\m^/usr/include/', '\m\c\.h$'] }
-    let g:syntastic_stl_format           = '[%E{Error 1/%e: line %fe}%B{, }%W{Warning 1/%w: line %fw}]'
-    let g:syntastic_error_symbol         = '✗'
-    let g:syntastic_warning_symbol       = '⚠'
-    let g:syntastic_style_error_symbol   = '✠'
-    let g:syntastic_style_warning_symbol = '⚡'
-    let g:syntastic_python_pylint_exe    = "pylint2"
-    let g:syntastic_javascript_checkers  = ['eslint']
-    let g:syntastic_javascript_eslint_exec = 'eslint_d'
-    let g:syntastic_mode_map             = {
-            \ 'mode': 'active',
-            \ 'active_filetyes': g:my.ft.program_files,
-            \ 'passive_filetypes' : ['html']
-            \ }
+    let g:ale_linters = {
+      \   'sh' : ['shellcheck'],
+      \   'vim' : ['vint'],
+      \   'html' : ['tidy'],
+      \   'python' : ['flake8'],
+      \   'markdown' : ['mdl'],
+      \   'javascript' : ['eslint'],
+      \ }
+    let g:ale_sign_error = '❌'
+    let g:ale_sign_warning = '⭕'
+    let g:ale_echo_msg_error_str = '✷ Error'
+    let g:ale_echo_msg_warning_str = '⚠ Warning'
+    let g:ale_echo_msg_format = '[#%linter%#] %s [%severity%]'
+    let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
   endfunction
 
   call neobundle#untap()
@@ -1770,52 +1785,19 @@ nnoremap <silent> [unite]ni :<C-u>Unite neobundle/install<CR>
 nnoremap <silent> [unite]ns :<C-u>Unite neobundle/search<CR>
 nnoremap <silent> [unite]nu :<C-u>Unite neobundle/update<CR>
 
-function! s:parse_git_root_option(input)
-  let reg_multi =  '\*\*/'
-  let reg_bad_pattern =  '\v(\*\*[^/])'
-  let reg_single = '[^/*]\{,1}\*[^*]'
-
-  let input = a:input
-  if input =~ reg_bad_pattern
-    next
-  elseif input =~ reg_multi
-    " echo 'multi'
-    let input = substitute(input, '.*/\([^/]\+\)$', '\1', 'g')
-  elseif input =~ reg_single
-    " echo 'single'
-    let input = '^' . input
-  else
-    " echo 'non'
-  endif
-
-  return input
-endfunction
-
 function! s:unite_git_root(...)
   let git_root = s:current_git()
-  let root_path = s:complement_delimiter_of_directory(git_root)
-
-  let argument = empty(a:000) ? '' : a:1
-  let [args, context] = unite#helper#parse_options_args(argument)
-  let full_path = get(unite#helper#get_source_names(args), 0, '')
-  let wild_sep = split(full_path, '\*')
-  let relative_path = get(wild_sep, 0, '')
-  let absolute_path = root_path . relative_path
-
-  let prefilter = len(wild_sep) > 1 ? '*' . join(wild_sep[1:-1], '*') : ''
-  let prefilter = s:parse_git_root_option(prefilter)
-  let context.source__prefilters = [prefilter]
-  let context.source__absolute_path = absolute_path
-  let context.source__project_root_path = git_root
+  let path = empty(a:000) ? '' : a:1
+  let absolute_path = s:complement_delimiter_of_directory(git_root) . path
 
   if isdirectory(absolute_path)
+    execute 'Unite -buffer-name=file file_rec/async:'.absolute_path
     lcd `=absolute_path`
-    call unite#start([['file_rec', absolute_path]], context)
-    file `='*unite* - ' . relative_path . ' - prefilter "' . join(context.source__prefilters, ',') . '"'`
+    file `='*unite* - ' . path`
   elseif filereadable(absolute_path)
     edit `=absolute_path`
   else
-    echomsg absolute_path . ' is not exists!'
+    echomsg path . ' is not exists!'
   endif
 endfunction
 
@@ -1842,9 +1824,9 @@ function! s:unite_with_same_syntax(cmd)
   endif
 endfunction
 
-nnoremap <silent>g/ :call <SID>unite_with_same_syntax('Unite line -buffer-name=line_fast -hide-source-names -horizontal -start-insert -no-quit')<CR>
-nnoremap <silent>g* :call <SID>unite_with_same_syntax('Unite line:forward -buffer-name=line_fast -start-insert -no-quit -input=' . expand('<cword>'))<CR>
-nnoremap <silent>g# :call <SID>unite_with_same_syntax('Unite line:backword -buffer-name=line_fast -start-insert -no-quit -input=' . expand('<cword>'))<CR>
+nnoremap <silent>g/ :call <SID>unite_with_same_syntax('Unite -buffer-name=line_fast -hide-source-names -horizontal -no-empty -start-insert -no-quit line')<CR>
+nnoremap <silent>g* :call <SID>unite_with_same_syntax('Unite -buffer-name=line_fast -hide-source-names -horizontal -no-empty -start-insert -no-quit line -input=<C-R><C-W>')<CR>
+
 
 if neobundle#tap('unite.vim')
   function! neobundle#tapped.hooks.on_source(bundle)
@@ -1875,7 +1857,7 @@ if neobundle#tap('unite.vim')
     let g:unite_marked_icon                = '✓'
     " let g:unite_force_overwrite_statusline = 0
     let g:unite_data_directory             = g:my.dir.unite
-    let g:unite_cursor_line_highlight      = 'TabLineSel'
+    let g:unite_cursor_line_highlight      = 'UniteCursorLine'
 
     let g:unite_source_buffer_time_format        = '(%d-%m-%Y %H:%M:%S) '
     let g:unite_source_file_mru_time_format      = '(%d-%m-%Y %H:%M:%S) '
@@ -1885,7 +1867,15 @@ if neobundle#tap('unite.vim')
     let g:unite_source_history_yank_enable       = 1
     let g:unite_source_history_yank_limit        = 100
 
+    call unite#custom_source('file_rec', 'max_candidates', 5000)
+    call unite#custom_source('file_rec/async', 'max_candidates', 5000)
+    call unite#custom_source('giti/branch_all', 'max_candidates', 5000)
     call unite#custom_source('giti/log', 'max_candidates', 5000)
+    call unite#custom_source('line', 'max_candidates', 5000)
+    call unite#custom_source('line/fast', 'max_candidates', 5000)
+    call unite#custom_source('tag', 'max_candidates', 5000)
+    call unite#custom_source('tags', 'max_candidates', 5000)
+
     let g:giti_git_command = executable('hub') ? 'hub' : 'git'
     let g:giti_log_default_line_count = 500
 
@@ -2138,6 +2128,17 @@ if neobundle#tap('nerdtree')
     let g:NERDTreeWinSize = 36
     let g:NERDTreeBookmarksFile = g:my.dir.nerdtree . '/NERDTreeBookmarks'
     let g:NERDTreeMinimalUI = 1
+    let g:NERDTreeIndicatorMapCustom = {
+      \ "Modified"  : "✹",
+      \ "Staged"    : "✚",
+      \ "Untracked" : "✭",
+      \ "Renamed"   : "➜",
+      \ "Unmerged"  : "═",
+      \ "Deleted"   : "✖",
+      \ "Dirty"     : "✗",
+      \ "Clean"     : "✔︎",
+      \ "Unknown"   : "?"
+      \ }
   endfunction
 
   call neobundle#untap()
@@ -2279,7 +2280,7 @@ endif
 " YouCompleteMe {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if neobundle#tap('YouCompleteMe')
-  function! neobundle#tapped.hooks.on_source(bundle)
+  " function! neobundle#tapped.hooks.on_source(bundle)
     let g:ycm_min_num_of_chars_for_completion = 1
     let g:ycm_min_num_identifier_candidate_chars = 0
     let g:ycm_filetype_whitelist = { '*': 1 }
@@ -2314,43 +2315,34 @@ if neobundle#tap('YouCompleteMe')
         \   'lua' : ['.', ':'],
         \   'erlang' : [':'],
         \ }
-  endfunction
-
-  function! neobundle#tapped.hooks.on_post_source(bundle)
-    call youcompleteme#Enable()
-  endfunction
+  " endfunction
 
   call neobundle#untap()
 endif
 " }}}
-"
+
 " UltiSnips {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" if neobundle#tap('ultisnips')
-"   function! neobundle#tapped.hooks.on_source(bundle)
-    let g:UltiSnipsExpandTrigger       = "<tab>"
-    let g:UltiSnipsJumpForwardTrigger  = "<tab>"
-    let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+if neobundle#tap('ultisnips')
+  function! neobundle#tapped.hooks.on_source(bundle)
+    let g:UltiSnipsListSnippets = '<C-Tab>'
+    let g:UltiSnipsJumpForwardTrigger = '<Tab>'
+    let g:UltiSnipsJumpBackwardTrigger = '<S-Tab>'
+    let g:UltiSnipsExpandTrigger = "<nop>"
+    let g:ulti_expand_or_jump_res = 0
 
-    " Make UltiSnips works nicely with YCM
-    function! g:UltiSnips_Complete()
-      call UltiSnips#ExpandSnippet()
-      if g:ulti_expand_res == 0
-        if pumvisible()
-          return "\<C-n>"
+    function! ExpandSnippetOrCarriageReturn()
+        let l:snippet = UltiSnips#ExpandSnippetOrJump()
+        if g:ulti_expand_or_jump_res > 0
+          return l:snippet
         else
-          call UltiSnips#JumpForwards()
-          if g:ulti_jump_forwards_res == 0
-            return "\<TAB>"
-          endif
+          return "\<CR>"
         endif
-      endif
-      return ""
     endfunction
+    inoremap <expr> <CR> pumvisible() ? "<C-R>=ExpandSnippetOrCarriageReturn()<CR>" : "\<CR>"
 
-    au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<CR>"
-"   endfunction
-" endif
+  endfunction
+endif
 " }}}
 
 " Vimshell
@@ -2491,7 +2483,7 @@ nnoremap <silent> <Leader>dd :VimwikiIndex<CR>
 
 " indentLine {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <Leader>i :<C-U>IndentLinesToggle<CR>
+nnoremap <Leader>i :IndentLinesToggle<CR>
 
 if neobundle#tap('indentLine')
   function! neobundle#tapped.hooks.on_source(bundle)
@@ -2691,9 +2683,9 @@ if neobundle#tap('lightline.vim')
       return branch
     endfunction
 
-    let g:lightline#functions#syntastic = s:lightline.new({ 'updatetime' : 5 })
-    function! g:lightline#functions#syntastic.func()
-      return neobundle#is_sourced('syntastic') ? SyntasticStatuslineFlag() : ''
+    let g:lightline#functions#ale = s:lightline.new({ 'updatetime' : 5 })
+    function! g:lightline#functions#ale.func()
+      return neobundle#is_sourced('ale') ? ale#statusline#Status() : ''
     endfunction
 
     let g:lightline#functions#tagbar = s:lightline.new({ 'updatetime' : 3 })
@@ -2723,7 +2715,7 @@ if neobundle#tap('lightline.vim')
           \     ['git_branch', 'tagbar', 'modified']
           \   ],
           \   'right': [
-          \     ['syntastic', 'lineinfo', 'file_size'],
+          \     ['ale', 'lineinfo', 'file_size'],
           \     ['percent'],
           \     ['fileformat', 'fileencoding', 'filetype']
           \   ],
@@ -2734,12 +2726,9 @@ if neobundle#tap('lightline.vim')
           \ },
           \ 'component_expand': {
           \   'git_branch':  'g:lightline#functions#git_branch.statusline',
-          \   'syntastic':   'g:lightline#functions#syntastic.statusline',
+          \   'ale':   'g:lightline#functions#ale.statusline',
           \   'file_size':   'g:lightline#functions#file_size.statusline'
           \ },
-          \ 'component_type': {
-          \   'syntastic': 'error'
-          \ }
           \ }
   endfunction
 
