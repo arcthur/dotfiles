@@ -39,10 +39,32 @@ zle -C matcher-complete complete-word _generic
 zstyle ':completion:matcher-complete:*' completer _matcher_complete
 zstyle ':completion:matcher-complete:*' menu-select
 
-# alias
-# List direcory contents
-alias ll='ls++ -alGh'
-alias ls='ls++ -Gh'
-alias sl=ls++ # often screw this up
-alias vim='DYLD_FORCE_FLAT_NAMESPACE=1 vim'
-alias ping=prettyping.sh
+unsetopt CORRECT
+
+expand-or-complete-with-dots() {
+  echo -n "\e[31m......\e[0m"
+  zle expand-or-complete
+  zle redisplay
+}
+zle -N expand-or-complete-with-dots
+bindkey "^I" expand-or-complete-with-dots
+
+# Color LS
+colorflag="-G"
+alias ls="command ls ${colorflag}"
+alias l="ls -lF ${colorflag}" # all files, in long format
+alias ll="ls -laF ${colorflag}" # all files inc dotfiles, in long format
+alias lsd='ls -lF ${colorflag} | grep "^d"' # only directories
+
+[[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh # This loads NVM
+export NVM_NODEJS_ORG_MIRROR=http://npm.taobao.org/mirrors/node
+
+# chrome
+alias chrome-debug='sudo open -a Google\ Chrome --args --disable-web-security --user-data-dir'
+
+# mvim
+alias mvim='gvim --remote-tab';
+
+ulimit -S -n 2048
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
