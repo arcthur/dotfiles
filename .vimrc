@@ -97,8 +97,6 @@ if s:on_init()
         \ 'program_files':   ['ruby', 'tex', 'php', 'python', 'vim', 'javascript', 'coffee', 'go', 'cpp', 'haml'],
         \ 'ignore_patterns': ['vimfiler', 'unite'],
         \ }
-
-  let g:my.ft.youcomplete_me = g:my.ft.ruby_files + g:my.ft.js_files + g:my.ft.python_files +  g:my.ft.sh_files + g:my.ft.php_files + g:my.ft.c_files + g:my.ft.style_files
 endif
 
 function! s:initialize_directory(directories)
@@ -272,11 +270,11 @@ if s:use_dein
           \ })
     " Comments
     call dein#add('tyru/caw.vim', {
-          \   'on_map' : [ '<Plug>(caw:prefix)', '<Plug>(caw:i:toggle)'],
+          \   'on_map' : ['<Plug>(caw:prefix)', '<Plug>(caw:i:toggle)'],
           \ })
 
     " Motions
-    call dein#add("justinmk/vim-sneak")
+    call dein#add('justinmk/vim-sneak')
 
     " Snippet
     call dein#add('Shougo/neosnippet')
@@ -302,13 +300,13 @@ if s:use_dein
     " The awesome plugin looks for one of a few specific patterns under the cursor and performs
     " a substition depending on the pattern.
     call dein#add("AndrewRadev/switch.vim", {
-          \ 'on_cmd' : 'Switch',
+          \ 'on_cmd' : ['Switch'],
           \ })
     call dein#add('t9md/vim-textmanip', {
           \ 'on_cmd' : [
-          \     '<Plug>(textmanip-move-down)', '<Plug>(textmanip-move-up)',
-          \     '<Plug>(textmanip-move-left)', '<Plug>(textmanip-move-right)'
-          \   ]
+          \   '<Plug>(textmanip-move-down)', '<Plug>(textmanip-move-up)',
+          \   '<Plug>(textmanip-move-left)', '<Plug>(textmanip-move-right)'
+          \ ]
           \ })
     " True Sublime Text style multiple selections
     call dein#add('terryma/vim-multiple-cursors')
@@ -390,9 +388,6 @@ if s:use_dein
 
     " Source for unite: outline
     call dein#add('Shougo/unite-outline', { 'depends': ['unite.vim'] })
-
-    " Source for unite: help
-    call dein#add('tsukkee/unite-help', { 'depends': ['unite.vim'] })
 
     " Source for unite: session
     call dein#add('Shougo/unite-session', { 'depends': ['unite.vim'] })
@@ -1150,6 +1145,11 @@ augroup END
 augroup ft_markdown
   au!
 
+  if s:dein_enabled && dein#tap("vim-markdown")
+    let g:vim_markdown_math = 1
+    let g:vim_markdown_frontmatter = 1
+  endif
+
   au BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} setlocal filetype=markdown
 augroup END
 
@@ -1312,22 +1312,24 @@ endif
 
 " Sneak {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:sneak#streak = 1
+if s:dein_enabled && dein#tap("vim-sneak")
+  let g:sneak#streak = 1
 
-"replace 'f' with inclusive 1-char Sneak
-nmap f <Plug>Sneak_f
-nmap F <Plug>Sneak_F
-xmap f <Plug>Sneak_f
-xmap F <Plug>Sneak_F
-omap f <Plug>Sneak_f
-omap F <Plug>Sneak_F
-"replace 't' with exclusive 1-char Sneak
-nmap t <Plug>Sneak_t
-nmap T <Plug>Sneak_T
-xmap t <Plug>Sneak_t
-xmap T <Plug>Sneak_T
-omap t <Plug>Sneak_t
-omap T <Plug>Sneak_T
+  "replace 'f' with inclusive 1-char Sneak
+  nmap f <Plug>Sneak_f
+  nmap F <Plug>Sneak_F
+  xmap f <Plug>Sneak_f
+  xmap F <Plug>Sneak_F
+  omap f <Plug>Sneak_f
+  omap F <Plug>Sneak_F
+  "replace 't' with exclusive 1-char Sneak
+  nmap t <Plug>Sneak_t
+  nmap T <Plug>Sneak_T
+  xmap t <Plug>Sneak_t
+  xmap T <Plug>Sneak_T
+  omap t <Plug>Sneak_t
+  omap T <Plug>Sneak_T
+endif
 " }}}
 
 " Git {{{
@@ -1383,7 +1385,7 @@ if s:dein_enabled && dein#tap("gist-vim")
   let g:github_user                  = g:my.info.github
 endif
 " }}
-"
+
 " Gitv {{
 nnoremap <silent> [git]v :Gitv --all<CR>
 nnoremap <silent> [git]V :Gitv! --all<CR>
@@ -1974,18 +1976,6 @@ if s:dein_enabled && dein#tap("vim-startify")
               \ '~/.zshrc'
               \ ]
 
-  let g:startify_custom_header = [
-              \ '                                 ________  __ __        ',
-              \ '            __                  /\_____  \/\ \\ \       ',
-              \ '    __  __ /\_\    ___ ___      \/___//''/''\ \ \\ \    ',
-              \ '   /\ \/\ \\/\ \ /'' __` __`\        /'' /''  \ \ \\ \_ ',
-              \ '   \ \ \_/ |\ \ \/\ \/\ \/\ \      /'' /''__  \ \__ ,__\',
-              \ '    \ \___/  \ \_\ \_\ \_\ \_\    /\_/ /\_\  \/_/\_\_/  ',
-              \ '     \/__/    \/_/\/_/\/_/\/_/    \//  \/_/     \/_/    ',
-              \ '',
-              \ '',
-              \ ]
-
   let g:startify_custom_footer = [''] + map(split(system('fortune | cowsay -f tux.cow'), '\n'), '"   ". v:val') + ['','']
 endif
 " }}}
@@ -2146,11 +2136,30 @@ if s:dein_enabled && dein#tap("neocomplete.vim")
   let g:neocomplete#lock_buffer_name_pattern = ''
   let g:neocomplete#enable_fuzzy_completion = 0
   let g:neocomplete#text_mode_filetypes =
-        \ {'hybrid': 1, 'text':1, 'help': 1, 'gitcommit': 1, 'gitrebase':1,
-        \  'vcs-commit': 1, 'markdown':1, 'textile':1, 'creole':1, 'org':1,
-        \  'rdoc':1, 'mediawiki':1, 'rst':1, 'asciidoc':1, 'prod':1,
-        \  'plaintex':1, 'mkd': 1, 'html': 1,
-        \  'vim':1, 'sh':0, 'javascript':1, 'perl':0}
+        \ {
+        \  'hybrid': 1,
+        \  'text':1,
+        \  'help': 1,
+        \  'gitcommit': 1,
+        \  'gitrebase':1,
+        \  'vcs-commit': 1,
+        \  'markdown':1,
+        \  'textile':1,
+        \  'creole':1,
+        \  'org':1,
+        \  'rdoc':1,
+        \  'mediawiki':1,
+        \  'rst':1,
+        \  'asciidoc':1,
+        \  'prod':1,
+        \  'plaintex':1,
+        \  'mkd': 1,
+        \  'html': 1,
+        \  'vim':1,
+        \  'sh':0,
+        \  'javascript':1,
+        \  'perl':0
+        \ }
   let g:neocomplete#same_filetypes = {}
   let g:neocomplete#same_filetypes._ = '_'
   inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : neocomplete#start_manual_complete()
@@ -2172,9 +2181,11 @@ if s:dein_enabled && dein#tap("neosnippet")
   if dein#tap("neosnippet-snippets")
     let g:neosnippet#snippets_directory += [expand(s:dein_github . '/Shougo/neosnippet-snippets/neosnippets')]
   endif
+
   if dein#tap("vim-snippets")
     let g:neosnippet#snippets_directory += [expand(s:dein_github . '/honza/vim-snippets/snippets')]
   endif
+
   if dein#tap("vim-react-snippets")
     let g:neosnippet#snippets_directory += [expand(s:dein_github . '/justinj/vim-react-snippets/snippets')]
   endif
@@ -2366,15 +2377,6 @@ if s:dein_enabled && dein#tap("vim-quickrun")
 
   let g:quickrun_config.lisp = {
         \ 'command': 'clisp' }
-
-  let g:quickrun_config['coffee.compile'] = {
-        \ 'command' : 'coffee',
-        \ 'exec' : ['%c -cbp %s'] }
-
-  let g:quickrun_config['coffee'] = {
-        \ 'command' : 'coffee'
-        \ }
-  let g:quickrun_config['coffee.javascript'] = g:quickrun_config['coffee']
 
   let g:quickrun_config.markdown = {
         \ 'outputter': 'browser',
