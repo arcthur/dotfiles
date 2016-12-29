@@ -1,6 +1,6 @@
 " Author: Arcthur <arthurtemptation@gmail.com>
 " Description: Arcthur's vim config
-" Last Change: 2016/12/06
+" Last Change: 2016/12/29
 
 " Preamble {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -85,7 +85,7 @@ if s:on_init()
   let g:my.ft = {
         \ 'html_files':      ['html', 'php', 'haml'],
         \ 'ruby_files':      ['ruby', 'Gemfile', 'haml', 'eruby', 'yaml'],
-        \ 'js_files':        ['javascript', 'coffeescript', 'node', 'json', 'typescript'],
+        \ 'js_files':        ['javascript', 'node', 'json', 'typescript'],
         \ 'python_files':    ['python', 'python*'],
         \ 'sh_files':        ['sh'],
         \ 'c_files':         ['c', 'cpp'],
@@ -94,7 +94,7 @@ if s:on_init()
         \ 'style_files':     ['css', 'stylus', 'less', 'scss', 'sass'],
         \ 'markup_files':    ['html', 'haml', 'erb', 'php', 'xhtml'],
         \ 'english_files':   ['markdown', 'help', 'text'],
-        \ 'program_files':   ['ruby', 'tex', 'php', 'python', 'vim', 'javascript', 'coffee', 'go', 'cpp', 'haml'],
+        \ 'program_files':   ['ruby', 'tex', 'php', 'python', 'vim', 'javascript', 'go', 'cpp', 'haml'],
         \ 'ignore_patterns': ['vimfiler', 'unite'],
         \ }
 endif
@@ -153,7 +153,7 @@ if s:use_dein
     " Webapi
     call dein#add('mattn/webapi-vim')
 
-    call dein#add("editorconfig/editorconfig-vim")
+    "call dein#add("editorconfig/editorconfig-vim")
 
     " Languages {{
     call dein#add('elixir-lang/vim-elixir', {
@@ -233,7 +233,7 @@ if s:use_dein
 
     " Github Gist
     call dein#add('mattn/gist-vim', {
-          \ 'depends': ['mattn/webapi-vim'],
+          \ 'depends': ['webapi-vim'],
           \ 'on_cmd' : ['Gist'],
           \ 'lazy': 1
           \ })
@@ -312,7 +312,9 @@ if s:use_dein
     call dein#add('terryma/vim-multiple-cursors')
 
     " Visually select increasingly larger regions of text using the same key combination
-    call dein#add("terryma/vim-expand-region.git")
+    call dein#add("terryma/vim-expand-region", {
+          \ 'on_cmd' : ['<Plug>(expand_region_expand)']
+          \ })
 
     call dein#add('scrooloose/nerdtree', {
           \ 'on_cmd': ['NERDTreeToggle'],
@@ -320,12 +322,12 @@ if s:use_dein
           \ })
 
     call dein#add('Xuyuanp/nerdtree-git-plugin', {
-          \ 'depends' : [ 'scrooloose/nerdtree' ],
+          \ 'depends' : ['nerdtree'],
           \ })
 
     call dein#add('Shougo/vimshell.vim', {
-          \ 'depends': [ 'Shougo/vimproc.vim'],
-          \ 'on_cmd' : [ 'VimShell', "VimShellPop", "VimShellInteractive" ],
+          \ 'depends': ['vimproc'],
+          \ 'on_cmd' : ['VimShell', "VimShellPop", "VimShellInteractive"],
           \ 'lazy': 1
           \ })
 
@@ -336,7 +338,7 @@ if s:use_dein
 
     " Run commands quickly
     call dein#add('thinca/vim-quickrun', {
-          \ 'depends' : 'Shougo/vimproc.vim',
+          \ 'depends' : ['vimproc'],
           \ 'on_map' : [['nxo', '<Plug>(quickrun)']],
           \ 'on_cmd' : ['QuickRun'],
           \ 'lazy': 1
@@ -355,9 +357,6 @@ if s:use_dein
           \ })
     " Displays tags in a window, ordered by class
     " Need to fix bug in jsctags/jsctags/ctags/writter.js:67 Trait.required -> []
-    " \ 'build' : {
-    " \   'mac' : 'npm install jsctags -g && sudo gem install CoffeeTags'
-    " \ },
     call dein#add("majutsushi/tagbar", {
           \ 'on_cmd': ["TagbarToggle"],
           \ 'lazy': 1
@@ -429,6 +428,12 @@ if s:use_dein
           \ 'lazy': 1
           \ })
     call dein#add("wellle/targets.vim")
+
+    " Improved incremental searching
+    call dein#add('haya14busa/incsearch.vim')
+
+    call dein#add('haya14busa/incsearch-fuzzy.vim', { 'depends': ['incsearch.vim'] })
+
     " }}
 
     " GUI {{
@@ -441,6 +446,7 @@ if s:use_dein
           \ 'on_cmd' : ['CSApprox', 'CSApproxSnapshot'],
           \ 'lazy': 1
           \ })
+
     " Lean & mean statusline for vim
     call dein#add('itchyny/lightline.vim')
     " }}
@@ -1194,54 +1200,14 @@ nmap yss <Plug>Yssurround
 xmap S   <Plug>VSurround
 xmap gS  <Plug>VgSurround
 xmap s   <Plug>VSurround
-
-if s:dein_enabled && dein#tap("vim-surround")
-  function! s:ChangeSurrounding(movement)
-    " define 'surrounding' opening characters that we want to be able to change
-    let surrounding_beginnings = ['{', '(', '"', '>', '[', "'", '`']
-    let cursor_position = col('.')
-    let line = getline('.')
-    " nasty hack to omit single appostrophy matching
-    if (count(split(line, '\zs'), "'") < 2)
-      let l = remove(surrounding_beginnings, index(surrounding_beginnings, "'"))
-    endif
-    " walk the line backwards looking for the innermost 'surrounding' opening character
-    while cursor_position > 0
-      let char = line[cursor_position-1]
-      let matched_beginning_index = index(surrounding_beginnings, char)
-      if matched_beginning_index > -1
-        if '>' == char
-          " vim already understands HTML and XML tags so use that
-          execute "normal! c" . a:movement . "t"
-        else
-          " change (inside) the 'surrounding' we found
-          execute "normal! c" . a:movement . char
-        endif
-        " move one char right of that opening character
-        execute "normal! l"
-        " go into insert mode (statinsert! positioned the cursor after the
-        " surrounding entirely)
-        startinsert
-        return
-      endif
-      let cursor_position -= 1
-    endwhile
-  endfunction
-
-  command! ChangeInsideSurrounding :call <SID>ChangeSurrounding("i")
-  command! ChangeAroundSurrounding :call <SID>ChangeSurrounding("a")
-
-  nmap <script> <silent> <unique> <Leader>ci :ChangeInsideSurrounding<CR>
-  nmap <script> <silent> <unique> <Leader>cas :ChangeAroundSurrounding<CR>
-endif
 " }}}
 
 " TagBar {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <F6> :<C-u>TagbarToggle<CR>
-inoremap <F6> <esc>:TagbarToggle<CR>
-
 if s:dein_enabled && dein#tap("tagbar")
+  nnoremap <F6> :<C-u>TagbarToggle<CR>
+  inoremap <F6> <esc>:TagbarToggle<CR>
+
   let g:tagbar_ctags_bin   = g:my.bin.ctags
   let g:tagbar_compact     = 1 " Remove empty lines by default
   let g:tagbar_autofocus   = 1
@@ -1273,15 +1239,15 @@ if s:dein_enabled && dein#tap("tagbar")
       \ }
 
   let g:tagbar_type_ruby = {
-        \ 'kinds' : [
-        \ 'm:modules',
-        \ 'c:classes',
-        \ 'd:describes',
-        \ 'C:contexts',
-        \ 'f:methods',
-        \ 'F:singleton methods'
-        \ ]
-        \ }
+      \ 'kinds' : [
+      \ 'm:modules',
+      \ 'c:classes',
+      \ 'd:describes',
+      \ 'C:contexts',
+      \ 'f:methods',
+      \ 'F:singleton methods'
+      \ ]
+      \ }
 
   let g:tagbar_type_tex = {
       \ 'ctagstype' : 'latex',
@@ -1338,15 +1304,15 @@ nnoremap [git]     <Nop>
 nmap     <Leader>g  [git]
 
 " Git {{
-nnoremap [git]A :<C-u>GitAdd<SPACE>
-nnoremap [git]a :<C-u>GitAdd<CR>
-nnoremap [git]d :<C-u>GitDiff --no-prefix<CR>
-nnoremap [git]D :<C-u>GitDiff --no-prefix --cached<CR>
-nnoremap [git]p :<C-u>Git push<SPACE>
-nnoremap [git]r :<C-u>GitPullRebase<CR>
-nnoremap [git]f :<C-u>GitCatFile %<CR>
-
 if s:dein_enabled && dein#tap("git-vim")
+  nnoremap [git]A :<C-u>GitAdd<SPACE>
+  nnoremap [git]a :<C-u>GitAdd<CR>
+  nnoremap [git]d :<C-u>GitDiff --no-prefix<CR>
+  nnoremap [git]D :<C-u>GitDiff --no-prefix --cached<CR>
+  nnoremap [git]p :<C-u>Git push<SPACE>
+  nnoremap [git]r :<C-u>GitPullRebase<CR>
+  nnoremap [git]f :<C-u>GitCatFile %<CR>
+
   let g:git_no_default_mappings = 1
   let g:git_bin                 = g:my.bin.git
   let g:git_command_edit        = 'vnew'
@@ -1356,13 +1322,13 @@ endif
 " }}
 
 " Fugitive {{
-nnoremap <silent> [git]c :Gcommit<CR>
-nnoremap <silent> [git]C :Gcommit --amend<CR>
-nnoremap <silent> [git]s :<C-U>Gstatus<CR>
-nnoremap <silent> [git]b :Gblame<CR>
-nnoremap <silent> [git]B :Gbrowse<CR>
-
 if s:dein_enabled && dein#tap("vim-fugitive")
+  nnoremap <silent> [git]c :Gcommit<CR>
+  nnoremap <silent> [git]C :Gcommit --amend<CR>
+  nnoremap <silent> [git]s :<C-U>Gstatus<CR>
+  nnoremap <silent> [git]b :Gblame<CR>
+  nnoremap <silent> [git]B :Gbrowse<CR>
+
   augroup MyGitCmd
     autocmd!
     autocmd FileType fugitiveblame vertical res 25
@@ -1375,10 +1341,10 @@ endif
 
 " Gist {{
 " Send visual selection to gist.github.com as a private, filetyped Gist
-vnoremap <silent> [git]g :w !gist -p -t %:e \| pbcopy<CR>
-vnoremap <silent> [git]G :w !gist -p \| pbcopy<CR>
-
 if s:dein_enabled && dein#tap("gist-vim")
+  vnoremap <silent> [git]g :w !gist -p -t %:e \| pbcopy<CR>
+  vnoremap <silent> [git]G :w !gist -p \| pbcopy<CR>
+
   let g:gist_clip_command            = 'pbcopy'
   let g:gist_detect_filetype         = 1
   let g:gist_open_browser_after_post = 1
@@ -1387,11 +1353,11 @@ endif
 " }}
 
 " Gitv {{
-nnoremap <silent> [git]v :Gitv --all<CR>
-nnoremap <silent> [git]V :Gitv! --all<CR>
-vnoremap <silent> [git]V :Gitv! --all<CR>
-
 if s:dein_enabled && dein#tap("gitv")
+  nnoremap <silent> [git]v :Gitv --all<CR>
+  nnoremap <silent> [git]V :Gitv! --all<CR>
+  vnoremap <silent> [git]V :Gitv! --all<CR>
+
   let g:Gitv_OpenHorizontal  = 1
   let g:Gitv_WipeAllOnClose  = 1
   let g:Gitv_DoNotMapCtrlKey = 1
@@ -1408,7 +1374,6 @@ endif
 
 " AlE {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Write this in your vimrc file
 if s:dein_enabled && dein#tap("ale")
   let g:ale_linters = {
     \   'sh' : ['shellcheck'],
@@ -1464,25 +1429,9 @@ endif
 
 " Switch {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap ! :Switch<CR>
-
-function! s:separate_defenition_to_each_filetypes(ft_dictionary)
-  let result = {}
-
-  for [filetypes, value] in items(a:ft_dictionary)
-    for ft in split(filetypes, ",")
-      if !has_key(result, ft)
-        let result[ft] = []
-      endif
-
-      call extend(result[ft], copy(value))
-    endfor
-  endfor
-
-  return result
-endfunction
-
 if s:dein_enabled && dein#tap("switch.vim")
+  nnoremap ! :Switch<CR>
+
   let s:switch_definition = {
         \ '_': [
         \   ['is', 'are'],
@@ -1514,11 +1463,6 @@ if s:dein_enabled && dein#tap("switch.vim")
         \   { '\.tap { |o| \%(.\{-}\) }': '' },
         \   { '\(\k\+\)(&:\(\S\+\))': '\1 { |x| x\.\2 }' },
         \   { '\(\k\+\)\s\={ |\(\k\+\)| \2.\(\S\+\) }': '\1(&:\3)' }
-        \ ],
-        \ 'coffee' : [
-        \   ['if', 'unless'],
-        \   { '^\(.*\)->': '\1=>' },
-        \   { '^\(.*\)=>': '\1->' },
         \ ],
         \ 'Gemfile,Berksfile' : [
         \   ['=', '<', '<=', '>', '>=', '~>']
@@ -1575,6 +1519,22 @@ if s:dein_enabled && dein#tap("switch.vim")
         \   { '\(\*\|_\)\(.*\)\1': '__\2__' }
         \ ]}
 
+  function! s:separate_defenition_to_each_filetypes(ft_dictionary)
+    let result = {}
+
+    for [filetypes, value] in items(a:ft_dictionary)
+      for ft in split(filetypes, ",")
+        if !has_key(result, ft)
+          let result[ft] = []
+        endif
+
+        call extend(result[ft], copy(value))
+      endfor
+    endfor
+
+    return result
+  endfunction
+
   let s:switch_definition = s:separate_defenition_to_each_filetypes(s:switch_definition)
 
   function! s:define_switch_mappings()
@@ -1608,111 +1568,110 @@ endif
 
 " Unite {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Map space to the prefix for Unite
-nnoremap [unite] <Nop>
-xnoremap [unite] <Nop>
-nmap <SPACE> [unite]
-xmap <SPACE> [unite]
-
-nnoremap <silent> [unite]r :<C-u>Unite file_rec/async -buffer-name=file_rec/async<CR>
-nnoremap <silent> [unite]b :<C-u>Unite buffer -buffer-name=buffer<CR>
-nnoremap <silent> [unite]B :<C-u>Unite bookmark -buffer-name=bookmark<CR>
-nnoremap <silent> [unite]f :<C-u>Unite file_mru -buffer-name=file_mru<CR>
-nnoremap <silent> [unite]c :<C-u>Unite command -buffer-name=command<CR>
-nnoremap <silent> [unite]d :<C-u>Unite directory_mru -default-action=lcd -buffer-name=directory_mru<CR>
-nnoremap <silent> [unite], :<C-u>Unite grep -buffer-name=grep -no-quit -auto-preview<CR>
-"nnoremap <silent> [unite]m :<C-u>Unite mapping -buffer-name=mapping<CR>
-
-if dein#tap("neomru.vim")
-  nnoremap <silent> [unite]<SPACE> :<C-u>Unite buffer file_mru bookmark file_rec/async<CR>
-  nnoremap <silent> [unite]m :Unite file_mru<CR>
-endif
-
-if dein#tap("neosnipet")
-  nnoremap <silent> [unite]pt :<C-u>Unite snippet -buffer-name=snippet<CR>
-endif
-
-if dein#tap("unite-mark")
-  nnoremap <silent> [unite]M :<C-u>Unite mark -buffer-name=snippet<CR>
-endif
-
-if dein#tap("neoyank.vim")
-  nnoremap <silent> [unite]/ :<C-u>Unite history/search -buffer-name=history_search -no-empty<CR>
-  nnoremap <silent> [unite]: :<C-u>Unite history/command -buffer-name=history_command -no-empty<CR>
-  nnoremap <silent> [unite]y :<C-u>Unite history/yank -buffer-name=history_yank -no-empty<CR>
-endif
-
-if dein#tap("unite-session")
-  nnoremap <silent> [unite]s :<C-u>Unite session -buffer-name=session -no-empty<CR>
-endif
-
-if dein#tap("unite-help")
-  nnoremap <silent> [unite]h :<C-u>Unite help -buffer-name=help<CR>
-endif
-
-if dein#tap("unite-outline")
-  nnoremap <silent> [unite]o :<C-u>Unite outline -vertical -winwidth=40 -buffer-name=outline<CR>
-endif
-
-if dein#tap("unite-quickfix")
-  nnoremap <silent> [unite]q :<C-u>Unite quickfix -buffer-name=quickfix<CR>
-endif
-
-if dein#tap("vim-unite-giti")
-  nnoremap <silent> [unite]gb :<C-u>Unite giti/branch_all -buffer-name=giti_branchall -no-start-insert<CR>
-  nnoremap <silent> [unite]gP :<C-u>Unite giti/pull_request/base -buffer-name=giti_pull_request -no-start-insert -horizontal<CR>
-  nnoremap <silent> [unite]gl :<C-u>Unite giti/log -buffer-name=giti_log -no-start-insert -horizontal<CR>
-  nnoremap <silent> [unite]gs :<C-u>Unite giti/status -buffer-name=giti_status -no-start-insert -horizontal<CR>
-endif
-
-if dein#tap("unite-tag")
-  nnoremap <silent> [unite]t :<C-u>Unite tags -horizontal -buffer-name=tags -input='.expand("<cword>").'<CR>
-endif
-
-function! s:unite_git_root(...)
-  let git_root = s:current_git()
-  let path = empty(a:000) ? '' : a:1
-  let absolute_path = s:complement_delimiter_of_directory(git_root) . path
-
-  if isdirectory(absolute_path)
-    execute 'Unite -buffer-name=file file_rec/async:'.absolute_path
-    lcd `=absolute_path`
-    file `='*unite* - ' . path`
-  elseif filereadable(absolute_path)
-    edit `=absolute_path`
-  else
-    echomsg path . ' is not exists!'
-  endif
-endfunction
-
-function! s:unite_git_complete(arg_lead, cmd_line, cursor_pos)
-  let git_root = s:complement_delimiter_of_directory(s:current_git())
-  let files = globpath(git_root, a:arg_lead . '*')
-  let file_list = split(files, '\n')
-  let file_list = map(file_list, 's:complement_delimiter_of_directory(v:val)')
-  let file_list = map(file_list, "substitute(v:val, git_root, '', 'g')")
-
-  return file_list
-endfunction
-command! -nargs=? -complete=customlist,s:unite_git_complete UniteGit call <SID>unite_git_root(<f-args>)
-
-nnoremap <silent> [unite]<C-f> :UniteGit<CR>
-
-function! s:unite_with_same_syntax(cmd)
-  let old_syntax = &syntax
-
-  execute a:cmd
-
-  if !empty(old_syntax)
-    execute 'setl syntax=' . old_syntax
-  endif
-endfunction
-
-nnoremap <silent>g/ :call <SID>unite_with_same_syntax('Unite -buffer-name=line_fast -hide-source-names -horizontal -no-empty -start-insert -no-quit line')<CR>
-nnoremap <silent>g* :call <SID>unite_with_same_syntax('Unite -buffer-name=line_fast -hide-source-names -horizontal -no-empty -start-insert -no-quit line -input=<C-R><C-W>')<CR>
-
-
 if s:dein_enabled && dein#tap("unite.vim")
+  " Map space to the prefix for Unite
+  nnoremap [unite] <Nop>
+  xnoremap [unite] <Nop>
+  nmap <SPACE> [unite]
+  xmap <SPACE> [unite]
+
+  nnoremap <silent> [unite]r :<C-u>Unite file_rec/async -buffer-name=file_rec/async<CR>
+  nnoremap <silent> [unite]b :<C-u>Unite buffer -buffer-name=buffer<CR>
+  nnoremap <silent> [unite]B :<C-u>Unite bookmark -buffer-name=bookmark<CR>
+  nnoremap <silent> [unite]f :<C-u>Unite file_mru -buffer-name=file_mru<CR>
+  nnoremap <silent> [unite]c :<C-u>Unite command -buffer-name=command<CR>
+  nnoremap <silent> [unite]d :<C-u>Unite directory_mru -default-action=lcd -buffer-name=directory_mru<CR>
+  nnoremap <silent> [unite], :<C-u>Unite grep -buffer-name=grep -no-quit -auto-preview<CR>
+  "nnoremap <silent> [unite]m :<C-u>Unite mapping -buffer-name=mapping<CR>
+
+  if dein#tap("neomru.vim")
+    nnoremap <silent> [unite]<SPACE> :<C-u>Unite buffer file_mru bookmark file_rec/async<CR>
+    nnoremap <silent> [unite]m :Unite file_mru<CR>
+  endif
+
+  if dein#tap("neosnipet")
+    nnoremap <silent> [unite]pt :<C-u>Unite snippet -buffer-name=snippet<CR>
+  endif
+
+  if dein#tap("unite-mark")
+    nnoremap <silent> [unite]M :<C-u>Unite mark -buffer-name=snippet<CR>
+  endif
+
+  if dein#tap("neoyank.vim")
+    nnoremap <silent> [unite]/ :<C-u>Unite history/search -buffer-name=history_search -no-empty<CR>
+    nnoremap <silent> [unite]: :<C-u>Unite history/command -buffer-name=history_command -no-empty<CR>
+    nnoremap <silent> [unite]y :<C-u>Unite history/yank -buffer-name=history_yank -no-empty<CR>
+  endif
+
+  if dein#tap("unite-session")
+    nnoremap <silent> [unite]s :<C-u>Unite session -buffer-name=session -no-empty<CR>
+  endif
+
+  if dein#tap("unite-help")
+    nnoremap <silent> [unite]h :<C-u>Unite help -buffer-name=help<CR>
+  endif
+
+  if dein#tap("unite-outline")
+    nnoremap <silent> [unite]o :<C-u>Unite outline -vertical -winwidth=40 -buffer-name=outline<CR>
+  endif
+
+  if dein#tap("unite-quickfix")
+    nnoremap <silent> [unite]q :<C-u>Unite quickfix -buffer-name=quickfix<CR>
+  endif
+
+  if dein#tap("vim-unite-giti")
+    nnoremap <silent> [unite]gb :<C-u>Unite giti/branch_all -buffer-name=giti_branchall -no-start-insert<CR>
+    nnoremap <silent> [unite]gP :<C-u>Unite giti/pull_request/base -buffer-name=giti_pull_request -no-start-insert -horizontal<CR>
+    nnoremap <silent> [unite]gl :<C-u>Unite giti/log -buffer-name=giti_log -no-start-insert -horizontal<CR>
+    nnoremap <silent> [unite]gs :<C-u>Unite giti/status -buffer-name=giti_status -no-start-insert -horizontal<CR>
+  endif
+
+  if dein#tap("unite-tag")
+    nnoremap <silent> [unite]t :<C-u>Unite tags -horizontal -buffer-name=tags -input='.expand("<cword>").'<CR>
+  endif
+
+  function! s:unite_git_root(...)
+    let git_root = s:current_git()
+    let path = empty(a:000) ? '' : a:1
+    let absolute_path = s:complement_delimiter_of_directory(git_root) . path
+
+    if isdirectory(absolute_path)
+      execute 'Unite -buffer-name=file file_rec/async:'.absolute_path
+      lcd `=absolute_path`
+      file `='*unite* - ' . path`
+    elseif filereadable(absolute_path)
+      edit `=absolute_path`
+    else
+      echomsg path . ' is not exists!'
+    endif
+  endfunction
+
+  function! s:unite_git_complete(arg_lead, cmd_line, cursor_pos)
+    let git_root = s:complement_delimiter_of_directory(s:current_git())
+    let files = globpath(git_root, a:arg_lead . '*')
+    let file_list = split(files, '\n')
+    let file_list = map(file_list, 's:complement_delimiter_of_directory(v:val)')
+    let file_list = map(file_list, "substitute(v:val, git_root, '', 'g')")
+
+    return file_list
+  endfunction
+  command! -nargs=? -complete=customlist,s:unite_git_complete UniteGit call <SID>unite_git_root(<f-args>)
+
+  nnoremap <silent> [unite]<C-f> :UniteGit<CR>
+
+  function! s:unite_with_same_syntax(cmd)
+    let old_syntax = &syntax
+
+    execute a:cmd
+
+    if !empty(old_syntax)
+      execute 'setl syntax=' . old_syntax
+    endif
+  endfunction
+
+  nnoremap <silent>g/ :call <SID>unite_with_same_syntax('Unite -buffer-name=line_fast -hide-source-names -horizontal -no-empty -start-insert -no-quit line')<CR>
+  nnoremap <silent>g* :call <SID>unite_with_same_syntax('Unite -buffer-name=line_fast -hide-source-names -horizontal -no-empty -start-insert -no-quit line -input=<C-R><C-W>')<CR>
+
   " Use the fuzzy matcher for everything
   call unite#filters#matcher_default#use(['matcher_fuzzy'])
 
@@ -1899,7 +1858,9 @@ if s:dein_enabled && dein#tap("unite.vim")
   " grep {{
   let g:unite_source_grep_max_candidates = 1000
   let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts = '--nocolor --nogroup'
+  let g:unite_source_grep_default_opts =
+        \ '-i --vimgrep --hidden --ignore ' .
+        \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
   let g:unite_source_grep_recursive_opt = ''
   let g:unite_source_grep_search_word_highlight = 1
 
@@ -1982,9 +1943,9 @@ endif
 
 " NerdTree {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <silent> <C-\> :<C-u>NERDTreeFind<CR>
-
 if s:dein_enabled && dein#tap("nerdtree")
+  nnoremap <silent> <C-\> :<C-u>NERDTreeFind<CR>
+
   let g:NERDTreeWinSize = 36
   let g:NERDTreeBookmarksFile = g:my.dir.nerdtree . '/NERDTreeBookmarks'
   let g:NERDTreeMinimalUI = 1
@@ -2004,21 +1965,21 @@ endif
 
 " Vimfiler {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap [vimfiler]  <Nop>
-nmap     <Leader>f  [vimfiler]
-
-nnoremap <silent> [vimfiler]f :<C-u>VimFiler -buffer-name=explorer -split -simple -winwidth=35 -toggle -no-quit<CR>
-nnoremap <silent> [vimfiler]g :call <SID>vim_filer_explorer_git()<CR>
-nnoremap <silent> [vimfiler]b :<C-u>VimFilerBufferDir<CR>
-nnoremap <silent> [vimfiler]c :<C-u>VimFilerCreate<CR>
-
-function! s:vim_filer_explorer_git()
-  let path = (system('git rev-parse --is-inside-work-tree') == "true\n") ? s:current_git() : '.'
-  execute 'VimFiler -buffer-name=explorer -split -simple -winwidth=35 -toggle -no-quit -find ' path
-endfunction
-command! VimFilerExplorerGit call <SID>vim_filer_explorer_git()
-
 if s:dein_enabled && dein#tap("vimfiler.vim")
+  nnoremap [vimfiler]  <Nop>
+  nmap     <Leader>f  [vimfiler]
+
+  nnoremap <silent> [vimfiler]f :<C-u>VimFiler -buffer-name=explorer -split -simple -winwidth=35 -toggle -no-quit<CR>
+  nnoremap <silent> [vimfiler]g :call <SID>vim_filer_explorer_git()<CR>
+  nnoremap <silent> [vimfiler]b :<C-u>VimFilerBufferDir<CR>
+  nnoremap <silent> [vimfiler]c :<C-u>VimFilerCreate<CR>
+
+  function! s:vim_filer_explorer_git()
+    let path = (system('git rev-parse --is-inside-work-tree') == "true\n") ? s:current_git() : '.'
+    execute 'VimFiler -buffer-name=explorer -split -simple -winwidth=35 -toggle -no-quit -find ' path
+  endfunction
+  command! VimFilerExplorerGit call <SID>vim_filer_explorer_git()
+
   let g:unite_kind_file_use_trashbox  = 1
   let g:vimfiler_data_directory       = g:my.dir.vimfiler
   let g:vimfiler_safe_mode_by_default = 0
@@ -2049,15 +2010,15 @@ endif
 
 " Signify {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <F4> :<C-u>SignifyToggle<CR>
-
-nmap <Leader>gj <Plug>(signify-next-hunk)zz
-nmap <Leader>gk <Plug>(signify-prev-hunk)zz
-
-nmap <Leader>gh <Plug>(signify-toggle-highlight)
-nmap <Leader>gt <Plug>(signify-toggle)
-
 if s:dein_enabled && dein#tap("vim-signify")
+  nnoremap <F4> :<C-u>SignifyToggle<CR>
+
+  nmap <Leader>gj <Plug>(signify-next-hunk)zz
+  nmap <Leader>gk <Plug>(signify-prev-hunk)zz
+
+  nmap <Leader>gh <Plug>(signify-toggle-highlight)
+  nmap <Leader>gt <Plug>(signify-toggle)
+
   let g:signify_vcs_list = [ 'git', 'svn' ]
   let g:signify_difftool = 'gnudiff'
 
@@ -2080,11 +2041,11 @@ endif
 
 " vim-transform {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nmap <D-R> <Plug>(transform)
-xmap <D-R> <Plug>(transform)
-imap <D-R> <Plug>(transform)
-
 if s:dein_enabled && dein#tap("vim-transform")
+  nmap <D-R> <Plug>(transform)
+  xmap <D-R> <Plug>(transform)
+  imap <D-R> <Plug>(transform)
+
   let g:transform = {}
   let g:transform.options = {}
   let g:transform.options.enable_default_config = 0
@@ -2128,43 +2089,69 @@ endif
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if s:dein_enabled && dein#tap("neocomplete.vim")
   let g:neocomplete#enable_at_startup = 1
-  let g:neocomplete#max_list = 20
-  let g:neocomplete#min_keyword_length = 3
-  let g:neocomplete#enable_ignore_case = 1
   let g:neocomplete#enable_smart_case = 1
-  let g:neocomplete#enable_auto_select = 0
-  let g:neocomplete#lock_buffer_name_pattern = ''
-  let g:neocomplete#enable_fuzzy_completion = 0
-  let g:neocomplete#text_mode_filetypes =
-        \ {
-        \  'hybrid': 1,
-        \  'text':1,
-        \  'help': 1,
-        \  'gitcommit': 1,
-        \  'gitrebase':1,
-        \  'vcs-commit': 1,
-        \  'markdown':1,
-        \  'textile':1,
-        \  'creole':1,
-        \  'org':1,
-        \  'rdoc':1,
-        \  'mediawiki':1,
-        \  'rst':1,
-        \  'asciidoc':1,
-        \  'prod':1,
-        \  'plaintex':1,
-        \  'mkd': 1,
-        \  'html': 1,
-        \  'vim':1,
-        \  'sh':0,
-        \  'javascript':1,
-        \  'perl':0
-        \ }
-  let g:neocomplete#same_filetypes = {}
-  let g:neocomplete#same_filetypes._ = '_'
-  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : neocomplete#start_manual_complete()
+  let g:neocomplete#enable_camel_case = 1
+  let g:neocomplete#auto_complete_delay = 30
+  let g:neocomplete#enable_fuzzy_completion = 1
+  let g:neocomplete#auto_completion_start_length = 2
+  let g:neocomplete#manual_completion_start_length = 0
+  let g:neocomplete#min_keyword_length = 3
+  let g:neocomplete#enable_auto_select = 1
+  let g:neocomplete#enable_auto_delimiter = 1
+  let g:neocomplete#max_list = 100
 
-  autocmd MyAutoCmd FileType python setlocal completeopt-=preview
+  if !exists('g:neocomplete#sources#omni#input_patterns')
+    let g:neocomplete#sources#omni#input_patterns = {}
+  endif
+
+  let g:marching_enable_neocomplete = 1
+  let g:neocomplete#sources#omni#input_patterns.python =
+        \ '[^. *\t]\.\w*\|\h\w*'
+
+  " Define keyword pattern.
+  if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+  endif
+  let g:neocomplete#keyword_patterns._ = '\h\k*(\?'
+  let g:neocomplete#keyword_patterns.rst =
+        \ '\$\$\?\w*\|[[:alpha:]_.\\/~-][[:alnum:]_.\\/~-]*\|\d\+\%(\.\d\+\)\+'
+
+  call neocomplete#custom#source('look', 'min_pattern_length', 4)
+  call neocomplete#custom#source('_', 'converters',
+        \ ['converter_add_paren', 'converter_remove_overlap',
+        \  'converter_delimiter', 'converter_abbr'])
+
+  " <C-f>, <C-b>: page move.
+  inoremap <expr><C-f>  pumvisible() ? "\<PageDown>" : "\<Right>"
+  inoremap <expr><C-b>  pumvisible() ? "\<PageUp>"   : "\<Left>"
+  " <C-h>, <BS>: close popup and delete backword char.
+  " inoremap <expr> <C-h> neocomplete#smart_close_popup()."\<C-h>"
+  inoremap <expr> <BS> neocomplete#smart_close_popup()."\<C-h>"
+  " <C-n>: neocomplete.
+  inoremap <expr> <C-n>  pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>\<Down>"
+  " <C-p>: keyword completion.
+  inoremap <expr> <C-p>  pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
+  inoremap <expr> '  pumvisible() ? "\<C-y>" : "'"
+
+  " <CR>: close popup and save indent.
+  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+  function! s:my_cr_function() abort
+    return neocomplete#smart_close_popup() . "\<CR>"
+  endfunction
+
+  " <TAB>: completion.
+  inoremap <silent><expr> <TAB>
+        \ pumvisible() ? "\<C-n>" :
+        \ <SID>check_back_space() ? "\<TAB>" :
+        \ neocomplete#start_manual_complete()
+
+  function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+  endfunction
+
+  " <S-TAB>: completion back.
+  inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<C-h>"
 endif
 
 " neosnippet {{{
@@ -2193,10 +2180,10 @@ endif
 
 " Vimshell
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <Leader>v :<C-u>tabnew<CR>:<C-u>VimShell<CR>
-nnoremap <Leader>V :<C-U>VimShellBufferDir<CR>
-
 if s:dein_enabled && dein#tap("vimshell.vim")
+  nnoremap <Leader>v :<C-u>tabnew<CR>:<C-u>VimShell<CR>
+  nnoremap <Leader>V :<C-U>VimShellBufferDir<CR>
+
   let g:vimshell_prompt            = $USER."% "
   let g:vimshell_user_prompt       = 'fnamemodify(getcwd(), ":~")'
   let g:vimshell_enable_smart_case = 1
@@ -2219,35 +2206,33 @@ endif
 
 " Commentary {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Beggining of Line Comment Toggle
-nmap <Leader>cc <Plug>(caw:i:toggle)
-vmap <Leader>cc <Plug>(caw:i:toggle)
-nmap <Leader>ci <Plug>(caw:i:toggle)
-vmap <Leader>ci <Plug>(caw:i:toggle)
-
-" End of Line Comment Toggle
-nmap <Leader>ca <Plug>(caw:a:toggle)
-vmap <Leader>ca <Plug>(caw:a:toggle)
-
-" Block Comment Toggle
-nmap <Leader>cw <Plug>(caw:wrap:toggle)
-vmap <Leader>cw <Plug>(caw:wrap:toggle)
-
-" Break line and Comment
-nmap <Leader>co <Plug>(caw:jump:comment-next)
-nmap <Leader>cO <Plug>(caw:jump:comment-prev)
-
 if s:dein_enabled && dein#tap("caw.vim")
+  " Beggining of Line Comment Toggle
+  nmap <Leader>cc <Plug>(caw:i:toggle)
+  vmap <Leader>cc <Plug>(caw:i:toggle)
+
+  " End of Line Comment Toggle
+  nmap <Leader>ca <Plug>(caw:a:toggle)
+  vmap <Leader>ca <Plug>(caw:a:toggle)
+
+  " Block Comment Toggle
+  nmap <Leader>cw <Plug>(caw:wrap:toggle)
+  vmap <Leader>cw <Plug>(caw:wrap:toggle)
+
+  " Break line and Comment
+  nmap <Leader>co <Plug>(caw:jump:comment-next)
+  nmap <Leader>cO <Plug>(caw:jump:comment-prev)
+
   let g:caw_no_default_keymappings = 1
 endif
 " }}}
 
 " Gundo {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-noremap <F3> :<C-u>GundoToggle<CR>
-inoremap <F3> <esc>:GundoToggle<CR>
-
 if s:dein_enabled && dein#tap("gundo")
+  noremap <F3> :<C-u>GundoToggle<CR>
+  inoremap <F3> <esc>:GundoToggle<CR>
+
   let g:gundo_width          = 30
   let g:gundo_debug          = 1
   let g:gundo_preview_bottom = 1
@@ -2256,53 +2241,55 @@ endif
 
 " EasyAlign {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:easy_align_delimiters = {
-    \ '>': { 'pattern': '>>\|=>\|>' },
-    \ '\': { 'pattern': '\\' },
-    \ '/': { 'pattern': '//\+\|/\*\|\*/', 'ignores': ['String'] },
-    \ '#': { 'pattern': '#\+', 'ignores': ['String'] },
-    \ ']': {
-    \     'pattern':       '[[\]]',
-    \     'left_margin':   0,
-    \     'right_margin':  0,
-    \     'stick_to_left': 0
-    \   },
-    \ ')': {
-    \     'pattern':       '[()]',
-    \     'left_margin':   0,
-    \     'right_margin':  0,
-    \     'stick_to_left': 0
-    \   },
-    \ 'f': {
-    \     'pattern': ' \(\S\+(\)\@=',
-    \     'left_margin': 0,
-    \     'right_margin': 0
-    \   },
-    \ 'd': {
-    \     'pattern': ' \(\S\+\s*[;=]\)\@=',
-    \     'left_margin': 0,
-    \     'right_margin': 0
-    \   }
-    \ }
-vnoremap <silent> <Enter> :EasyAlign<cr>
+if s:dein_enabled && dein#tap("vim-easy-align")
+  let g:easy_align_delimiters = {
+      \ '>': { 'pattern': '>>\|=>\|>' },
+      \ '\': { 'pattern': '\\' },
+      \ '/': { 'pattern': '//\+\|/\*\|\*/', 'ignores': ['String'] },
+      \ '#': { 'pattern': '#\+', 'ignores': ['String'] },
+      \ ']': {
+      \     'pattern':       '[[\]]',
+      \     'left_margin':   0,
+      \     'right_margin':  0,
+      \     'stick_to_left': 0
+      \   },
+      \ ')': {
+      \     'pattern':       '[()]',
+      \     'left_margin':   0,
+      \     'right_margin':  0,
+      \     'stick_to_left': 0
+      \   },
+      \ 'f': {
+      \     'pattern': ' \(\S\+(\)\@=',
+      \     'left_margin': 0,
+      \     'right_margin': 0
+      \   },
+      \ 'd': {
+      \     'pattern': ' \(\S\+\s*[;=]\)\@=',
+      \     'left_margin': 0,
+      \     'right_margin': 0
+      \   }
+      \ }
+  vnoremap <silent> <Enter> :EasyAlign<cr>
 
-" help map-operator
-function! s:easy_align_1st_eq(type, ...)
-  '[,']EasyAlign=
-endfunction
-nnoremap <Leader>= :set opfunc=<SID>easy_align_1st_eq<Enter>g@
+  " help map-operator
+  function! s:easy_align_1st_eq(type, ...)
+    '[,']EasyAlign=
+  endfunction
+  nnoremap <Leader>= :set opfunc=<SID>easy_align_1st_eq<Enter>g@
 
-function! s:easy_align_1st_colon(type, ...)
-  '[,']EasyAlign:
-endfunction
-nnoremap <Leader>: :set opfunc=<SID>easy_align_1st_colon<Enter>g@
+  function! s:easy_align_1st_colon(type, ...)
+    '[,']EasyAlign:
+  endfunction
+  nnoremap <Leader>: :set opfunc=<SID>easy_align_1st_colon<Enter>g@
+endif
 " }}}
 
 " Vimwiki {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <silent> <Leader>dd :VimwikiIndex<CR>
-
 if s:dein_enabled && dein#tap("vimwiki")
+  nnoremap <silent> <Leader>dd :VimwikiIndex<CR>
+
   let screen = {'path': '~/Dropbox/vimwiki/wiki/',
               \ 'path_html': '~/Dropbox/public/wiki/screen/',
               \ 'html_header': '~/Dropbox/vimwiki/template/screen/header.tpl',
@@ -2316,57 +2303,81 @@ endif
 
 " indentLine {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <Leader>i :IndentLinesToggle<CR>
-
 if s:dein_enabled && dein#tap("indentLine")
-  let g:indentLine_fileType = g:my.ft.program_files
+  let g:indentLine_enabled = 1
   let g:indentLine_char = '┊'
   let g:indentLine_first_char = '┃'
-  let g:indentLine_fileTypeExclude = ['help']
+  let g:indentLine_concealcursor='vc'
   let g:indentLine_color_gui = '#363636'
+  let g:indentLine_fileType = g:my.ft.program_files
+
+  nnoremap <Leader>i :IndentLinesToggle<CR>
 endif
 " }}}
 
 " Textmanip {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-xmap <M-d> <Plug>(textmanip-duplicate-down)
-nmap <M-d> <Plug>(textmanip-duplicate-down)
-xmap <M-D> <Plug>(textmanip-duplicate-up)
-nmap <M-D> <Plug>(textmanip-duplicate-up)
+if s:dein_enabled && dein#tap("vim-textmanip")
+  xmap <M-d> <Plug>(textmanip-duplicate-down)
+  nmap <M-d> <Plug>(textmanip-duplicate-down)
+  xmap <M-D> <Plug>(textmanip-duplicate-up)
+  nmap <M-D> <Plug>(textmanip-duplicate-up)
 
-xmap <C-j> <Plug>(textmanip-move-down)
-xmap <C-k> <Plug>(textmanip-move-up)
-xmap <C-h> <Plug>(textmanip-move-left)
-xmap <C-l> <Plug>(textmanip-move-right)
+  xmap <C-j> <Plug>(textmanip-move-down)
+  xmap <C-k> <Plug>(textmanip-move-up)
+  xmap <C-h> <Plug>(textmanip-move-left)
+  xmap <C-l> <Plug>(textmanip-move-right)
+endif
 " }}}
 
 " Expand-region {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map K <Plug>(expand_region_expand)
+if s:dein_enabled && dein#tap("vim-expand-region")
+  map K <Plug>(expand_region_expand)
+endif
 " }}}
 
 " Multiple-cursors {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-xnoremap <C-N> :call multiple_cursors#new('n')<CR>
+if s:dein_enabled && dein#tap("vim-multiple-cursors")
+  xnoremap <C-N> :call multiple_cursors#new('n')<CR>
 
-let g:multi_cursor_use_default_mapping = 0
-let g:multi_cursor_start_key = '<C-N>'
-let g:multi_cursor_next_key  = '<C-N>'
-let g:multi_cursor_prev_key  = '<C-P>'
-let g:multi_cursor_skip_key  = '<C-X>'
-let g:multi_cursor_quit_key  = '<Esc>'
+  let g:multi_cursor_use_default_mapping = 0
+  let g:multi_cursor_start_key = '<C-N>'
+  let g:multi_cursor_next_key  = '<C-N>'
+  let g:multi_cursor_prev_key  = '<C-P>'
+  let g:multi_cursor_skip_key  = '<C-X>'
+  let g:multi_cursor_quit_key  = '<Esc>'
+endif
+" }}}
+
+" incsearch {{{
+" """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if s:dein_enabled && dein#tap("incsearch-fuzzy.vim")
+  function! s:config_fuzzyall(...) abort
+    return extend(copy({
+    \   'converters': [
+    \     incsearch#config#fuzzy#converter(),
+    \     incsearch#config#fuzzyspell#converter()
+    \   ],
+    \ }), get(a:, 1, {}))
+  endfunction
+
+  noremap <silent><expr> z/ incsearch#go(<SID>config_fuzzyall())
+  noremap <silent><expr> z? incsearch#go(<SID>config_fuzzyall({'command': '?'}))
+  noremap <silent><expr> zg? incsearch#go(<SID>config_fuzzyall({'is_stay': 1}))
+endif
 " }}}
 
 " QuickRun {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <silent> <Leader>r  :<C-u>QuickRun -mode n<CR>
-vnoremap <silent> <Leader>r  :<C-u>QuickRun -mode v<CR>
-nnoremap <Leader>R           :<C-u>QuickRun -args ""<Left>
-
 if s:dein_enabled && dein#tap("vim-quickrun")
+  nnoremap <silent> <Leader>r  :<C-u>QuickRun -mode n<CR>
+  vnoremap <silent> <Leader>r  :<C-u>QuickRun -mode v<CR>
+  nnoremap <Leader>R           :<C-u>QuickRun -args ""<Left>
+
   let g:quickrun_config = {}
   let g:quickrun_no_default_key_mappings = 1
-
   let g:quickrun_config._ = {
         \ 'runner' : 'vimproc',
         \ 'outputter/buffer/split' : 'botright 10sp',
@@ -2394,11 +2405,11 @@ endif
 
 " vim-over {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:over_command_line_key_mappings = {
-      \ "\<C-L>" : "\<C-F>",
-      \ }
-
 if s:dein_enabled && dein#tap("vim-over")
+  let g:over_command_line_key_mappings = {
+        \ "\<C-L>" : "\<C-F>",
+        \ }
+
   OverCommandLineNoremap <C-J> <Plug>(over-cmdline-substitute-jump-pattern)
   OverCommandLineNoremap <C-K> <Plug>(over-cmdline-substitute-jump-string)
 
@@ -2413,9 +2424,9 @@ endif
 
 " emmet {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-imap <buffer><C-e> <C-y>,
-
 if s:dein_enabled && dein#tap("emmet-vim")
+  imap <buffer><C-e> <C-y>,
+
   let g:user_emmet_mode = 'iv'
   let g:user_emmet_leader_key = '<C-y>'
   let g:use_emmet_complete_tag = 1
