@@ -12,12 +12,9 @@ fi
 
 export GOPATH=$HOME/gocode
 export NODE_PATH=/usr/local/lib/node_modules/jsctags/:$NODE_PATH
-export PATH=/usr/local/bin:/usr/bin:/usr/local/share/npm/bin:$PATH:$HOME/bin:$GOPATH/bin:/usr/texbin/
+export PATH=/usr/local/bin:/usr/bin:/usr/local/share/npm/bin:$HOME/.rbenv:$PATH:$HOME/bin:$GOPATH/bin:/Library/TeX/texbin
 
 # work
-alias mvn-install='mvn clean install -Dmaven.test.skip=true'
-alias mvn-eclipse='mvn eclipse:clean eclipse:eclipse'
-
 function sudo-command-line () {
     [[ -z $BUFFER ]] && zle up-history
     [[ $BUFFER != sudo\ * ]] && BUFFER="sudo $BUFFER"
@@ -39,10 +36,14 @@ zle -C matcher-complete complete-word _generic
 zstyle ':completion:matcher-complete:*' completer _matcher_complete
 zstyle ':completion:matcher-complete:*' menu-select
 
-unsetopt CORRECT
+# Directories
+zstyle ':completion:*:default' list-colors ''
 
-expand-or-complete-with-dots() {
-  echo -n "\e[31m......\e[0m"
+unsetopt CORRECT                      # Disable autocorrect guesses. Happens when typing a wrong
+                                      # command that may look like an existing one.
+
+expand-or-complete-with-dots() {      # This bunch of code displays red dots when autocompleting
+  echo -n "\e[31m......\e[0m"         # a command with the tab key, "Oh-my-zsh"-style.
   zle expand-or-complete
   zle redisplay
 }
@@ -56,14 +57,20 @@ alias l="ls -lF ${colorflag}" # all files, in long format
 alias ll="ls -laF ${colorflag}" # all files inc dotfiles, in long format
 alias lsd='ls -lF ${colorflag} | grep "^d"' # only directories
 
-[[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh # This loads NVM
-export NVM_NODEJS_ORG_MIRROR=http://npm.taobao.org/mirrors/node
+#node
+alias node='node --harmony'
 
-# chrome
+alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 alias chrome-debug='sudo open -a Google\ Chrome --args --disable-web-security --user-data-dir'
 
 # mvim
 alias mvim='gvim --remote-tab';
+
+[[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh # This loads NVM
+export NVM_NODEJS_ORG_MIRROR=http://npm.taobao.org/mirrors/node
+
+# jsut
+export PATH=~/.just-installs/bin:$PATH
 
 ulimit -S -n 2048
 
