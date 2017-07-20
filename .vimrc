@@ -182,6 +182,14 @@ if s:use_dein
           \ 'on_ft': 'javascript'
           \ })
 
+    call dein#add("leafgarland/typescript-vim", {
+          \ 'on_ft': 'typescript'
+          \ })
+
+    call dein#add("Quramy/tsuquyomi", {
+          \ 'on_ft': 'typescript'
+          \ })
+
     " Markdown
     call dein#add("plasticboy/vim-markdown" , {
           \ 'on_ft': 'markdown'
@@ -254,13 +262,9 @@ if s:use_dein
     " General text editing improvements... {{
 
     " Completion {{{
-    call dein#add('Shougo/neocomplete.vim', {
+    call dein#add('Valloric/YouCompleteMe', {
           \ 'on_i': 1,
           \ 'lazy': 1
-          \ })
-
-    call dein#add('ujihisa/neco-look', {
-          \ 'depends': ['neocomplete.vim']
           \ })
 
     " Text filtering and alignment
@@ -277,8 +281,7 @@ if s:use_dein
     call dein#add('justinmk/vim-sneak')
 
     " Snippet
-    call dein#add('Shougo/neosnippet')
-    call dein#add('Shougo/neosnippet-snippets', {'depdens': ['neosnippet']})
+    call dein#add('SirVer/ultisnips.git')
     call dein#add('honza/vim-snippets', {'depdens': ['neosnippet']})
     call dein#add("justinj/vim-react-snippets", {'depdens': ['neosnippet']})
 
@@ -312,9 +315,7 @@ if s:use_dein
     call dein#add('terryma/vim-multiple-cursors')
 
     " Visually select increasingly larger regions of text using the same key combination
-    call dein#add("terryma/vim-expand-region", {
-          \ 'on_cmd' : ['<Plug>(expand_region_expand)']
-          \ })
+    call dein#add("terryma/vim-expand-region")
 
     call dein#add('scrooloose/nerdtree', {
           \ 'on_cmd': ['NERDTreeToggle'],
@@ -2085,96 +2086,70 @@ if s:dein_enabled && dein#tap("vim-transform")
 endif
 " }}}
 
-" neocomplete
+" YouCompleteMe
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if s:dein_enabled && dein#tap("neocomplete.vim")
-  let g:neocomplete#enable_at_startup = 1
-  let g:neocomplete#enable_smart_case = 1
-  let g:neocomplete#enable_camel_case = 1
-  let g:neocomplete#auto_complete_delay = 30
-  let g:neocomplete#enable_fuzzy_completion = 1
-  let g:neocomplete#auto_completion_start_length = 2
-  let g:neocomplete#manual_completion_start_length = 0
-  let g:neocomplete#min_keyword_length = 3
-  let g:neocomplete#enable_auto_select = 1
-  let g:neocomplete#enable_auto_delimiter = 1
-  let g:neocomplete#max_list = 100
-
-  if !exists('g:neocomplete#sources#omni#input_patterns')
-    let g:neocomplete#sources#omni#input_patterns = {}
-  endif
-
-  let g:marching_enable_neocomplete = 1
-  let g:neocomplete#sources#omni#input_patterns.python =
-        \ '[^. *\t]\.\w*\|\h\w*'
-
-  " Define keyword pattern.
-  if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-  endif
-  let g:neocomplete#keyword_patterns._ = '\h\k*(\?'
-  let g:neocomplete#keyword_patterns.rst =
-        \ '\$\$\?\w*\|[[:alpha:]_.\\/~-][[:alnum:]_.\\/~-]*\|\d\+\%(\.\d\+\)\+'
-
-  call neocomplete#custom#source('look', 'min_pattern_length', 4)
-  call neocomplete#custom#source('_', 'converters',
-        \ ['converter_add_paren', 'converter_remove_overlap',
-        \  'converter_delimiter', 'converter_abbr'])
-
-  " <C-f>, <C-b>: page move.
-  inoremap <expr><C-f>  pumvisible() ? "\<PageDown>" : "\<Right>"
-  inoremap <expr><C-b>  pumvisible() ? "\<PageUp>"   : "\<Left>"
-  " <C-h>, <BS>: close popup and delete backword char.
-  " inoremap <expr> <C-h> neocomplete#smart_close_popup()."\<C-h>"
-  inoremap <expr> <BS> neocomplete#smart_close_popup()."\<C-h>"
-  " <C-n>: neocomplete.
-  inoremap <expr> <C-n>  pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>\<Down>"
-  " <C-p>: keyword completion.
-  inoremap <expr> <C-p>  pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
-  inoremap <expr> '  pumvisible() ? "\<C-y>" : "'"
-
-  " <CR>: close popup and save indent.
-  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-  function! s:my_cr_function() abort
-    return neocomplete#smart_close_popup() . "\<CR>"
-  endfunction
-
-  " <TAB>: completion.
-  inoremap <silent><expr> <TAB>
-        \ pumvisible() ? "\<C-n>" :
-        \ <SID>check_back_space() ? "\<TAB>" :
-        \ neocomplete#start_manual_complete()
-
-  function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
-  endfunction
-
-  " <S-TAB>: completion back.
-  inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<C-h>"
+if s:dein_enabled && dein#tap("YouCompleteMe")
+  let g:ycm_min_num_of_chars_for_completion = 1
+  let g:ycm_min_num_identifier_candidate_chars = 0
+  let g:ycm_filetype_whitelist = { '*': 1 }
+  let g:ycm_filetype_specific_completion_to_disable = {}
+  let g:ycm_register_as_syntastic_checker = 1
+  let g:ycm_allow_changing_updatetime = 1
+  let g:ycm_complete_in_comments = 1
+  let g:ycm_complete_in_strings = 1
+  let g:ycm_collect_identifiers_from_tags_files = 0
+  let g:ycm_collect_identifiers_from_comments_and_strings = 0
+  let g:ycm_seed_identifiers_with_syntax = 0
+  let g:ycm_cache_omnifunc = 1
+  let g:ycm_use_ultisnips_completer = 1
+  let g:ycm_filetype_blacklist = {
+        \ 'tagbar' : 1,
+        \ 'notes' : 1,
+        \ 'markdown' : 1,
+        \ 'unite' : 1,
+        \ 'text' : 1,
+        \ 'vimwiki' : 1,
+        \ 'vimshell': 1,
+        \ }
+  let g:ycm_semantic_triggers =  {
+      \   'c' : ['->', '.'],
+      \   'objc' : ['->', '.'],
+      \   'ocaml' : ['.', '#'],
+      \   'cpp,objcpp' : ['->', '.', '::'],
+      \   'perl' : ['->'],
+      \   'php' : ['->', '::'],
+      \   'cs,java,javascript,d,vim,python,perl6,scala,vb,elixir,go' : ['.'],
+      \   'ruby' : ['.', '::'],
+      \   'lua' : ['.', ':'],
+      \   'erlang' : [':'],
+      \ }
 endif
 
-" neosnippet {{{
+" Ultisnips {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if s:dein_enabled && dein#tap("neosnippet")
-  imap <C-s> <Plug>(neosnippet_expand_or_jump)
-  smap <C-s> <Plug>(neosnippet_expand_or_jump)
-  xmap <C-s> <Plug>(neosnippet_expand_target)
+if s:dein_enabled && dein#tap("ultisnips")
+  let g:UltiSnipsSnippetDirectories=['UltiSnips']
+  let g:UltiSnipsListSnippets = '<C-Tab>'
+  let g:UltiSnipsJumpForwardTrigger = '<Tab>'
+  let g:UltiSnipsJumpBackwardTrigger = '<S-Tab>'
 
-  let g:neosnippet#enable_snipmate_compatibility = 1
-  let g:neosnippet#disable_runtime_snippets = {'_' : 1}
-  let g:neosnippet#snippets_directory = []
+  " Fix tab conflict with YCM
+  let g:UltiSnipsExpandTrigger = '<nop>'
+  let g:ulti_expand_or_jump_res = 0
 
-  if dein#tap("neosnippet-snippets")
-    let g:neosnippet#snippets_directory += [expand(s:dein_github . '/Shougo/neosnippet-snippets/neosnippets')]
-  endif
+  function! ExpandSnippetOrCarriageReturn()
+    let l:snippet = UltiSnips#ExpandSnippetOrJump()
+    if g:ulti_expand_or_jump_res > 0
+        return l:snippet
+    else
+        return "\<CR>"
+    endif
+  endfunction
+  inoremap <expr> <CR> pumvisible() ? "<C-R>=ExpandSnippetOrCarriageReturn()<CR>" : "\<CR>"
 
-  if dein#tap("vim-snippets")
-    let g:neosnippet#snippets_directory += [expand(s:dein_github . '/honza/vim-snippets/snippets')]
-  endif
-
-  if dein#tap("vim-react-snippets")
-    let g:neosnippet#snippets_directory += [expand(s:dein_github . '/justinj/vim-react-snippets/snippets')]
+  if !exists(':UltiSnipsEdit')
+    inoremap <silent> <Plug>(tab) UltiSnips#ExpandSnippet()
+    imap <tab> <Plug>(tab)
   endif
 endif
 
@@ -2332,9 +2307,9 @@ endif
 
 " Expand-region {{{
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if s:dein_enabled && dein#tap("vim-expand-region")
+" if s:dein_enabled && dein#tap("vim-expand-region")
   map K <Plug>(expand_region_expand)
-endif
+" endif
 " }}}
 
 " Multiple-cursors {{{
