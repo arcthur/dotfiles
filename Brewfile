@@ -66,7 +66,6 @@ brew "cmake"
 brew "git-lfs"
 brew "git-delta"
 brew "gh"
-brew "hub"
 brew "tokei"
 
 # Python related tools

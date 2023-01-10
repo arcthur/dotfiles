@@ -64,20 +64,24 @@ bindkey "^b" sudo-command-line
 alias chromews='sudo open -a Google\ Chrome --args --disable-web-security'
 
 # Better Version
-alias git='hub'
 alias cat='bat'
 alias less='bat'
-alias diff='delta'
 alias find='fdfind'
 alias top='htop'
 alias ps='procs'
-alias ls='exa'
 alias grep='rg'
 alias df='duf'
 alias du='dust'
 alias ping='gping'
 alias man='tldr'
 alias cd='z'
+
+alias ls='exa'
+alias l='exa -l --all --group-directories-first --git'
+alias ll='exa -l --all --all --group-directories-first --git'
+alias lt='exa -T --git-ignore --level=2 --group-directories-first'
+alias llt='exa -lT --git-ignore --level=2 --group-directories-first'
+alias lT='exa -T --git-ignore --level=4 --group-directories-first'
 
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
