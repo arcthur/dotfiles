@@ -1,5 +1,5 @@
 # TAPS
-
+# ---------------
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-drivers"
@@ -9,18 +9,65 @@ tap "homebrew/core"
 tap "homebrew/services"
 
 # BINARIES
+# ---------------
+# Monitoring
+brew "htop"
+brew "bottom"
+
+# Terminal
+brew "zellij"
+brew "starship"
 
 # GNU utilities, to replace default BSD ones
 brew "coreutils"
+brew "diffutils"
 brew "findutils"
+brew "ed"
 brew "grep"
-brew "make"
+brew "gawk"
+brew "gnu-indent"
+brew "gnu-sed"
+brew "gnu-tar"
+brew "gnu-which"
+brew "gnutls"
+brew "gzip"
+brew "screen"
+brew "watch"
+brew "wdiff"
+brew "wget"
+
+# Updated built-in system tools
+brew "openssh"
+brew "python"
+brew "git"
 brew "zsh"
+brew "ruby"
+brew "make"
+brew "vim"
+
+# Utilities
+brew "fd"
+brew "exa"
+brew "riggrep"
+brew "bat"
+brew "procs"
+brew "dust"
+brew "duf"
+brew "zoxide"
+brew "tealdeer"
+brew "gping"
+brew "sk"
+
+# Editor
+brew "neovim"
 
 # General development tools
 brew "cmake"
-brew "git"
+brew "git-lfs"
+brew "git-delta"
+brew "gh"
 brew "hub"
+brew "tokei"
 
 # Python related tools
 brew "pyenv"
@@ -33,29 +80,11 @@ brew "goenv"
 brew "fnm"
 brew "yarn"
 
-# miscellaneous
-brew "fd"
-brew "exa"
-brew "riggrep"
-brew "bat"
-brew "procs"
-brew "dust"
-brew "duf"
-brew "zoxide"
-brew "tealdeer"
-brew "htop"
-brew "gping"
-brew "sk"
-brew "tokei"
-brew "delta"
-brew "neovim"
-brew "zellij"
-brew "starship"
+# Mac OS X
 brew "mas"
-brew "bottom"
 
 # CASK
-
+# ---------------
 # Storage
 cask "baidunetdisk"
 
@@ -101,7 +130,8 @@ cask "visual-studio-code"
 cask "fig"
 
 # MAC APPSTORE APPS
+# ---------------
 mas "Keynote", id: 409183694
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
-mas "Things3", id: 904280696
+mas "Things 3", id: 904280696
