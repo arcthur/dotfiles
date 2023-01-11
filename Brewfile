@@ -11,14 +11,18 @@ tap "homebrew/services"
 # BINARIES
 # ---------------
 # Monitoring
+## an interactive process viewer
 brew "htop"
+## Cross-platform graphical process/system monitor
 brew "bottom"
 
 # Terminal
+## Pluggable terminal workspace
 brew "zellij"
+## Cross-shell prompt
 brew "starship"
 
-# GNU utilities, to replace default BSD ones
+# Updated built-in GNU utilities
 brew "coreutils"
 brew "diffutils"
 brew "findutils"
@@ -47,16 +51,27 @@ brew "make"
 brew "vim"
 
 # Utilities
+## alternative to find
 brew "fd"
+## alternative to ls
 brew "exa"
+## alternative to grep
 brew "riggrep"
+## alternative to cat or less
 brew "bat"
+## alternative to ps
 brew "procs"
+## alternative to du
 brew "dust"
+## alternative to df
 brew "duf"
+## alternative to autojumper
 brew "zoxide"
+## alternative to man
 brew "tealdeer"
+## alternative to ping
 brew "gping"
+## alternative to fzf
 brew "sk"
 
 # Editor
@@ -64,20 +79,29 @@ brew "neovim"
 
 # General development tools
 brew "cmake"
+## Git extension for versioning large files
 brew "git-lfs"
+## Syntax-highlighting pager for git and diff output
 brew "git-delta"
+## Github Cli
 brew "gh"
+## Program that allows you to count code, quickly
 brew "tokei"
 
 # Python related tools
+## Python version manager
 brew "pyenv"
+## Execute binaries from Python packages in isolated environments
 brew "pipx"
 
 # Go related tools
+## Go version manager
 brew "goenv"
 
 # Node.js related tools
+## Node.js version manager
 brew "fnm"
+## JavaScript package manager
 brew "yarn"
 
 # Mac OS X
