@@ -121,6 +121,7 @@ cask "balenaetcher"
 cask "betterdisplay"
 cask "the-unarchiver"
 cask "clashx"
+cask "karabiner-elements"
 
 # Development
 cask "font-hack-nerd-font"
