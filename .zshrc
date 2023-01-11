@@ -19,7 +19,7 @@ znap prompt
 #znap source marlonrichert/zsh-autocomplete
 znap source marlonrichert/zsh-edit
 
-ZSH_AUTOSUGGEST_STRATEGY=( history )
+ZSH_AUTOSUGGEST_STRATEGY=( history completion )
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 znap source zsh-users/zsh-autosuggestions
 

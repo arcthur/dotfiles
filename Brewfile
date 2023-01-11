@@ -10,102 +10,71 @@ tap "homebrew/services"
 
 # BINARIES
 # ---------------
+# Updated built-in GNU utilities
+brew "coreutils"    # GNU file, shell, and text utilities
+brew "binutils"     # GNU binary tools for native development
+brew "diffutils"    # GNU file comparison utilities
+brew "findutils"    # GNU find, xargs, and locate
+brew "grep"         # GNU grep, egrep and fgrep
+brew "gawk"         # GNU awk utility
+brew "gnu-sed"      # GNU implementation of the famous stream editor
+brew "gnu-tar"      # GNU version of the tar archiving utility
+brew "gnu-which"    # GNU implementation of which utility
+brew "gnutls"       # GNU transport layer security (TLS)
+brew "gzip"         # Data compression program
+brew "screen"       # Terminal multiplexer
+brew "watch"        # Run commands periorically
+brew "wdiff"        # Display word differences between text files
+brew "wget"         # Resuming download util
+
 # Monitoring
-## an interactive process viewer
-brew "htop"
-## Cross-platform graphical process/system monitor
-brew "bottom"
+brew "htop"         # An interactive process viewer (better top)
+brew "bottom"       # Cross-platform graphical process/system monitor
 
 # Terminal
-## Pluggable terminal workspace
-brew "zellij"
-## Cross-shell prompt
-brew "starship"
-
-# Updated built-in GNU utilities
-brew "coreutils"
-brew "diffutils"
-brew "findutils"
-brew "ed"
-brew "grep"
-brew "gawk"
-brew "gnu-indent"
-brew "gnu-sed"
-brew "gnu-tar"
-brew "gnu-which"
-brew "gnutls"
-brew "gzip"
-brew "screen"
-brew "watch"
-brew "wdiff"
-brew "wget"
-
-# Updated built-in system tools
-brew "readline"
-brew "openssh"
-brew "python"
-brew "git"
-brew "zsh"
-brew "ruby"
-brew "make"
-brew "vim"
+brew "zsh"          # Z shell
+brew "zellij"       # Pluggable terminal workspace
+brew "starship"     # Cross-shell prompt
 
 # Utilities
-## alternative to find
-brew "fd"
-## alternative to ls
-brew "exa"
-## alternative to grep
-brew "riggrep"
-## alternative to cat or less
-brew "bat"
-## alternative to ps
-brew "procs"
-## alternative to du
-brew "dust"
-## alternative to df
-brew "duf"
-## alternative to autojumper
-brew "zoxide"
-## alternative to man
-brew "tealdeer"
-## alternative to ping
-brew "gping"
-## alternative to fzf
-brew "sk"
+brew "aria2"        # Resuming download util (better wget)
+brew "fd"           # Find entries (better find)
+brew "exa"          # Listing files with info (better ls)
+brew "riggrep"      # The silver searcher (better grep)
+brew "bat"          # Output highlighting (better cat)
+brew 'most'         # Multi-window scroll pager (better less)
+brew "procs"        # Advanced process viewer (better ps)
+brew "dust"         # Display disk usage (better du)
+brew "duf"          # Get info on mounted disks (better df)
+brew "zoxide"       # Auto-learning navigation (better cd)
+brew "tealdeer"     # Community-maintained docs (better man)
+brew "gping"        # Interactive ping tool (better ping)
+brew "sk"           # Fuzzy Finder (better fzf)
 
 # Editor
-brew "neovim"
+brew "vim"          # Vi 'workalike' with many additional features
+brew "neovim"       # New vim
 
 # General development tools
-brew "cmake"
-## Git extension for versioning large files
-brew "git-lfs"
-## Syntax-highlighting pager for git and diff output
-brew "git-delta"
-## Github Cli
-brew "gh"
-## Program that allows you to count code, quickly
-brew "tokei"
+brew "cmake"        # Cross-platform make
+brew "git"          # Distributed revision control system
+brew "git-lfs"      # Git extension for versioning large files
+brew "git-delta"    # Syntax-highlighting pager for git and diff output
+brew "gh"           # Interact with GitHub PRs, issues, repos
+brew "tokei"        # Count code (better cloc)
 
-# Python related tools
-## Python version manager
-brew "pyenv"
-## Execute binaries from Python packages in isolated environments
-brew "pipx"
-
-# Go related tools
-## Go version manager
-brew "goenv"
-
-# Node.js related tools
-## Node.js version manager
-brew "fnm"
-## JavaScript package manager
-brew "yarn"
+# Programming languages
+brew "ruby"         # Ruby language
+brew "python"       # Python language
+brew "pyenv"        # Python version manager
+brew "pipx"         # Execute binaries from Python packages in isolated environments
+brew "go"           # Go language
+brew "goenv"        # Go version manager
+brew "fnm"          # Node.js version manager
+brew "yarn"         # JavaScript package manager
 
 # Mac OS X
-brew "mas"
+brew "mas"          # Mac App Store command-line interface
 
 # CASK
 # ---------------
