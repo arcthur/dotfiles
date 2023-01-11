@@ -37,6 +37,7 @@ brew "wdiff"
 brew "wget"
 
 # Updated built-in system tools
+brew "readline"
 brew "openssh"
 brew "python"
 brew "git"
