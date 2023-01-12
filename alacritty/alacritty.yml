@@ -1,6 +1,5 @@
 # Live config reload (changes require restart)
 live_config_reload: true
-window.opacity: 0.9
 
 env:
   TERM: alacritty
@@ -59,6 +58,7 @@ window:
   decorations: "none"
   dynamic_padding: true
   startup_mode: Windowed
+  opacity: 0.9
 
 scrolling:
   history: 2000
