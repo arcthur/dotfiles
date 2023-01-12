@@ -49,7 +49,7 @@ brew "duf"          # Get info on mounted disks (better df)
 brew "zoxide"       # Auto-learning navigation (better cd)
 brew "tealdeer"     # Community-maintained docs (better man)
 brew "gping"        # Interactive ping tool (better ping)
-brew "sk"           # Fuzzy Finder (better fzf)
+brew "fzf"          # Fuzzy Finder
 
 # Editor
 brew "vim"          # Vi 'workalike' with many additional features
@@ -64,6 +64,7 @@ brew "gh"           # Interact with GitHub PRs, issues, repos
 brew "tokei"        # Count code (better cloc)
 
 # Programming languages
+brew "rust"         # Rust language
 brew "ruby"         # Ruby language
 brew "python"       # Python language
 brew "pyenv"        # Python version manager
