@@ -42,7 +42,6 @@ brew "fd"           # Find entries (better find)
 brew "exa"          # Listing files with info (better ls)
 brew "riggrep"      # The silver searcher (better grep)
 brew "bat"          # Output highlighting (better cat)
-brew 'most'         # Multi-window scroll pager (better less)
 brew "procs"        # Advanced process viewer (better ps)
 brew "dust"         # Display disk usage (better du)
 brew "duf"          # Get info on mounted disks (better df)
@@ -71,6 +70,7 @@ brew "pyenv"        # Python version manager
 brew "pipx"         # Execute binaries from Python packages in isolated environments
 brew "go"           # Go language
 brew "goenv"        # Go version manager
+brew "node"         # Node language
 brew "fnm"          # Node.js version manager
 brew "yarn"         # JavaScript package manager
 

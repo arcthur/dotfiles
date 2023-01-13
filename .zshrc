@@ -35,16 +35,9 @@ zstyle ':prezto:module:history' histfile "${ZDOTDIR:-$HOME}/.zsh_history"
 zstyle ':prezto:module:history' histsize 10000
 zstyle ':prezto:module:history' savehist 10000
 
-znap eval trapd00r/LS_COLORS "$( whence -a dircolors gdircolors ) -b LS_COLORS"
-
-znap source marlonrichert/zcolors
-znap eval   marlonrichert/zcolors "zcolors ${(q)LS_COLORS}"
-
 znap source zdharma-continuum/fast-syntax-highlighting
 znap source zdharma-continuum/history-search-multi-word
 znap source zsh-users/zsh-history-substring-search
-
-znap source unixorn/fzf-zsh-plugin
 
 # Lazy Load
 znap function _pyenv pyenv 'eval "$(pyenv init - --no-rehash)"'
@@ -163,6 +156,11 @@ fi
 # zoxide
 if [ "$(command -v zoxide)" ]; then
     eval "$(zoxide init zsh)"
+fi
+
+# fzf
+if [ "$(command -v fzf)" ] && [ -e "${XDG_CONFIG_HOME}/fzf/fzf.sh" ]; then
+    source "${XDG_CONFIG_HOME}/fzf/fzf.sh"
 fi
 
 # Fig post block. Keep at the bottom of this file.
