@@ -1,22 +1,29 @@
 [[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
 # Fig pre block. Keep at the top of this file.
 
-# Homebrew and Tools
-eval "$(zoxide init zsh)"      # A smarter cd command
-export SKIM_DEFAULT_COMMAND="fd --type f || git ls-tree -r --name-only HEAD || rg --files || find ."
+# Path
+# ---------------
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
 
-# zsh-snap {
-[[ -f ~/.znap/zsh-snap/znap.zsh ]] ||
-    git clone --depth 1 -- https://github.com/marlonrichert/zsh-snap.git ~/.znap/zsh-snap
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_CONFIG_DIR="/etc/xdg"
+export XDG_DATA_DIR="/usr/local/share/:/usr/share/"
 
-source ~/.znap/zsh-snap/znap.zsh
+export ZSNAP_HOME="$HOME/.znap"
+
+# Zsh-Snap
+# ---------------
+[[ -f $ZSNAP_HOME/zsh-snap/znap.zsh ]] ||
+    git clone --depth 1 -- https://github.com/marlonrichert/zsh-snap.git $ZSNAP_HOME/zsh-snap
+
+source $ZSNAP_HOME/zsh-snap/znap.zsh
 
 # Prompt
 znap eval starship 'starship init zsh --print-full-init'
 znap prompt
 
 # Load plugins
-#znap source marlonrichert/zsh-autocomplete
 znap source marlonrichert/zsh-edit
 
 ZSH_AUTOSUGGEST_STRATEGY=( history completion )
@@ -33,22 +40,26 @@ znap eval trapd00r/LS_COLORS "$( whence -a dircolors gdircolors ) -b LS_COLORS"
 znap source marlonrichert/zcolors
 znap eval   marlonrichert/zcolors "zcolors ${(q)LS_COLORS}"
 
-znap source zdharma-continuum/history-search-multi-word
 znap source zdharma-continuum/fast-syntax-highlighting
+znap source zdharma-continuum/history-search-multi-word
+znap source zsh-users/zsh-history-substring-search
+
+znap source unixorn/fzf-zsh-plugin
 
 # Lazy Load
-znap function _pyenv pyenv 'eval "$( pyenv init - --no-rehash )"'
+znap function _pyenv pyenv 'eval "$(pyenv init - --no-rehash)"'
 compctl -K _pyenv pyenv
 
-znap function _python_argcomplete pipx 'eval "$( register-python-argcomplete pipx  )"'
+znap function _python_argcomplete pipx 'eval "$(register-python-argcomplete pipx)"'
 complete -o nospace -o default -o bashdefault -F _python_argcomplete pipx
 
 znap function _fnm fnm 'eval "$(fnm env --use-on-cd)"'
 compctl -K _fnm fnm
 # }
 
-# Make VI mode as default for zsh {
-# https://dougblack.io/words/zsh-vi-mode.html
+# Editor
+# ---------------
+# Make VI mode as default for zsh
 bindkey -v
 
 function zle-line-init zle-keymap-select {
@@ -72,48 +83,87 @@ bindkey "^y" yank
 
 # Make mode change lag go away
 export KEYTIMEOUT=1
-# }
 
-# Use Neovim as "preferred editor" {
+# Use Neovim as "preferred editor"
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 
-# fix terminals to send ctrl-h to neovim correctly
-[[ -f "~/.$TERM.ti" ]] && tic ~/.$TERM.ti
-# }
-
-
-# Quickly Sudo {
-function sudo-command-line () {
-    [[ -z $BUFFER ]] && zle up-history
-    [[ $BUFFER != sudo\ * ]] && BUFFER="sudo $BUFFER"
-    zle end-of-line
-}
-zle -N sudo-command-line
-bindkey "^b" sudo-command-line
-# }
-
+# Chrome
+# ---------------
 alias chromews='sudo open -a Google\ Chrome --args --disable-web-security'
 
-# Better Version
-alias cat='bat'
-alias less='bat'
-alias find='fdfind'
-alias top='htop'
-alias ps='procs'
-alias grep='rg'
-alias df='duf'
-alias du='dust'
-alias ping='gping'
-alias man='tldr'
-alias cd='z'
+# Better Version Tools
+# ---------------
+# fd
+if [ "$(command -v fd)" ]; then
+    unalias -m 'find'
+    alias find='fd'
+fi
 
-alias ls='exa'
-alias l='exa -l --all --group-directories-first --git'
-alias ll='exa -l --all --all --group-directories-first --git'
-alias lt='exa -T --git-ignore --level=2 --group-directories-first'
-alias llt='exa -lT --git-ignore --level=2 --group-directories-first'
-alias lT='exa -T --git-ignore --level=4 --group-directories-first'
+# ripgrep
+if [ "$(command -v rg)" ]; then
+    unalias -m 'grep'
+    alias grep='rg -S'
+    alias rg='rg -S'
+fi
+
+# exa
+if [ "$(command -v exa)" ]; then
+    unalias -m 'ls'
+    alias ls='exa -l -s type'
+    alias ll='exa -l -a -s type --group-directories-first --git'
+    alias lt='exa -T -s type --git-ignore --level=2 --group-directories-first'
+    alias llt='exa -lT -s type --git-ignore --level=2 --group-directories-first'
+    alias lT='exa -T -s type --git-ignore --level=4 --group-directories-first'
+fi
+
+# bat
+if [ "$(command -v bat)" ]; then
+    unalias -m 'cat'
+    alias cat='bat --theme="Nord"'
+    alias bat='bat --theme="Nord"'
+fi
+
+# htop
+if [ "$(command -v htop)" ]; then
+    unalias -m 'top'
+    alias top='htop'
+fi
+
+# procs
+if [ "$(command -v procs)" ]; then
+    unalias -m 'ps'
+    alias ps='procs'
+fi
+
+# duf
+if [ "$(command -v duf)" ]; then
+    unalias -m 'df'
+    alias df='duf'
+fi
+
+# dust
+if [ "$(command -v dust)" ]; then
+    unalias -m 'du'
+    alias du='dust'
+fi
+
+# gping
+if [ "$(command -v gping)" ]; then
+    unalias -m 'ping'
+    alias ping='gping'
+fi
+
+# tldr
+if [ "$(command -v tldr)" ]; then
+    unalias -m 'man'
+    alias man='tldr'
+fi
+
+# zoxide
+if [ "$(command -v zoxide)" ]; then
+    eval "$(zoxide init zsh)"
+fi
 
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
