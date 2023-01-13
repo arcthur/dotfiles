@@ -73,6 +73,7 @@ brew "goenv"        # Go version manager
 brew "node"         # Node language
 brew "fnm"          # Node.js version manager
 brew "yarn"         # JavaScript package manager
+brew "jq"           # Command-line JSON processor
 
 # Mac OS X
 brew "mas"          # Mac App Store command-line interface

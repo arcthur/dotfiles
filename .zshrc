@@ -26,6 +26,8 @@ znap prompt
 # Load plugins
 znap source marlonrichert/zsh-edit
 
+znap source arcthur/zsh-fzf
+
 ZSH_AUTOSUGGEST_STRATEGY=( history completion )
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 znap source zsh-users/zsh-autosuggestions
@@ -156,11 +158,15 @@ fi
 # zoxide
 if [ "$(command -v zoxide)" ]; then
     eval "$(zoxide init zsh)"
-fi
-
-# fzf
-if [ "$(command -v fzf)" ] && [ -e "${XDG_CONFIG_HOME}/fzf/fzf.sh" ]; then
-    source "${XDG_CONFIG_HOME}/fzf/fzf.sh"
+    export _ZO_FZF_OPTS="--prompt 'dir >' \
+        --ansi \
+        --info=inline \
+        --layout=reverse \
+        --height=80% \
+        --preview='exa -l -s type' \
+        --color='hl:148,hl+:154,pointer:032,marker:010,bg+:237,gutter:008'"
+    alias cd='z'
+    alias fzf-dir='zi'
 fi
 
 # Fig post block. Keep at the bottom of this file.
