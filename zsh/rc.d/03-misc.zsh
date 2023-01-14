@@ -30,13 +30,3 @@ znap source zdharma-continuum/fast-syntax-highlighting
 # Histotry search
 znap source zdharma-continuum/history-search-multi-word
 znap source zsh-users/zsh-history-substring-search
-
-# Lazy Load
-znap function _pyenv pyenv 'eval "$(pyenv init - --no-rehash)"'
-compctl -K _pyenv pyenv
-
-znap function _python_argcomplete pipx 'eval "$(register-python-argcomplete pipx)"'
-complete -o nospace -o default -o bashdefault -F _python_argcomplete pipx
-
-znap function _fnm fnm 'eval "$(fnm env --use-on-cd)"'
-compctl -K _fnm fnm

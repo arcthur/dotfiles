@@ -1,10 +1,3 @@
-# Zsh-Snap
-# ---------------
-[[ -f $ZSNAP_HOME/zsh-snap/znap.zsh ]] ||
-    git clone --depth 1 -- https://github.com/marlonrichert/zsh-snap.git $ZSNAP_HOME/zsh-snap
-
-source $ZSNAP_HOME/zsh-snap/znap.zsh
-
 # Config
 # ---------------
 # directory
@@ -61,4 +54,3 @@ local -a files=( $HISTFILE(|\ <->)(OL) )
 
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
-
