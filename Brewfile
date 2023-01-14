@@ -123,7 +123,6 @@ cask "karabiner-elements"
 cask "font-hack-nerd-font"
 cask "alacritty"
 cask "visual-studio-code"
-cask "fig"
 
 # MAC APPSTORE APPS
 # ---------------
