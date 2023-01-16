@@ -118,6 +118,7 @@ cask "betterdisplay"
 cask "the-unarchiver"
 cask "clashx"
 cask "karabiner-elements"
+cask "baiduinput"
 
 # Development
 cask "font-hack-nerd-font"
