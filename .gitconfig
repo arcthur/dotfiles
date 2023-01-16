@@ -10,18 +10,65 @@
     features = side-by-side line-numbers decorations
     whitespace-error-style = 22 reverse
 [delta "decorations"]
-    commit-decoration-style = bold yellow box ul
-    file-style = bold yellow ul
-    file-decoration-style = none
+    commit-decoration-style = 232 130 box
+    commit-style = 232 bold italic 130
+    dark = true
+    file-added-label = [+]
+    file-copied-label = [C]
+    file-decoration-style = yellow ul
+    file-modified-label = [M]
+    file-removed-label = [-]
+    file-renamed-label = [R]
+    file-style = yellow
+    hunk-header-decoration-style = box blue
+    hunk-header-file-style = bold reverse purple
+    hunk-header-line-number-style = bold blue
+    hunk-header-style = line-number
+
+    # the following is from --diff-so-fancy emulation
+    minus-style                   = bold red
+    minus-non-emph-style          = bold red
+    minus-emph-style              = bold red 52
+    minus-empty-line-marker-style = normal "#3f0001"
+    zero-style                    = normal
+    plus-style                    = bold green
+    plus-non-emph-style           = bold green
+    plus-emph-style               = bold green 22
+    plus-empty-line-marker-style  = normal "#002800"
 [merge]
     conflictstyle = diff3
 [mergetool]
     keepBackup = false
     prompt = false
 [diff]
-    colorMoved = zebra
+    tool = nvimdiff
+[difftool "nvimdiff"]
+	cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "nvimdiff"]
+	cmd = nvim -d \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[push]
+    default = matching
+[apply]
+    whitespace = nowarn
+[rerere]
+    enabled = true
+    autoupdate = true
+[credential]
+    helper = store
+[user]
+    name = arcthur
+    email = arthurtemptation@gmail.com
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
 [hub]
     protocol = https
+[github]
+	user = arcthur
 [alias]
     # add
     a = add                           # add
@@ -96,20 +143,3 @@
 
     # submodule
     su = submodule foreach git pull origin master
-[push]
-    default = matching
-[apply]
-    whitespace = nowarn
-[rerere]
-    enabled = true
-    autoupdate = true
-[credential]
-    helper = store
-[user]
-    name = arcthur
-    email = arthurtemptation@gmail.com
-[filter "lfs"]
-    clean = git-lfs clean -- %f
-    smudge = git-lfs smudge -- %f
-    process = git-lfs filter-process
-    required = true
