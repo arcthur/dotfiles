@@ -165,61 +165,13 @@
                                 ]
                             },
                             {
-                                "description": "option + h = mouse left",
+                                "description": "option + h = mouse wheel left",
                                 "type": "basic",
                                 "from": {
                                     "key_code": "h",
                                     "modifiers": {
                                         "mandatory": [
                                             "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "x": -1600
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + option + h = mouse left fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "h",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "x": -3200
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + control + h = mouse wheel left",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "h",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_control",
                                             "right_command",
                                             "right_control",
                                             "right_shift",
@@ -236,14 +188,14 @@
                                 ]
                             },
                             {
-                                "description": "shift + command + h = mouse wheel left fast",
+                                "description": "shift + option + h = mouse wheel left fast",
                                 "type": "basic",
                                 "from": {
                                     "key_code": "h",
                                     "modifiers": {
                                         "mandatory": [
                                             "left_shift",
-                                            "left_command",
+                                            "left_option",
                                             "right_command",
                                             "right_control",
                                             "right_shift",
@@ -389,61 +341,13 @@
                                 ]
                             },
                             {
-                                "description": "option + j = mouse down",
+                                "description": "option + j = mouse wheel down",
                                 "type": "basic",
                                 "from": {
                                     "key_code": "j",
                                     "modifiers": {
                                         "mandatory": [
                                             "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "y": 1600
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + option + j = mouse down fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "j",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "y": 3200
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + control + j = mouse wheel down",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "j",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_control",
                                             "right_command",
                                             "right_control",
                                             "right_shift",
@@ -460,14 +364,14 @@
                                 ]
                             },
                             {
-                                "description": "shift + command + j = mouse wheel down fast",
+                                "description": "shift + option + j = mouse wheel down fast",
                                 "type": "basic",
                                 "from": {
                                     "key_code": "j",
                                     "modifiers": {
                                         "mandatory": [
                                             "left_shift",
-                                            "left_command",
+                                            "left_option",
                                             "right_command",
                                             "right_control",
                                             "right_shift",
@@ -614,61 +518,13 @@
                                 ]
                             },
                             {
-                                "description": "option + k = mouse up",
+                                "description": "option + k = mouse wheel up",
                                 "type": "basic",
                                 "from": {
                                     "key_code": "k",
                                     "modifiers": {
                                         "mandatory": [
                                             "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "y": -1600
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + option + k = mouse up fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "k",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "y": -3200
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + control + k = mouse wheel up",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "k",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_control",
                                             "right_command",
                                             "right_control",
                                             "right_shift",
@@ -685,14 +541,14 @@
                                 ]
                             },
                             {
-                                "description": "shift + command + k = mouse wheel up fast",
+                                "description": "shift + option + k = mouse wheel up fast",
                                 "type": "basic",
                                 "from": {
                                     "key_code": "k",
                                     "modifiers": {
                                         "mandatory": [
                                             "left_shift",
-                                            "left_command",
+                                            "left_option",
                                             "right_command",
                                             "right_control",
                                             "right_shift",
@@ -827,61 +683,13 @@
                                 ]
                             },
                             {
-                                "description": "option + l = mouse move right",
+                                "description": "option + l = mouse wheel right",
                                 "type": "basic",
                                 "from": {
                                     "key_code": "l",
                                     "modifiers": {
                                         "mandatory": [
                                             "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "x": 1600
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + option + l = mouse move right fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "l",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "x": 3200
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + control + l = mouse wheel right",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "l",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_control",
                                             "right_command",
                                             "right_control",
                                             "right_shift",
@@ -898,14 +706,14 @@
                                 ]
                             },
                             {
-                                "description": "shift + command + l = mouse wheel right fast",
+                                "description": "shift + option + l = mouse wheel right fast",
                                 "type": "basic",
                                 "from": {
                                     "key_code": "l",
                                     "modifiers": {
                                         "mandatory": [
                                             "left_shift",
-                                            "left_command",
+                                            "left_option",
                                             "right_command",
                                             "right_control",
                                             "right_shift",
@@ -1041,97 +849,6 @@
                                 ]
                             },
                             {
-                                "description": "option + u = mouse left click",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "u",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "pointing_button": "button1"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + option + u = mouse left click",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "u",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "pointing_button": "button1"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + control + u = mouse wheel left (rev)",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "u",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_control",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "horizontal_wheel": -64
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + command + u = mouse wheel left (rev) fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "u",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "horizontal_wheel": -128
-                                        }
-                                    }
-                                ]
-                            },
-                            {
                                 "description": " u = page_up",
                                 "type": "basic",
                                 "from": {
@@ -1259,97 +976,6 @@
                                 ]
                             },
                             {
-                                "description": "option + i = mouse right click",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "i",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "pointing_button": "button2"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + option + i = mouse move down fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "i",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "pointing_button": "button2"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + control + i = mouse wheel down (rev)",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "i",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_control",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "vertical_wheel": -64
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + command + i = mouse wheel down (rev) fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "i",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "vertical_wheel": -128
-                                        }
-                                    }
-                                ]
-                            },
-                            {
                                 "description": " i = home",
                                 "type": "basic",
                                 "from": {
@@ -1470,97 +1096,6 @@
                                 ]
                             },
                             {
-                                "description": "option + o = mouse backward",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "o",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "pointing_button": "button4"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + option + o = mouse backward",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "o",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "pointing_button": "button4"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + control + o = mouse wheel up (rev)",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "o",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_control",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "vertical_wheel": 64
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + command + o = mouse wheel up (rev) fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "o",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "vertical_wheel": 128
-                                        }
-                                    }
-                                ]
-                            },
-                            {
                                 "description": " o = end",
                                 "type": "basic",
                                 "from": {
@@ -1676,97 +1211,6 @@
                                 ]
                             },
                             {
-                                "description": "option + p = mouse forward",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "p",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "pointing_button": "button5"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + option + p = mouse forward",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "p",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "pointing_button": "button5"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + control + p = mouse wheel right (rev)",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "p",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_control",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "horizontal_wheel": 64
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + command + p = mouse wheel right (rev) fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "p",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "horizontal_wheel": 128
-                                        }
-                                    }
-                                ]
-                            },
-                            {
                                 "description": " p = page_down",
                                 "type": "basic",
                                 "from": {
@@ -1783,688 +1227,6 @@
                                 "to": [
                                     {
                                         "key_code": "page_down"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "control + shift + enter = button1 (mouse left click)",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "return_or_enter",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_control",
-                                            "left_shift",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "pointing_button": "button1"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "enter = button1 (mouse left click)",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "return_or_enter",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "pointing_button": "button1"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "command + enter = button2 (mouse right click)",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "return_or_enter",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_command",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "pointing_button": "button2"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "option + enter = button3 (mouse middle click)",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "return_or_enter",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "pointing_button": "button3"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + enter = button4 (mouse back)",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "return_or_enter",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "pointing_button": "button4"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "control + enter = button5 (mouse forward)",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "return_or_enter",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_control",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "pointing_button": "button5"
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + up arrow = mouse wheel up",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "up_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "vertical_wheel": -64
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + down arrow = mouse wheel down",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "down_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "vertical_wheel": 64
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + left arrow = mouse wheel left",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "left_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "horizontal_wheel": 64
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + right arrow = mouse wheel right",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "right_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "horizontal_wheel": -64
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + option + up arrow = mouse wheel up slow",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "up_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "vertical_wheel": -32
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + option + down arrow = mouse wheel down slow",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "down_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "vertical_wheel": 32
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + option + left arrow = mouse wheel left slow",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "left_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "horizontal_wheel": 32
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + option + right arrow = mouse wheel right slow",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "right_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "horizontal_wheel": -32
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + command + up arrow = mouse wheel up fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "up_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "vertical_wheel": 256
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + command + down arrow = mouse wheel down fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "down_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "vertical_wheel": -256
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + command + left arrow = mouse wheel left fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "left_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "horizontal_wheel": 256
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "shift + command + right arrow = mouse wheel right fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "right_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "horizontal_wheel": -256
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "option + up arrow = mouse up slow",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "up_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "y": -800
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "option + down arrow = mouse down slow",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "down_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "y": 800
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "option + left arrow = mouse left slow",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "left_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "x": -800
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "option + right arrow = mouse right slow",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "right_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_option",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "x": 800
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "command + up arrow = mouse up fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "up_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_command",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "y": -4200
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "command + down arrow = mouse down fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "down_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_command",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "y": 4200
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "command + left arrow = mouse left fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "left_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_command",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "x": -4200
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "command + right arrow = mouse right fast",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "right_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_command",
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "x": 4200
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "up arrow = mouse up",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "up_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "y": -1600
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "down arrow = mouse down",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "down_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "y": 1600
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "left arrow = mouse left",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "left_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "x": -1600
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "description": "right arrow = mouse right",
-                                "type": "basic",
-                                "from": {
-                                    "key_code": "right_arrow",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_command",
-                                            "right_control",
-                                            "right_shift",
-                                            "right_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "mouse_key": {
-                                            "x": 1600
-                                        }
                                     }
                                 ]
                             }
