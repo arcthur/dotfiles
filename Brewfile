@@ -49,6 +49,7 @@ brew "zoxide"       # Auto-learning navigation (better cd)
 brew "tealdeer"     # Community-maintained docs (better man)
 brew "gping"        # Interactive ping tool (better ping)
 brew "fzf"          # Fuzzy Finder
+brew "mcfly"        # Fly through your shell history
 
 # Editor
 brew "vim"          # Vi 'workalike' with many additional features

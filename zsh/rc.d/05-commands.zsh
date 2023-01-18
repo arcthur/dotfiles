@@ -89,3 +89,9 @@ if [ "$(command -v zoxide)" ]; then
     alias fzf-dir='zi'
 fi
 
+# mcfly
+if [ "$(command -v mcfly)" ]; then
+    export MCFLY_KEY_SCHEME=vim
+    export MCFLY_FUZZY=3
+    export MCFLY_RESULTS=100
+fi
