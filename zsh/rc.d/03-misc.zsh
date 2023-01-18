@@ -15,6 +15,7 @@ znap source marlonrichert/zsh-hist
 
 # Fzf
 znap source arcthur/zsh-fzf
+znap source Aloxaf/fzf-tab
 
 # Auto suggestions
 ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=()
