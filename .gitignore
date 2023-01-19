@@ -46,4 +46,4 @@ cscope.in.out
 cscope.po.out
 
 # Zsh
-.zwc
+*.zwc
