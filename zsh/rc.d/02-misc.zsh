@@ -24,3 +24,5 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 ZSH_AUTOSUGGEST_MANUAL_REBIND='1'
 ZSH_AUTOSUGGEST_HISTORY_IGNORE=$'(*\n*|?(#c80,)|*\\#:hist:push-line:)'
 
+# fast-syntax-highlighting
+export FAST_THEME_NAME='clean'
