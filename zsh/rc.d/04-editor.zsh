@@ -21,6 +21,13 @@ bindkey '^w' backward-kill-word
 bindkey '^e' end-of-line
 bindkey '^a' beginning-of-line
 bindkey "^y" yank
+bindkey ' '  magic-space  # [Space] Do history expansion
+
+# Trim trailing newline from pasted text
+bracketed-paste() {
+    zle .$WIDGET && LBUFFER=${LBUFFER%$'\n'}
+}
+zle -N bracketed-paste
 
 # Make mode change lag go away
 export KEYTIMEOUT=1

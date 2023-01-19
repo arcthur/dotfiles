@@ -43,11 +43,11 @@
 [diff]
     tool = nvimdiff
 [difftool "nvimdiff"]
-	cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
-	path = 
+    cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
+    path = 
 [mergetool "nvimdiff"]
-	cmd = nvim -d \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+    cmd = nvim -d \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+    trustExitCode = true
 [push]
     default = matching
 [apply]
@@ -68,78 +68,4 @@
 [hub]
     protocol = https
 [github]
-	user = arcthur
-[alias]
-    # add
-    a = add                           # add
-    aa = add --all
-    chunkyadd = add --patch           # stage commits chunk by chunk
-
-    # branch
-    b = branch -v                     # branch (verbose)
-
-    # commit
-    c = commit -m                     # commit with message
-    ca = commit -am                   # commit all with message
-    ci = commit                       # commit
-    amend = commit --amend            # ammend your last commit
-    ammend = commit --amend           # ammend your last commit
-
-    # checkout
-    co = checkout                     # checkout
-    nb = checkout -b                  # create and switch to a new branch (mnemonic: "git new branch branchname...")
-
-    # cherry-pick
-    cp = cherry-pick -x               # grab a change from a branch
-
-    # diff
-    d = diff                          # diff unstaged changes
-    dc = diff --cached                # diff staged changes
-    last = diff @^                 # diff last committed change
-
-    # log
-    lo = log --date=local --pretty=full --stat
-    changes = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\" --name-status
-    short = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
-    changelog = log --pretty=format:\" * %s\"
-    shortnocolor = log --pretty=format:\"%h %cr %cn %s\"
-    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-
-    # pull
-    pl = pull                         # pull
-
-    # push
-    ps = push                         # push
-    pu = push origin master
-
-    # rebase
-    rc = rebase --continue            # continue rebase
-    rs = rebase --skip                # skip rebase
-
-    # remote
-    r = remote -v                     # show remotes (verbose)
-
-    # reset
-    unstage = reset @                 # remove files from index (tracking)
-    uncommit = reset --soft @^        # go back before last commit, with files in uncommitted state
-    filelog = log -u                  # show changes to a file
-    mt = mergetool                    # fire up the merge tool
-    untrack = rm -r --cached
-    merge-branch-file = checkout --merge
-
-    # stash
-    ss = stash                        # stash changes
-    sl = stash list                   # list stashes
-    sa = stash apply                  # apply stash (restore changes)
-    sd = stash drop                   # drop stashes (destory changes)
-
-    # status
-    s = status                        # status
-    st = status                       # status
-    stat = status                     # status
-
-    # tag
-    t = tag -n                        # show tags with <n> lines of each tag message
-
-    # submodule
-    su = submodule foreach git pull origin master
+    user = arcthur

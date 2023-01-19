@@ -35,8 +35,8 @@ fi
 # bat
 if [ "$(command -v bat)" ]; then
     unalias -m 'cat'
-    alias cat='bat --theme="Nord"'
-    alias bat='bat --theme="Nord"'
+    export BAT_THEME='OneHalfDark'
+    alias cat='bat'
 fi
 
 # htop
@@ -72,6 +72,8 @@ fi
 # tldr
 if [ "$(command -v tldr)" ]; then
     unalias -m 'man'
+    export MANPAGER='sh -c "col -bx | bat -pl man --theme=Monokai\ Extended"'
+    export MANROFFOPT='-c'
     alias man='tldr'
 fi
 
@@ -94,4 +96,9 @@ if [ "$(command -v mcfly)" ]; then
     export MCFLY_KEY_SCHEME=vim
     export MCFLY_FUZZY=3
     export MCFLY_RESULTS=100
+fi
+
+# starship
+if [ "$(command -v starship)" ]; then
+    eval "$(starship init zsh)"
 fi

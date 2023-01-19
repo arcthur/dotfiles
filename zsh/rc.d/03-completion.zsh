@@ -1,22 +1,5 @@
-# Completion
+# Completion from prezto
 # ---------------
-znap source zsh-users/zsh-completions
-
-# Add zsh-completions to $fpath.
-fpath=(${0:h}/external/src $fpath)
-
-# Add completion for keg-only brewed curl on macOS when available.
-if (( $+commands[brew] )); then
-  brew_prefix=${HOMEBREW_PREFIX:-${HOMEBREW_REPOSITORY:-$commands[brew]:A:h:h}}
-  # $HOMEBREW_PREFIX defaults to $HOMEBREW_REPOSITORY but is explicitly set to
-  # /usr/local when $HOMEBREW_REPOSITORY is /usr/local/Homebrew.
-  # https://github.com/Homebrew/brew/blob/2a850e02d8f2dedcad7164c2f4b95d340a7200bb/bin/brew#L66-L69
-  [[ $brew_prefix == '/usr/local/Homebrew' ]] && brew_prefix=$brew_prefix:h
-  fpath=($brew_prefix/opt/curl/share/zsh/site-functions(/N) $fpath)
-  unset brew_prefix
-fi
-
-# Options
 setopt complete_in_word     # Complete from both ends of a word.
 setopt always_to_end        # Move cursor to the end of a completed word.
 setopt path_dirs            # Perform path search even on command names with slashes.
@@ -26,33 +9,19 @@ setopt auto_param_slash     # If completed parameter is a directory, add a trail
 unsetopt menu_complete      # Do not autoselect the first completion entry.
 unsetopt flow_control       # Disable start/stop characters in shell editor.
 
-# Variables
-# Standard style used by default for 'list-colors'
-LS_COLORS=${LS_COLORS:-'di=34:ln=35:so=32:pi=33:ex=31:bd=36;01:cd=33;01:su=31;40;07:sg=36;40;07:tw=32;40;07:ow=33;40;07:'}
-
-# Initialization
-# Load and initialize the completion system ignoring insecure directories with a
-# cache time of 20 hours, so it should almost always regenerate the first time a
-# shell is opened each day.
-autoload -Uz compinit
-_comp_path="${XDG_CACHE_HOME}/zcompdump"
-# #q expands globs in conditional expressions
-if [[ $_comp_path(#qNmh-20) ]]; then
-  # -C (skip function check) implies -i (skip security check).
-  compinit -C -d "$_comp_path"
-else
-  mkdir -p "$_comp_path:h"
-  compinit -i -d "$_comp_path"
-  # Keep $_comp_path younger than cache time even if it isn't regenerated.
-  touch "$_comp_path"
-fi
-unset _comp_path
-
+compdef _galiases -first-
+_galiases() {
+    if [[ $PREFIX == :* ]] {
+        local des=()
+        for k v in "${(@kv)galiases}"; des+=("\\:${k:1}:galias: '$v'")
+        _describe 'alias' des
+    }
+}
 # Complete . and .. special directories
-zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' special-dirs false
+zstyle ':completion:*' sort false
 
-# Styles
-# Defaults.
+# Styles Defaults.
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*:default' list-prompt '%S%M matches%s'
 
@@ -69,13 +38,10 @@ zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*:matches' group 'yes'
 zstyle ':completion:*:options' description 'yes'
 zstyle ':completion:*:options' auto-description '%d'
-zstyle ':completion:*:corrections' format ' %F{green}-- %d (errors: %e) --%f'
-zstyle ':completion:*:descriptions' format ' %F{yellow}-- %d --%f'
-zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
-zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
-zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' format '%d'
 zstyle ':completion:*' group-name ''
-zstyle ':completion:*' verbose yes
+zstyle ':completion:*' verbose true
 
 # Fuzzy match mistyped completions.
 zstyle ':completion:*' completer _complete _match _approximate
@@ -150,7 +116,10 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' l
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
-# preview directory's content with exa when completing cd
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
-# switch group using `,` and `.`
+# FZF TAB
 zstyle ':fzf-tab:*' switch-group ',' '.'
+zstyle ':fzf-tab:complete:kill:argument-rest' fzf-preview 'ps --pid=$word -o cmd --no-headers -w -w'
+zstyle ':fzf-tab:complete:kill:argument-rest' fzf-flags '--preview-window=down:3:wrap'
+zstyle ':fzf-tab:complete:kill:*' popup-pad 0 3
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:cd:*' popup-pad 30 0

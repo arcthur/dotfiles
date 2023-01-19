@@ -3,12 +3,12 @@ export XDG_CONFIG_DIR="/etc/xdg"
 export XDG_DATA_DIR="/usr/local/share/:/usr/share/"
 export XDG_DATA_HOME="$HOME/.local/share"
 
-export ZSNAP_HOME="$HOME/.znap"
+export ZGENOM_HOME="$HOME/.zgenom"
 
-[[ -f $ZSNAP_HOME/zsh-snap/znap.zsh ]] ||
-    git clone --depth 1 -- https://github.com/marlonrichert/zsh-snap.git $ZSNAP_HOME/zsh-snap
+[[ -f $ZGENOM_HOME/zgenom.zsh ]] ||
+    git clone --depth 1 -- https://github.com/jandamm/zgenom $ZGENOM_HOME
 
-source $ZSNAP_HOME/zsh-snap/znap.zsh
+source $ZGENOM_HOME/zgenom.zsh
 
 () {
   local __file__=
