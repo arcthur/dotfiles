@@ -72,8 +72,6 @@ fi
 # tldr
 if [ "$(command -v tldr)" ]; then
     unalias -m 'man'
-    export MANPAGER='sh -c "col -bx | bat -pl man --theme=Monokai\ Extended"'
-    export MANROFFOPT='-c'
     alias man='tldr'
 fi
 
