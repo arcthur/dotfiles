@@ -51,6 +51,7 @@ brew "gping"        # Interactive ping tool (better ping)
 brew "broot"        # Navigate directory trees (better tree)
 brew "fzf"          # Fuzzy Finder
 brew "mcfly"        # Fly through your shell history
+brew "topgrade"     # Upgrade everything
 
 # Editor
 brew "vim"          # Vi 'workalike' with many additional features
@@ -121,6 +122,7 @@ cask "the-unarchiver"
 cask "clashx"
 cask "karabiner-elements"
 cask "baiduinput"
+cask "bitwarden"
 
 # Development
 cask "font-hack-nerd-font"
