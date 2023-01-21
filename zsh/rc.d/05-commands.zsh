@@ -7,6 +7,7 @@ if [ "$(command -v nvim)" ]; then
     export VISUAL=nvim
     export EDITOR="$VISUAL"
     alias vim='nvim'
+    alias vimup='nvim +PackerSync +TSUpdate'
 fi
 
 # fd

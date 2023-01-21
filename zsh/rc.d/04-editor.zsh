@@ -23,12 +23,25 @@ bindkey '^a' beginning-of-line
 bindkey "^y" yank
 bindkey ' '  magic-space  # [Space] Do history expansion
 
+# Make mode change lag go away
+export KEYTIMEOUT=1
+
+fancy-ctrl-z () {
+  if [[ $#BUFFER -eq 0 ]]; then
+    BUFFER="fg"
+    zle accept-line
+  else
+    zle push-input
+    zle clear-screen
+  fi
+}
+
+# easy vim/terminal switch
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z
+
 # Trim trailing newline from pasted text
 bracketed-paste() {
     zle .$WIDGET && LBUFFER=${LBUFFER%$'\n'}
 }
 zle -N bracketed-paste
-
-# Make mode change lag go away
-export KEYTIMEOUT=1
-
