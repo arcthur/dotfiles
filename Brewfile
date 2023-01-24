@@ -118,7 +118,7 @@ cask "balenaetcher"
 
 # Utilities
 cask "betterdisplay"
-cask "the-unarchiver"
+cask "keka"
 cask "clashx"
 cask "karabiner-elements"
 cask "baiduinput"
