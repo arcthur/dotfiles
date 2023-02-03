@@ -56,6 +56,7 @@ brew "topgrade"     # Upgrade everything
 # Editor
 brew "vim"          # Vi 'workalike' with many additional features
 brew "neovim"       # New vim
+brew "glow"         # Markdown reader
 
 # General development tools
 brew "cmake"        # Cross-platform make
@@ -107,6 +108,7 @@ cask "sigil"
 cask "raycast"
 cask "notion"
 cask "logseq"
+cask "eudic"
 
 # IM
 cask "wechat"
@@ -128,6 +130,7 @@ cask "bitwarden"
 cask "font-hack-nerd-font"
 cask "alacritty"
 cask "visual-studio-code"
+cask "docker"
 
 # MAC APPSTORE APPS
 # ---------------
