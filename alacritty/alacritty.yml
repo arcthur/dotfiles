@@ -17,12 +17,15 @@ font:
     style: Regular
 
   bold:
+    family: Hack Nerd Font Mono
     style: Bold
 
   italic:
+    family: Hack Nerd Font Mono
     style: Italic
 
   bold_italic:
+    family: Hack Nerd Font Mono
     style: Bold Italic
 
   size: 12
@@ -31,6 +34,13 @@ colors:
   primary:
     background: "#282828"
     foreground: "#ebdbb2"
+  
+  cursor:
+    cursor: '#458588'
+
+  selection:
+    text: CellForeground
+    background: '#29263c'
 
   # Normal colors
   normal:
@@ -55,9 +65,9 @@ colors:
     white: "#ebdbb2"
 
 window:
-  decorations: "none"
+  decorations: 'none'
+  startup_mode: SimpleFullscreen
   dynamic_padding: true
-  startup_mode: Windowed
   opacity: 0.9
 
 scrolling:
@@ -68,6 +78,8 @@ scrolling:
 
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
+  text: CellForeground
+  background: '#29263c'
   # When set to `true`, selected text will be copied to the primary clipboard.
   save_to_clipboard: true
 
@@ -79,10 +91,15 @@ cursor:
   # If this is `true`, the cursor will be rendered as a hollow box when the window is not focused.
   unfocused_hollow: true
 
+# If this is `true`, the bold text be rendered as bright colors
+draw_bold_text_with_bright_colors: false
+
 # Setup some amazing custom key bindings here - Best thing is you can setup key bindings
 # using Mac's 'command' to control your tmux.
 # A great reference: https://arslan.io/2018/02/05/gpu-accelerated-terminal-alacritty/#make-alacritty-feel-like-iterm2
 key_bindings:
+  - { key: R, mods: Command, mode: ~Vi|~Search, chars: "\x0c" }
+  - { key: R, mods: Command, mode: ~Vi|~Search, action: ClearHistory }
   # Use command + [ - to go to previous tmux window
   - { key: LBracket, mods: Command, chars: "\x5c\x70" }
   # Use command + ] - to go to previous tmux window
