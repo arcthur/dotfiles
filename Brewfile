@@ -52,6 +52,7 @@ brew "broot"        # Navigate directory trees (better tree)
 brew "fzf"          # Fuzzy Finder
 brew "mcfly"        # Fly through your shell history
 brew "topgrade"     # Upgrade everything
+brew "thefuck"      # Magnificent app which corrects your previous console command
 
 # Editor
 brew "vim"          # Vi 'workalike' with many additional features
