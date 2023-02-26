@@ -144,6 +144,7 @@ proxy-groups:
   - name: Global_Classical
     type: select
     proxies:
+      - 美国节点
       - 自动选择
       - DIRECT
 
@@ -153,7 +154,7 @@ proxy-groups:
       - HK
     proxies:
       - DIRECT
-      
+
   - name: 日本节点
     type: select
     use:
