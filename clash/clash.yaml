@@ -41,7 +41,7 @@ dns:
 proxy-providers:
   All:
     type: http
-    url: "https://api.v1.mk/sub?target=clash&url=$URL&list=true&udp=true"
+    url: "https://api.10101.io/sub?target=clash&url=$URL&list=true&udp=true"
     interval: 172800
     path: ./all.yaml
 
@@ -149,42 +149,29 @@ proxy-groups:
       - DIRECT
 
   - name: 香港节点
-    type: select
+    type: url-test
     use:
       - HK
-    proxies:
-      - DIRECT
-
   - name: 日本节点
-    type: select
+    type: url-test
     use:
       - JP
-    proxies:
-      - DIRECT
   - name: 台湾节点
-    type: select
+    type: url-test
     use:
       - TW
-    proxies:
-      - DIRECT
   - name: 新加坡节点
-    type: select
+    type: url-test
     use:
       - SG
-    proxies:
-      - DIRECT
   - name: 美国节点
-    type: select
+    type: url-test
     use:
       - US
-    proxies:
-      - DIRECT
   - name: 其它节点
-    type: select
+    type: url-test
     use:
       - Other
-    proxies:
-      - DIRECT
 
 rule-providers:
   Direct:
