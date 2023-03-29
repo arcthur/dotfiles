@@ -54,3 +54,23 @@ local -a files=( $HISTFILE(|\ <->)(OL) )
 
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
+
+function proxy_on() {
+  export http_proxy=http://127.0.0.1:7890
+  export https_proxy=http://127.0.0.1:7890
+  export all_proxy=socks5://127.0.0.1:7890
+  eval "$(npm config set proxy http://127.0.0.1:7890)"
+  eval "$(npm config set https-proxy http://127.0.0.1:7890)"
+  eval "$(git config --global http.proxy 'socks5://127.0.0.1:7890')"
+  eval "$(git config --global https.proxy 'socks5://127.0.0.1:7890')"
+  echo -e "Proxy On"
+}
+
+function proxy_off(){
+  unset http_proxy https_proxy all_proxy
+  eval "$(npm config delete proxy)"
+  eval "$(npm config delete https-proxy)"
+  eval "$(git config --global --unset http.proxy)"
+  eval "$(git config --global --unset https.proxy)"
+  echo -e "Proxy Off"
+}

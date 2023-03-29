@@ -131,7 +131,7 @@ cask "bitwarden"
 cask "font-hack-nerd-font"
 cask "alacritty"
 cask "visual-studio-code"
-cask "docker"
+# cask "docker" use OrbStack instead
 
 # MAC APPSTORE APPS
 # ---------------

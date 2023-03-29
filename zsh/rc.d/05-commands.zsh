@@ -106,3 +106,8 @@ fi
 if [ "$(command -v starship)" ]; then
     eval "$(starship init zsh)"
 fi
+
+# fnm
+if [ "$(command -v fnm)" ]; then
+    eval "$(fnm env --use-on-cd)"
+fi
