@@ -131,7 +131,7 @@ cask "bitwarden"
 cask "font-hack-nerd-font"
 cask "alacritty"
 cask "visual-studio-code"
-# cask "docker" use OrbStack instead
+cask "orbstack"
 
 # MAC APPSTORE APPS
 # ---------------
@@ -139,3 +139,4 @@ mas "Keynote", id: 409183694
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Things 3", id: 904280696
+mas "OpenCat", id: 6445999201
