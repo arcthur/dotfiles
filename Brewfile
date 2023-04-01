@@ -7,6 +7,7 @@ tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "homebrew/services"
+tap "afutured/openai-translator"
 
 # BINARIES
 # ---------------
@@ -126,6 +127,7 @@ cask "clashx"
 cask "karabiner-elements"
 cask "baiduinput"
 cask "bitwarden"
+cask "openai-translator"
 
 # Development
 cask "font-hack-nerd-font"
