@@ -135,6 +135,9 @@ cask "alacritty"
 cask "visual-studio-code"
 cask "orbstack"
 
+# Invest
+cask "futubull"
+
 # MAC APPSTORE APPS
 # ---------------
 mas "Keynote", id: 409183694
