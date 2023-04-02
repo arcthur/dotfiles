@@ -111,3 +111,6 @@ fi
 if [ "$(command -v fnm)" ]; then
     eval "$(fnm env --use-on-cd)"
 fi
+
+# orbstack
+source ~/.orbstack/shell/init.zsh 2>/dev/null || :
