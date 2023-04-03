@@ -145,3 +145,4 @@ mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Things 3", id: 904280696
 mas "OpenCat", id: 6445999201
+mas "Just Focus", id: 1135331024
