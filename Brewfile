@@ -125,7 +125,7 @@ cask "betterdisplay"
 cask "keka"
 cask "clashx"
 cask "karabiner-elements"
-cask "baiduinput"
+cask "squirrel"
 cask "bitwarden"
 cask "openai-translator"
 

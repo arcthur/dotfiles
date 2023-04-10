@@ -85,31 +85,40 @@ proxy-providers:
       enable: true
       interval: 3600
       url: http://www.gstatic.com/generate_204
+  UK:
+    type: file
+    path: ./all.yaml
+    filter: 英国|UK|uk|(?i)England
+    health-check:
+      enable: true
+      interval: 3600
+      url: http://www.gstatic.com/generate_204
   Other:
     type: file
     path: ./all.yaml
-    filter: 韩国|印度|巴西|阿根廷|英国|澳门|土耳其|挪威|瑞士|俄罗斯|瑞典|爱尔兰|法国|菲律宾|越南|泰国|印度尼西亚|德国|英国|荷兰|乌克兰
+    filter: 韩国|印度|巴西|阿根廷|澳门|土耳其|挪威|瑞士|俄罗斯|瑞典|爱尔兰|法国|菲律宾|越南|泰国|印度尼西亚|德国|英国|荷兰|乌克兰
     health-check:
       enable: true
       interval: 3600
       url: http://www.gstatic.com/generate_204
 
 proxy-groups:
-  - name: 自动选择
+  - name: Auto_Select
     type: select
     proxies:
-      - 香港节点
-      - 新加坡节点
-      - 台湾节点
-      - 美国节点
-      - 日本节点
-      - 其它节点
+      - HK_Nodes
+      - SG_Nodes
+      - TW_Nodes
+      - US_Nodes
+      - JP_Nodes
+      - UK_Nodes
+      - Other_Nodes
       - DIRECT
 
   - name: Final
     type: select
     proxies:
-      - 自动选择
+      - Auto_Select
       - DIRECT
 
   - name: AdBlock
@@ -121,54 +130,65 @@ proxy-groups:
     type: select
     proxies:
       - DIRECT
-      - 自动选择
+      - Auto_Select
 
   - name: GlobalMedia
     type: select
     proxies:
-      - 自动选择
+      - Auto_Select
       - DIRECT
 
   - name: Telegram
     type: select
     proxies:
-      - 自动选择
+      - Auto_Select
       - DIRECT
 
   - name: China
     type: select
     proxies:
       - DIRECT
-      - 自动选择
+      - Auto_Select
 
   - name: Global_Classical
     type: select
     proxies:
-      - 美国节点
-      - 自动选择
+      - US_Nodes
+      - Auto_Select
       - DIRECT
 
-  - name: 香港节点
+  - name: BiliBiliIntl
+    type: select
+    proxies:
+      - HK_Nodes
+      - Auto_Select
+      - DIRECT
+
+  - name: HK_Nodes
     type: url-test
     use:
       - HK
-  - name: 日本节点
+  - name: JP_Nodes
     type: url-test
     use:
       - JP
-  - name: 台湾节点
+  - name: TW_Nodes
     type: url-test
     use:
       - TW
-  - name: 新加坡节点
+  - name: SG_Nodes
     type: url-test
     use:
       - SG
-  - name: 美国节点
+  - name: US_Nodes
     type: url-test
     use:
       - US
-  - name: 其它节点
+  - name: UK_Nodes
+    type: url-test
+    use:
+      - UK
+  - name: Other_Nodes
     type: url-test
     use:
       - Other
@@ -219,8 +239,15 @@ rule-providers:
   Global_Classical:
     type: http
     behavior: classical
-    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@release/rule/Clash/Global/Global_Classical.yaml"
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Global/Global_Classical.yaml"
     path: ./ruleset/Global_Classical.yaml
+    interval: 172800
+
+  BiliBiliIntl:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/BiliBiliIntl/BiliBiliIntl.yaml"
+    path: ./ruleset/BiliBiliIntl.yaml
     interval: 172800
 
 rules:
@@ -231,6 +258,7 @@ rules:
   - RULE-SET,Telegram,Telegram
   - RULE-SET,China,China
   - RULE-SET,GlobalMedia,GlobalMedia
+  - RULE-SET,BiliBiliIntl,BiliBiliIntl
   - IP-CIDR,192.168.0.0/16,DIRECT
   - IP-CIDR,10.0.0.0/8,DIRECT
   - IP-CIDR,172.16.0.0/12,DIRECT

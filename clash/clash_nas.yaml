@@ -83,10 +83,18 @@ proxy-providers:
       enable: true
       interval: 3600
       url: http://www.gstatic.com/generate_204
+  UK:
+    type: file
+    path: ./all.yaml
+    filter: 英国|UK|uk|(?i)England
+    health-check:
+      enable: true
+      interval: 3600
+      url: http://www.gstatic.com/generate_204
   Other:
     type: file
     path: ./all.yaml
-    filter: 韩国|印度|巴西|阿根廷|英国|澳门|土耳其|挪威|瑞士|俄罗斯|瑞典|爱尔兰|法国|菲律宾|越南|泰国|印度尼西亚|德国|英国|荷兰|乌克兰
+    filter: 韩国|印度|巴西|阿根廷|澳门|土耳其|挪威|瑞士|俄罗斯|瑞典|爱尔兰|法国|菲律宾|越南|泰国|印度尼西亚|德国|英国|荷兰|乌克兰
     health-check:
       enable: true
       interval: 3600
@@ -101,6 +109,7 @@ proxy-groups:
       - 台湾节点
       - 美国节点
       - 日本节点
+      - 英国节点
       - 其它节点
       - DIRECT
 
@@ -173,6 +182,10 @@ proxy-groups:
     type: url-test
     use:
       - US
+  - name: 英国节点
+    type: url-test
+    use:
+      - UK
   - name: 其它节点
     type: url-test
     use:
