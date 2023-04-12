@@ -5,7 +5,7 @@ zgenom autoupdate  # every 7 days
 if ! zgenom saved; then
     zgenom load arcthur/zsh-fzf
     zgenom load Aloxaf/fzf-tab
-    zgenom load arcthur/fzf-tab-source
+    zgenom load Freed-Wu/fzf-tab-source
 
     zgenom load zsh-users/zsh-autosuggestions
     zgenom load zdharma-continuum/fast-syntax-highlighting
