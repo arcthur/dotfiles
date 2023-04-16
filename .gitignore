@@ -47,4 +47,4 @@ cscope.po.out
 
 # Zsh
 *.zwc
-zsh/.zcompcache/
+zsh/.config/zsh/.zcompcache
