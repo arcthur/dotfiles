@@ -67,6 +67,7 @@ brew "git-lfs"      # Git extension for versioning large files
 brew "git-delta"    # Syntax-highlighting pager for git and diff output
 brew "gh"           # Interact with GitHub PRs, issues, repos
 brew "tokei"        # Count code (better cloc)
+brew "stow"         # Symlink farm manager
 
 # Programming languages
 brew "rust"         # Rust language
