@@ -8,6 +8,7 @@ tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "homebrew/services"
 tap "afutured/openai-translator"
+tap "oven-sh/bun"
 
 # BINARIES
 # ---------------
@@ -78,6 +79,7 @@ brew "pipx"         # Execute binaries from Python packages in isolated environm
 brew "go"           # Go language
 brew "goenv"        # Go version manager
 brew "node"         # Node language
+brew "bun"          # JavaScript runtime
 brew "fnm"          # Node.js version manager
 brew "yarn"         # JavaScript package manager
 brew "jq"           # Command-line JSON processor
