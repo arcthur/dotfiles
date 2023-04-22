@@ -112,5 +112,12 @@ if [ "$(command -v fnm)" ]; then
     eval "$(fnm env --use-on-cd)"
 fi
 
+# pyenv
+if [ "$(command -v pyenv)" ]; then
+  export PYENV_ROOT="$HOME/.pyenv"
+  command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init -)"
+fi
+
 # orbstack
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
