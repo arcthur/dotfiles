@@ -1,26 +1,16 @@
 patch:
   # ascii_mode、inline、no_inline、vim_mode 等等设定，可参考 /Library/Input Methods/Squirrel.app/Contents/SharedSupport/squirrel.yaml
   app_options:
-    #com.raycast.macos:
-    #  ascii_mode: true   # 初始爲西文模式
-    #com.microsoft.VSCode:
-    #  ascii_mode: true   # 初始爲西文模式
-    #  vim_mode: true
-    #md.obsidian:
-    #  ascii_mode: true   # 初始爲西文模式
-    #  vim_mode: true
-    #org.alacritty:
-    #  ascii_mode: true   # 初始爲西文模式
-    #com.jetbrains.intellij:
-    #  ascii_mode: true
-    #  vim_mode: true
+    com.raycast.macos:
+      ascii_mode: true   # 初始爲西文模式
+    com.microsoft.VSCode:
+      ascii_mode: true   # 初始爲西文模式
+      vim_mode: true
+    org.alacritty:
+      ascii_mode: true   # 初始爲西文模式
   
   style:
     # 选择皮肤，亮色与暗色主题
-    #color_scheme: purity_of_form_custom
-    #color_scheme_dark: purity_of_form_custom
-    #color_scheme: macos_light
-    #color_scheme_dark: macos_dark
     color_scheme: wechat_light
     color_scheme_dark: wechat_dark
   
@@ -33,13 +23,9 @@ patch:
     border_width: 0
     line_spacing: 5
     spacing: 10
-    #candidate_format: '%c. %@'
-    #base_offset: 6
     font_face: 'Lucida Grande'
     font_point: 21
-    #label_font_face: 'Lucida Grande'
     label_font_point: 18
-    #comment_font_face: 'Lucida Grande'
     comment_font_point: 18
   
   # 皮肤列表
@@ -159,9 +145,9 @@ patch:
       candidate_text_color: 0x3c3c3c          # 文字颜色
       hilited_candidate_text_color: 0xFFFFFF  # 选中文字颜色
       comment_text_color: 0x999999            # 注颜色
-      hilited_comment_text_color: 0x999999    # 选中注颜色
+      hilited_comment_text_color: 0xFFFFFF    # 选中注颜色
       text_color: 0x424242                    # 拼音颜色 （inline_preedit: false）
-      hilited_text_color: 0x999999            # 选中拼音颜色 （inline_preedit: false）
+      hilited_text_color: 0xFFFFFF            # 选中拼音颜色 （inline_preedit: false）
       candidate_back_color: 0xFFFFFF          # 候选项底色
       # preedit_back_color:                   # 拼音底色 （inline_preedit: false）
       hilited_back_color: 0x79af22            # 选中拼音底色 （inline_preedit: false）
