@@ -7,7 +7,6 @@ if [ "$(command -v nvim)" ]; then
     export VISUAL=nvim
     export EDITOR="$VISUAL"
     alias vim='nvim'
-    alias vimup='nvim +PackerSync +TSUpdate'
 fi
 
 # fd
@@ -114,9 +113,16 @@ fi
 
 # pyenv
 if [ "$(command -v pyenv)" ]; then
-  export PYENV_ROOT="$HOME/.pyenv"
-  command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init -)"
+    export PYENV_ROOT="$HOME/.pyenv"
+    command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+fi
+
+# goenv
+if [ "$(command -v goenv)" ]; then
+    export GOENV_ROOT="$HOME/.goenv"
+    command -v pyenv >/dev/null || export PATH="$GOENV_ROOT/bin:$PATH"
+    eval "$(goenv init -)"
 fi
 
 # orbstack
