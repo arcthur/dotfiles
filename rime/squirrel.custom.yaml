@@ -14,25 +14,10 @@ patch:
     color_scheme: wechat_light
     color_scheme_dark: wechat_dark
   
-    # 预设选项：（可被皮肤覆盖；如果皮肤没写，则默认使用这些属性。）
-    text_orientation: horizontal  # horizontal | vertical
-    inline_preedit: true
-    corner_radius: 10
-    hilited_corner_radius: 0
-    border_height: 0
-    border_width: 0
-    line_spacing: 5
-    spacing: 10
-    font_face: 'Lucida Grande'
-    font_point: 21
-    label_font_point: 18
-    comment_font_point: 18
-  
   # 皮肤列表
   preset_color_schemes:
     macos_light:
       name: "MacOS 浅色／MacOS Light"
-      author: 小码哥
       font_face: "PingFangSC"          # 字体及大小
       font_point: 16
       label_font_face: "PingFangSC"    # 序号字体及大小
@@ -73,7 +58,6 @@ patch:
   
     macos_dark:
       name: "MacOS 深色／MacOS Dark"
-      author: 小码哥
       font_face: "PingFangSC"          # 字体及大小
       font_point: 16
       label_font_face: "PingFangSC"    # 序号字体及大小
@@ -114,7 +98,6 @@ patch:
   
     wechat_light:
       name: "微信浅色／Wechat Light"
-      author: 小码哥
       font_face: "PingFangSC"          # 字体及大小
       font_point: 16
       label_font_face: "PingFangSC"    # 序号字体及大小
@@ -155,7 +138,6 @@ patch:
   
     wechat_dark:
       name: "微信深色／Wechat Dark"
-      author: 小码哥
       font_face: "PingFangSC"          # 字体及大小
       font_point: 16
       label_font_face: "PingFangSC"    # 序号字体及大小
