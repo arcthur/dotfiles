@@ -41,7 +41,7 @@ brew "starship"     # Cross-shell prompt
 brew "aria2"        # Resuming download util (better wget)
 brew "fd"           # Find entries (better find)
 brew "exa"          # Listing files with info (better ls)
-brew "riggrep"      # The silver searcher (better grep)
+brew "ripgrep"      # The silver searcher (better grep)
 brew "bat"          # Output highlighting (better cat)
 brew "procs"        # Advanced process viewer (better ps)
 brew "dust"         # Display disk usage (better du)
