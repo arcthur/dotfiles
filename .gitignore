@@ -48,3 +48,9 @@ cscope.po.out
 # Zsh
 *.zwc
 zsh/.config/zsh/.zcompcache
+
+# Brewfile
+Brewfile.lock.json
+
+# karabiner_backups
+karabiner/.config/karabiner/automatic_backups
