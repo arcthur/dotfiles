@@ -122,7 +122,7 @@ cask "balenaetcher"
 # Utilities
 cask "betterdisplay"
 cask "keka"
-cask "clashx"
+cask "surge"
 cask "karabiner-elements"
 cask "squirrel"
 cask "bitwarden"
@@ -140,8 +140,7 @@ cask "futubull"
 # MAC APPSTORE APPS
 # ---------------
 mas "Keynote", id: 409183694
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
 mas "Things 3", id: 904280696
 mas "OpenCat", id: 6445999201
-mas "Just Focus", id: 1135331024
+mas "Just Focus", id: 1142151959
+mas "Bear", id: 1091189122

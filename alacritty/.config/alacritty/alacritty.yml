@@ -5,11 +5,7 @@ env:
   TERM: alacritty
 
 shell:
-  program: /usr/local/bin/zsh
-  args:
-    - -l
-    - -c
-    - "zellij attach --index 0 --create"
+  program: /opt/homebrew/bin/zellij
 
 font:
   normal:

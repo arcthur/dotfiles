@@ -2,9 +2,9 @@
 
 brew bundle install
 
-Stow -d $HOME alacritty
-Stow -d $HOME git
-Stow -d $HOME karabiner
-Stow -d $HOME topgrade
-Stow -d $HOME zellij
-Stow -d $HOME zsh
+stow --dotfiles alacritty
+stow --dotfiles git
+stow --dotfiles karabiner
+stow --dotfiles topgrade
+stow --dotfiles zellij
+stow --dotfiles zsh
