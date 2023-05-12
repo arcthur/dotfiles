@@ -96,11 +96,6 @@ if [ "$(command -v mcfly)" ]; then
     export MCFLY_RESULTS=100
 fi
 
-# thefuck
-if [ "$(command -v thefuck)" ]; then
-    eval "$(thefuck --alias)"
-fi
-
 # starship
 if [ "$(command -v starship)" ]; then
     eval "$(starship init zsh)"
