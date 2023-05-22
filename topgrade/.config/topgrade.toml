@@ -14,6 +14,14 @@ pre_sudo = false
 # Cleanup temporary or old files
 cleanup = true
 
+[git]
+repos = [
+  "~/.config/nvim",
+  "~/dotfiles/",
+]
+
+arguments = "--rebase --autostash"
+
 [brew]
 greedy_cask = true
 autoremove = true
