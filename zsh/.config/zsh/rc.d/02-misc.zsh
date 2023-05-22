@@ -11,6 +11,8 @@ if ! zgenom saved; then
     zgenom load zsh-users/zsh-syntax-highlighting
     zgenom load marlonrichert/zsh-edit
 
+    zgenom load RobSis/zsh-completion-generator
+
     zgenom clean
     zgenom save
     zgenom compile $ZDOTDIR

@@ -109,8 +109,11 @@ fi
 # pyenv
 if [ "$(command -v pyenv)" ]; then
     export PYENV_ROOT="$HOME/.pyenv"
+    export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+
     command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
     eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
 fi
 
 # goenv
@@ -122,3 +125,6 @@ fi
 
 # orbstack
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+
+# mactex
+eval "$(/usr/libexec/path_helper)"

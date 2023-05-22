@@ -56,13 +56,13 @@ local -a files=( $HISTFILE(|\ <->)(OL) )
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
 
 function proxy_on() {
-  export http_proxy=http://127.0.0.1:7890
-  export https_proxy=http://127.0.0.1:7890
-  export all_proxy=socks5://127.0.0.1:7890
-  eval "$(npm config set proxy http://127.0.0.1:7890)"
-  eval "$(npm config set https-proxy http://127.0.0.1:7890)"
-  eval "$(git config --global http.proxy 'socks5://127.0.0.1:7890')"
-  eval "$(git config --global https.proxy 'socks5://127.0.0.1:7890')"
+  export http_proxy=http://127.0.0.1:6152
+  export https_proxy=http://127.0.0.1:6152
+  export all_proxy=socks5://127.0.0.1:6153
+  eval "$(npm config set proxy http://127.0.0.1:6152)"
+  eval "$(npm config set https-proxy http://127.0.0.1:6152)"
+  eval "$(git config --global http.proxy 'socks5://127.0.0.1:6153')"
+  eval "$(git config --global https.proxy 'socks5://127.0.0.1:6153')"
   echo -e "Proxy On"
 }
 

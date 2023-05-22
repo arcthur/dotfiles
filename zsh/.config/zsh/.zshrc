@@ -10,7 +10,7 @@ export ZGENOM_HOME="$HOME/.zgenom"
 
 source $ZGENOM_HOME/zgenom.zsh
 
-export PATH=/opt/homebrew/bin:$PATH
+export PATH=/opt/homebrew/bin:$HOME/.local/bin:$PATH
 
 () {
   local __file__=
