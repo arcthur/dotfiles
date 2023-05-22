@@ -73,6 +73,7 @@ brew "rust"         # Rust language
 brew "ruby"         # Ruby language
 brew "python"       # Python language
 brew "pyenv"        # Python version manager
+brew "pyenv-virtualenv" # A pyenv plugin to manage virtualenv
 brew "pipx"         # Execute binaries from Python packages in isolated environments
 brew "go"           # Go language
 brew "goenv"        # Go version manager
