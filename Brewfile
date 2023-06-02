@@ -143,5 +143,4 @@ cask "futubull"
 mas "Keynote", id: 409183694
 mas "Things 3", id: 904280696
 mas "OpenCat", id: 6445999201
-mas "Just Focus", id: 1142151959
 mas "Bear", id: 1091189122
