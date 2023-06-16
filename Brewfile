@@ -35,7 +35,6 @@ brew "bottom"       # Cross-platform graphical process/system monitor
 # Terminal
 brew "zsh"          # Z shell
 brew "zellij"       # Pluggable terminal workspace
-brew "starship"     # Cross-shell prompt
 
 # Utilities
 brew "aria2"        # Resuming download util (better wget)
@@ -53,6 +52,8 @@ brew "broot"        # Navigate directory trees (better tree)
 brew "fzf"          # Fuzzy Finder
 brew "mcfly"        # Fly through your shell history
 brew "topgrade"     # Upgrade everything
+brew "navi"         # An interactive cheatsheet tool for the command-line
+brew "bitwarden-cli"
 
 # Editor
 brew "vim"          # Vi 'workalike' with many additional features
