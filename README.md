@@ -8,3 +8,11 @@ Configuration files for editors and other UNIX tools. This is to make it easier 
 - [Plum](https://github.com/rime/plum)
 
 `bash rime-install iDvel/rime-ice:others/recipes/full`
+
+## ZSH
+
+- [Z4H](https://github.com/romkatv/zsh4humans)
+
+## NeoVim
+
+- [NVim](https://github.com/ayamir/nvimdots)

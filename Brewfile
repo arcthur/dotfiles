@@ -38,6 +38,7 @@ brew "zellij"       # Pluggable terminal workspace
 
 # Utilities
 brew "aria2"        # Resuming download util (better wget)
+brew "curlie"       # The ease of use of httpie (better curl)
 brew "fd"           # Find entries (better find)
 brew "exa"          # Listing files with info (better ls)
 brew "ripgrep"      # The silver searcher (better grep)
