@@ -7,7 +7,6 @@ tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "homebrew/services"
-tap "afutured/openai-translator"
 
 # BINARIES
 # ---------------
@@ -51,7 +50,7 @@ brew "tealdeer"     # Community-maintained docs (better man)
 brew "gping"        # Interactive ping tool (better ping)
 brew "broot"        # Navigate directory trees (better tree)
 brew "fzf"          # Fuzzy Finder
-brew "mcfly"        # Fly through your shell history
+brew "atuin"        # Fly through your shell history
 brew "topgrade"     # Upgrade everything
 brew "navi"         # An interactive cheatsheet tool for the command-line
 brew "bitwarden-cli"

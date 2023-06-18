@@ -21,9 +21,9 @@ zstyle ':z4h:' term-shell-integration 'yes'
 
 # Right-arrow key accepts one character ('partial-accept') from
 # command autosuggestions or the whole thing ('accept')?
+zstyle ':z4h:autosuggestions' strategy 'atuin_top completion'
 zstyle ':z4h:autosuggestions' forward-char 'accept'
 zstyle ':z4h:autosuggestions' partial-accept 'forward-char forward-word end-of-line'
-zstyle ':z4h:autosuggestions' history-ignore $'(*\n*|?(#c80,)|*\\#:hist:push-line:)'
 
 # Recursively traverse directories when TAB-completing files.
 #zstyle ':z4h:fzf-complete' recurse-dirs 'no'
@@ -161,12 +161,42 @@ if [ "$(command -v zoxide)" ]; then
     alias fzf-dir='zi'
 fi
 
-# mcfly
-if [ "$(command -v mcfly)" ]; then
-    eval "$(mcfly init zsh)"
-    export MCFLY_KEY_SCHEME=vim
-    export MCFLY_FUZZY=3
-    export MCFLY_RESULTS=100
+if [ "$(command -v atuin)" ]; then
+    eval "$(atuin init zsh)"
+
+    export ATUIN_NOBIND="true"
+
+    fzf-atuin-history-widget() {
+        local atuin_opts="--cmd-only"
+        local fzf_opts=(
+            --height=${FZF_TMUX_HEIGHT:-80%}
+            --tac
+            "-n2..,.."
+            --tiebreak=index
+            "--query=${LBUFFER}"
+            "+m"
+            "--bind=ctrl-d:reload(atuin search $atuin_opts -c $PWD),ctrl-r:reload(atuin search $atuin_opts)"
+        )
+
+        selected=$(
+        eval "atuin search ${atuin_opts}" |
+            fzf "${fzf_opts[@]}"
+        )
+        local ret=$?
+        if [ -n "$selected" ]; then
+            # the += lets it insert at current pos instead of replacing
+            LBUFFER+="${selected}"
+        fi
+        zle reset-prompt
+        return $ret
+    }
+    zle -N fzf-atuin-history-widget
+    bindkey '^r' fzf-atuin-history-widget
+
+    _zsh_autosuggest_strategy_atuin_top() {
+        suggestion=$(atuin search --cmd-only --limit 1 --search-mode prefix $1)
+    }
+    #ZSH_AUTOSUGGEST_STRATEGY=atuin_top
 fi
 
 # fnm
