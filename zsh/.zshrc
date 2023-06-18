@@ -127,6 +127,9 @@ setopt glob_dots     # no special treatment for file names with a leading dot
 setopt no_auto_menu  # require an extra TAB press to open the completion menu
 
 # Commands & aliases
+alias cp='cp -r --reflink=auto'
+alias mkdir='mkdir -p'
+
 [ -z "$EDITOR" ] && export EDITOR='nvim'
 [ -z "$VISUAL" ] && export EDITOR="$VISUAL"
 
@@ -162,7 +165,7 @@ if [ "$(command -v zoxide)" ]; then
 fi
 
 if [ "$(command -v atuin)" ]; then
-    eval "$(atuin init zsh)"
+    eval "$(atuin init zsh --disable-up-arrow)"
 
     export ATUIN_NOBIND="true"
 
@@ -196,7 +199,6 @@ if [ "$(command -v atuin)" ]; then
     _zsh_autosuggest_strategy_atuin_top() {
         suggestion=$(atuin search --cmd-only --limit 1 --search-mode prefix $1)
     }
-    #ZSH_AUTOSUGGEST_STRATEGY=atuin_top
 fi
 
 # fnm
