@@ -58,7 +58,8 @@ z4h install marlonrichert/zsh-edit || return
 
 z4h init || return
 
-zstyle ':completion:*' matcher-list "m:{a-z}={A-Z}" "l:|=* r:|=*"
+# Case-insensitive (all), partial-word, and then substring completion.
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 # Extend PATH.
 path=(~/bin $path)
