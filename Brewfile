@@ -53,6 +53,7 @@ brew "fzf"          # Fuzzy Finder
 brew "atuin"        # Fly through your shell history
 brew "topgrade"     # Upgrade everything
 brew "navi"         # An interactive cheatsheet tool for the command-line
+brew "direnv"       # Load and unload environment variables
 brew "bitwarden-cli"
 
 # Editor

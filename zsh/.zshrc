@@ -33,7 +33,7 @@ zstyle ':z4h:(fzf-complete|fzf-dir-history)'                fzf-bindings        
 zstyle ':z4h:fzf-complete'                                  find-flags             '(' -name '.git' -o -name node_modules ')' -prune -print -o -print
 
 # Enable direnv to automatically source .envrc files.
-zstyle ':z4h:direnv'         enable 'no'
+zstyle ':z4h:direnv'         enable 'yes'
 # Show "loading" and "unloading" notifications from direnv.
 zstyle ':z4h:direnv:success' notify 'yes'
 
