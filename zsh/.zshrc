@@ -130,6 +130,7 @@ setopt no_auto_menu  # require an extra TAB press to open the completion menu
 # Commands & aliases
 alias cp='cp -r --reflink=auto'
 alias mkdir='mkdir -p'
+alias f='open -a Finder ./' # Opens current directory in apps
 
 [ -z "$EDITOR" ] && export EDITOR='nvim'
 [ -z "$VISUAL" ] && export EDITOR="$VISUAL"
@@ -137,7 +138,7 @@ alias mkdir='mkdir -p'
 command -v curlie &> /dev/null && alias curl='curlie'
 command -v bat    &> /dev/null && alias cat='bat --theme=OneHalfDark'
 command -v nvim   &> /dev/null && alias vim='nvim'
-command -v fd     &> /dev/null && alias fd='fd --hidden --follow' || alias fd='find . -name'
+command -v fd     &> /dev/null && alias fd='fd --one-file-system --hidden --follow' || alias fd='find . -name'
 command -v rg     &> /dev/null && alias rg='rg --hidden --follow --smart-case 2>/dev/null' || alias rg='grep --color=auto --exclude-dir=.git -R'
 command -v exa    &> /dev/null && alias ls='exa --group --git --group-directories-first' || alias ls='ls --color=auto --group-directories-first -h'
 command -v exa    &> /dev/null && alias ll='exa -l -a -s type --group-directories-first --git' || alias ll='ls -A'
@@ -146,8 +147,8 @@ command -v exa    &> /dev/null && alias llt='exa -lT -s type --git-ignore --leve
 command -v exa    &> /dev/null && alias lT='exa -T -s type --git-ignore --level=4 --group-directories-first'
 command -v htop   &> /dev/null && alias top='htop'
 command -v procs  &> /dev/null && alias ps='procs'
-command -v duf    &> /dev/null && alias df='duf'
-command -v dust   &> /dev/null && alias du='dust'
+command -v duf    &> /dev/null && alias df='duf' || alias df='df -h' 
+command -v dust   &> /dev/null && alias du='dust' || alias du='du -csh'
 command -v gping  &> /dev/null && alias ping='gping'
 command -v tldr   &> /dev/null && alias man='tldr'
 
@@ -229,3 +230,8 @@ source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 
 # mactex
 eval "$(/usr/libexec/path_helper)"
+
+# File associations, i.e. suffix aliases
+# Source: https://thorsten-hans.com/5-types-of-zsh-aliases#suffix-aliases
+alias -s {md,markdown,rst,toml,json}=code
+alias -s {ape,avi,flv,m4a,mkv,mov,mp3,mp4,mpeg,mpg,ogg,ogm,wav,webm}=iina
