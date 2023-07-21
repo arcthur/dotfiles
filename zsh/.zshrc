@@ -205,15 +205,17 @@ fi
 
 # fnm
 if [ "$(command -v fnm)" ]; then
-    eval "$(fnm env --use-on-cd)"
+    #eval "$(fnm env --use-on-cd)"
+    export PATH="$HOME/.fnm:$PATH"
+    eval "$(fnm env --use-on-cd --version-file-strategy=recursive)"
 fi
 
 # pyenv
 if [ "$(command -v pyenv)" ]; then
-    export PYENV_ROOT="$HOME/.pyenv"
     export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
-    command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
 fi
@@ -221,7 +223,7 @@ fi
 # goenv
 if [ "$(command -v goenv)" ]; then
     export GOENV_ROOT="$HOME/.goenv"
-    command -v pyenv >/dev/null || export PATH="$GOENV_ROOT/bin:$PATH"
+    export PATH="$GOENV_ROOT/bin:$PATH"
     eval "$(goenv init -)"
 fi
 
