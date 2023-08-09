@@ -136,11 +136,10 @@ alias f='open -a Finder ./' # Opens current directory in apps
 [ -z "$VISUAL" ] && export EDITOR="$VISUAL"
 
 command -v curlie &> /dev/null && alias curl='curlie'
-command -v bat    &> /dev/null && alias cat='bat --theme=OneHalfDark'
 command -v nvim   &> /dev/null && alias vim='nvim'
 command -v fd     &> /dev/null && alias fd='fd --one-file-system --hidden --follow' || alias fd='find . -name'
 command -v rg     &> /dev/null && alias rg='rg --hidden --follow --smart-case 2>/dev/null' || alias rg='grep --color=auto --exclude-dir=.git -R'
-command -v exa    &> /dev/null && alias ls='exa --group --git --group-directories-first' || alias ls='ls --color=auto --group-directories-first -h'
+command -v exa    &> /dev/null && alias ls='exa --group --git --group-directories-first' || alias ls='ls --color=auto -h'
 command -v exa    &> /dev/null && alias ll='exa -l -a -s type --group-directories-first --git' || alias ll='ls -A'
 command -v exa    &> /dev/null && alias lt='exa -T -s type --git-ignore --level=2 --group-directories-first'
 command -v exa    &> /dev/null && alias llt='exa -lT -s type --git-ignore --level=2 --group-directories-first'
@@ -151,6 +150,11 @@ command -v duf    &> /dev/null && alias df='duf' || alias df='df -h'
 command -v dust   &> /dev/null && alias du='dust' || alias du='du -csh'
 command -v gping  &> /dev/null && alias ping='gping'
 command -v tldr   &> /dev/null && alias man='tldr'
+
+if [ "$(command -v bat)" ]; then
+  alias cat='bat -p --wrap character --theme="gruvbox-dark"'
+  export MANPAGER="sh -c 'col -bx | bat -l man -p --theme=gruvbox-dark'"
+fi
 
 # zoxide
 if [ "$(command -v zoxide)" ]; then
