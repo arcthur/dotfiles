@@ -152,8 +152,9 @@ command -v gping  &> /dev/null && alias ping='gping'
 command -v tldr   &> /dev/null && alias man='tldr'
 
 if [ "$(command -v bat)" ]; then
-  alias cat='bat -p --wrap character --theme="gruvbox-dark"'
-  export MANPAGER="sh -c 'col -bx | bat -l man -p --theme=gruvbox-dark'"
+  export BAT_THEME="gruvbox-dark"
+  alias cat='bat -p --wrap character'
+  export MANPAGER="sh -c 'col -bx | bat -l man -p"
 fi
 
 # zoxide
