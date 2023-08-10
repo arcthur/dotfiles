@@ -5,7 +5,7 @@ env:
   TERM: alacritty
 
 shell:
-  program: /opt/homebrew/bin/zellij
+  program: /opt/homebrew/bin/tmux
 
 font:
   normal:

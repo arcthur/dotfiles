@@ -33,7 +33,7 @@ brew "bottom"       # Cross-platform graphical process/system monitor
 
 # Terminal
 brew "zsh"          # Z shell
-brew "zellij"       # Pluggable terminal workspace
+brew "tmux"         # terminal workspace
 
 # Utilities
 brew "aria2"        # Resuming download util (better wget)
