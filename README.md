@@ -2,6 +2,10 @@
 
 Configuration files for editors and other UNIX tools. This is to make it easier to setup programming environment for me.
 
+# Brew
+
+`brew bundle install`
+
 ## RIME
 
 - [Rime-Ice](https://github.com/iDvel/rime-ice)
@@ -18,3 +22,7 @@ Configuration files for editors and other UNIX tools. This is to make it easier 
 ## NeoVim
 
 - [NVim](https://github.com/ayamir/nvimdots)
+
+## TMUX
+
+- [TPM](https://github.com/tmux-plugins/tpm)

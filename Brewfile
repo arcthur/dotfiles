@@ -54,7 +54,6 @@ brew "atuin"        # Fly through your shell history
 brew "topgrade"     # Upgrade everything
 brew "navi"         # An interactive cheatsheet tool for the command-line
 brew "direnv"       # Load and unload environment variables
-brew "bleunlock" .  # Lock/unlock your Mac with your iPhone
 brew "bitwarden-cli"
 
 # Editor
@@ -114,6 +113,7 @@ cask "raycast"
 cask "notion"
 cask "logseq"
 cask "eudic"
+cask "bleunlock"
 
 # IM
 cask "wechat"
