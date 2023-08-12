@@ -130,7 +130,7 @@ cask "surge"
 cask "karabiner-elements"
 cask "squirrel"
 cask "bitwarden"
-cask "openai-translator"
+cask "bartender"
 
 # Development
 cask "font-hack-nerd-font"
