@@ -84,6 +84,9 @@ brew "fnm"          # Node.js version manager
 brew "yarn"         # JavaScript package manager
 brew "jq"           # Command-line JSON processor
 
+# Docker
+brew "docker"
+
 # Mac OS X
 brew "mas"          # Mac App Store command-line interface
 
@@ -118,6 +121,7 @@ cask "bleunlock"
 # IM
 cask "wechat"
 cask "slack"
+cask "discord"
 cask "telegram-desktop"
 
 # Raspberry
