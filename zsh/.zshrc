@@ -132,6 +132,12 @@ alias cp='cp -r --reflink=auto'
 alias mkdir='mkdir -p'
 alias f='open -a Finder ./' # Opens current directory in apps
 
+# Aliases for cd ..
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+
 [ -z "$EDITOR" ] && export EDITOR='nvim'
 [ -z "$VISUAL" ] && export EDITOR="$VISUAL"
 

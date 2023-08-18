@@ -71,8 +71,8 @@ brew "tokei"        # Count code (better cloc)
 brew "stow"         # Symlink farm manager
 
 # Programming languages
-brew "rust"         # Rust language
 brew "ruby"         # Ruby language
+brew "rust"         # Rust language
 brew "python"       # Python language
 brew "pyenv"        # Python version manager
 brew "pyenv-virtualenv" # A pyenv plugin to manage virtualenv
@@ -83,6 +83,8 @@ brew "node"         # Node language
 brew "fnm"          # Node.js version manager
 brew "yarn"         # JavaScript package manager
 brew "jq"           # Command-line JSON processor
+brew "typst"        # New markup-based typesetting system
+brew "just"         # Just a command runner
 
 # Docker
 brew "docker"
