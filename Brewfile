@@ -112,6 +112,7 @@ cask "shottr"
 
 # E-books
 cask "sigil"
+cask "calibre" # Add WordDumb Plugin
 
 # Productivity
 cask "raycast"
@@ -119,6 +120,7 @@ cask "notion"
 cask "logseq"
 cask "eudic"
 cask "obsidian"
+cask "zotero"
 
 # IM
 cask "wechat"
