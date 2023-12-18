@@ -94,6 +94,9 @@ brew "mas"          # Mac App Store command-line interface
 
 # CASK
 # ---------------
+# Security
+cask "lulu"
+
 # Storage
 cask "baidunetdisk"
 
@@ -112,7 +115,7 @@ cask "shottr"
 
 # E-books
 cask "sigil"
-cask "calibre" # Add WordDumb Plugin
+cask "calibre"      # Add WordDumb, Goodreads, Douban Plugins
 
 # Productivity
 cask "raycast"
@@ -124,12 +127,8 @@ cask "zotero"
 
 # IM
 cask "wechat"
-cask "slack"
 cask "discord"
 cask "telegram-desktop"
-
-# Raspberry
-cask "balenaetcher"
 
 # Utilities
 cask "betterdisplay"
