@@ -1,10 +1,8 @@
 # TAPS
 # ---------------
 tap "homebrew/bundle"
-tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
-tap "homebrew/core"
 tap "homebrew/services"
 
 # BINARIES
@@ -120,7 +118,6 @@ cask "calibre"      # Add WordDumb, Goodreads, Douban Plugins
 # Productivity
 cask "raycast"
 cask "notion"
-cask "logseq"
 cask "eudic"
 cask "obsidian"
 cask "zotero"
