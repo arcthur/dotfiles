@@ -92,11 +92,9 @@ brew "mas"          # Mac App Store command-line interface
 
 # CASK
 # ---------------
-# Security
-cask "lulu"
-
 # Storage
 cask "baidunetdisk"
+cask "adrive"
 
 # Browsers
 cask "google-chrome"
