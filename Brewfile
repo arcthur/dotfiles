@@ -119,6 +119,7 @@ cask "notion"
 cask "eudic"
 cask "obsidian"
 cask "zotero-beta"
+cask "chatgpt"
 
 # IM
 cask "wechat"
