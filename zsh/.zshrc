@@ -150,11 +150,9 @@ command -v curlie &> /dev/null && alias curl='curlie'
 command -v nvim   &> /dev/null && alias vim='nvim'
 command -v fd     &> /dev/null && alias fd='fd --one-file-system --hidden --follow' || alias fd='find . -name'
 command -v rg     &> /dev/null && alias rg='rg --hidden --follow --smart-case 2>/dev/null' || alias rg='grep --color=auto --exclude-dir=.git -R'
-command -v exa    &> /dev/null && alias ls='exa --group --git --group-directories-first' || alias ls='ls --color=auto -h'
-command -v exa    &> /dev/null && alias ll='exa -l -a -s type --group-directories-first --git' || alias ll='ls -A'
-command -v exa    &> /dev/null && alias lt='exa -T -s type --git-ignore --level=2 --group-directories-first'
-command -v exa    &> /dev/null && alias llt='exa -lT -s type --git-ignore --level=2 --group-directories-first'
-command -v exa    &> /dev/null && alias lT='exa -T -s type --git-ignore --level=4 --group-directories-first'
+command -v lsd    &> /dev/null && alias ls='lsd -l' || alias ls='ls --color=auto -h'
+command -v lsd    &> /dev/null && alias ll='lsd -la' || alias ll='ls -A'
+command -v lsd    &> /dev/null && alias lt='lsd --tree --depth 2'
 command -v htop   &> /dev/null && alias top='htop'
 command -v procs  &> /dev/null && alias ps='procs'
 command -v duf    &> /dev/null && alias df='duf' || alias df='df -h' 
@@ -176,7 +174,7 @@ if [ "$(command -v zoxide)" ]; then
         --info=inline \
         --layout=reverse \
         --height=80% \
-        --preview='exa -l -s type' \
+        --preview='lsd -l' \
         --color='hl:148,hl+:154,pointer:032,marker:010,bg+:237,gutter:008'"
     alias cd='z'
     alias fzf-dir='zi'

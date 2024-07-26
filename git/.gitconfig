@@ -83,7 +83,7 @@
     ca = commit -am                   # commit all with message
     ci = commit                       # commit
     amend = commit --amend            # ammend your last commit
-    ammend = commit --amend           # ammend your last commit
+    onemore = commit -a --amend --no-edit # Still need a little change, and don't want to create a new commit
 
     # checkout
     co = checkout                     # checkout
@@ -121,7 +121,9 @@
 
     # reset
     unstage = reset @                 # remove files from index (tracking)
-    uncommit = reset --soft @^        # go back before last commit, with files in uncommitted state
+    undo = reset --soft @^            # deletes the most recent commit and retains file modifications
+    cancel = reset --hard @^          # Deletes the most recent commit and does not keep the file
+
     filelog = log -u                  # show changes to a file
     mt = mergetool                    # fire up the merge tool
     untrack = rm -r --cached
