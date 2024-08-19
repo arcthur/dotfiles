@@ -118,7 +118,7 @@ cask "raycast"
 cask "notion"
 cask "eudic"
 cask "obsidian"
-cask "zotero-beta"
+cask "zotero"
 cask "chatgpt"
 
 # IM
