@@ -119,7 +119,6 @@ cask "notion"
 cask "eudic"
 cask "obsidian"
 cask "zotero"
-cask "chatgpt"
 
 # IM
 cask "wechat"
@@ -139,6 +138,7 @@ cask "bartender"
 cask "font-hack-nerd-font"
 cask "alacritty"
 cask "visual-studio-code"
+cask "cursor"
 cask "orbstack"
 
 # Invest
