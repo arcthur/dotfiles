@@ -40,14 +40,14 @@
 [mergetool]
     keepBackup = false
     prompt = false
+[pager]
+    difftool = true
 [diff]
-    tool = nvimdiff
-[difftool "nvimdiff"]
-    cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
-    path = 
-[mergetool "nvimdiff"]
-    cmd = nvim -d \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-    trustExitCode = true
+    external = difft
+[difftool]
+    prompt = false
+[difftool "difftastic"]
+    cmd = difft "$MERGED" "$LOCAL" "abcdef1" "100644" "$REMOTE" "abcdef2" "100644"
 [push]
     default = matching
 [apply]

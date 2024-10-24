@@ -21,7 +21,7 @@ brew "gnutls"       # GNU transport layer security (TLS)
 brew "gzip"         # Data compression program
 brew "screen"       # Terminal multiplexer
 brew "watch"        # Run commands periorically
-brew "wdiff"        # Display word differences between text files
+brew "difftastic"   # Structural diff tool
 brew "wget"         # Resuming download util
 
 # Monitoring
