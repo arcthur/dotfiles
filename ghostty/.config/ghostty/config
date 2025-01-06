@@ -1,0 +1,24 @@
+# cursor
+cursor-style = block
+cursor-style-blink = false
+
+# window
+window-padding-balance = true
+background-opacity = 0.9
+
+# clipboard
+copy-on-select = clipboard
+clipboard-trim-trailing-spaces = true
+
+# mouse
+mouse-scroll-multiplier = 20
+mouse-hide-while-typing = true
+
+# split
+keybind = cmd+s>|=new_split:right
+keybind = cmd+s>-=new_split:down
+
+# macos
+macos-titlebar-style = "hidden"
+macos-non-native-fullscreen = true
+fullscreen = true

@@ -53,6 +53,7 @@ brew "navi"         # An interactive cheatsheet tool for the command-line
 brew "direnv"       # Load and unload environment variables
 brew "nexttrace"    # Visual route tracking
 brew "bitwarden-cli"
+brew "ai-chat"
 
 # Editor
 brew "vim"          # Vi 'workalike' with many additional features
@@ -136,7 +137,7 @@ cask "bartender"
 
 # Development
 cask "font-hack-nerd-font"
-cask "alacritty"
+cask "ghostty"
 cask "visual-studio-code"
 cask "cursor"
 cask "orbstack"
