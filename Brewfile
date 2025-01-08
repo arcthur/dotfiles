@@ -150,3 +150,4 @@ cask "futubull"
 mas "Keynote", id: 409183694
 mas "Things 3", id: 904280696
 mas "Bear", id: 1091189122
+mas "flomo", id: 1665341561
