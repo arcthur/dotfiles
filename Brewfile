@@ -112,7 +112,7 @@ cask "shottr"
 
 # E-books
 cask "sigil"
-cask "calibre"      # Add WordDumb, Goodreads, Douban Plugins
+cask "calibre"      # Add WordDumb, Goodreads
 
 # Productivity
 cask "raycast"
@@ -141,6 +141,7 @@ cask "ghostty"
 cask "visual-studio-code"
 cask "cursor"
 cask "orbstack"
+cask "fork"
 
 # Invest
 cask "futubull"
