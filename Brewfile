@@ -142,6 +142,7 @@ cask "visual-studio-code"
 cask "cursor"
 cask "orbstack"
 cask "fork"
+cask "apifox"
 
 # Invest
 cask "futubull"
