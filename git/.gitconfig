@@ -40,26 +40,23 @@
 [mergetool]
     keepBackup = false
     prompt = false
-[pager]
-    difftool = true
 [diff]
     external = difft
 [difftool]
     prompt = false
 [difftool "difftastic"]
-    cmd = difft "$MERGED" "$LOCAL" "abcdef1" "100644" "$REMOTE" "abcdef2" "100644"
+    # cmd = difft "$MERGED" "$LOCAL" "abcdef1" "100644" "$REMOTE" "abcdef2" "100644"
+    cmd = difft "$LOCAL" "$REMOTE"
 [push]
-    default = matching
+    default = simple
 [apply]
     whitespace = nowarn
 [rerere]
     enabled = true
     autoupdate = true
-[credential]
-    helper = store
 [user]
-    name = arcthur
-    email = arthurtemptation@gmail.com
+	name = arcthur
+	email = arthurtemptation@gmail.com
 [filter "lfs"]
     clean = git-lfs clean -- %f
     smudge = git-lfs smudge -- %f
@@ -95,7 +92,7 @@
     # diff
     d = diff                          # diff unstaged changes
     dc = diff --cached                # diff staged changes
-    last = diff @^                 # diff last committed change
+    last = diff @^                    # diff last committed change
 
     # log
     lo = log --date=local --pretty=full --stat
@@ -110,7 +107,7 @@
 
     # push
     ps = push                         # push
-    pu = push origin master
+    pu = push origin HEAD
 
     # rebase
     rc = rebase --continue            # continue rebase
@@ -144,4 +141,4 @@
     t = tag -n                        # show tags with <n> lines of each tag message
 
     # submodule
-    su = submodule foreach git pull origin master
+    su = "!f() { git submodule foreach 'git pull origin $(git remote show origin | grep \"HEAD branch\" | sed \"s/.*HEAD branch: //\")'; }; f"
