@@ -1,9 +1,6 @@
 # TAPS
 # ---------------
 tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
-tap "homebrew/cask-versions"
-tap "homebrew/services"
 
 # BINARIES
 # ---------------
@@ -52,8 +49,6 @@ brew "topgrade"     # Upgrade everything
 brew "navi"         # An interactive cheatsheet tool for the command-line
 brew "direnv"       # Load and unload environment variables
 brew "nexttrace"    # Visual route tracking
-brew "bitwarden-cli"
-brew "ai-chat"
 
 # Editor
 brew "vim"          # Vi 'workalike' with many additional features
@@ -71,18 +66,13 @@ brew "stow"         # Symlink farm manager
 
 # Programming languages
 brew "ruby"         # Ruby language
-brew "rust"         # Rust language
 brew "python"       # Python language
 brew "pyenv"        # Python version manager
 brew "pyenv-virtualenv" # A pyenv plugin to manage virtualenv
-brew "pipx"         # Execute binaries from Python packages in isolated environments
 brew "go"           # Go language
-brew "goenv"        # Go version manager
 brew "node"         # Node language
 brew "fnm"          # Node.js version manager
-brew "yarn"         # JavaScript package manager
 brew "jq"           # Command-line JSON processor
-brew "typst"        # New markup-based typesetting system
 brew "just"         # Just a command runner
 
 # Docker
@@ -116,7 +106,6 @@ cask "calibre"      # Add WordDumb, Goodreads
 
 # Productivity
 cask "raycast"
-cask "notion"
 cask "eudic"
 cask "obsidian"
 cask "zotero"
@@ -124,7 +113,7 @@ cask "zotero"
 # IM
 cask "wechat"
 cask "discord"
-cask "telegram-desktop"
+cask "whatsapp"
 
 # Utilities
 cask "betterdisplay"
@@ -141,8 +130,7 @@ cask "ghostty"
 cask "visual-studio-code"
 cask "cursor"
 cask "orbstack"
-cask "fork"
-cask "apifox"
+#cask "apifox"
 
 # Invest
 cask "futubull"
@@ -152,4 +140,4 @@ cask "futubull"
 mas "Keynote", id: 409183694
 mas "Things 3", id: 904280696
 mas "Bear", id: 1091189122
-mas "flomo", id: 1665341561
+#mas "flomo", id: 1665341561
