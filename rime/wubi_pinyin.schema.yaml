@@ -1,0 +1,114 @@
+# Rime schema settings
+# encoding: utf-8
+
+schema:
+  schema_id: wubi_pinyin
+  name: "五笔·拼音"
+  version: "0.9"
+  author:
+    - 發明人 王永民先生
+  description: |
+    五筆字型86版＋漢語拼音混合輸入。
+    碼表源自 ibus-table
+  dependencies:
+    - rime_ice 
+
+switches:
+  - name: ascii_mode
+    states: [ 中, A ]
+  - name: ascii_punct
+    states: [ 。，, ．， ]
+  - name: traditionalization
+    states: [ 简, 繁 ]
+  - name: emoji
+    states: [ 💀, 😄 ]
+  - name: full_shape
+    states: [ 半角, 全角 ]
+
+engine:
+  processors:
+    - lua_processor@select_character  # 以词定字
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - lua_translator@date_translator      # 时间、日期、星期
+    - reverse_lookup_translator
+    - table_translator
+    - lua_translator@unicode              # Unicode
+    - lua_translator@number_translator    # 数字、金额大写
+  filters:
+    - simplifier@emoji                  # Emoji
+    - simplifier@traditionalize         # 简繁切换
+
+# Lua 配置: 日期、时间、星期、ISO 8601、时间戳的触发关键字
+date_translator:
+  date: date     # 日期： 2022-11-29
+  time: time     # 时间： 18:13
+  week: week     # 星期： 星期二
+  datetime: datetime    # ISO 8601： 2022-11-29T18:13:11+08:00
+  timestamp: timestamp  # 时间戳： 1669716794
+
+speller:
+  delimiter: " ;'"
+  #max_code_length: 4  # 四碼頂字上屏
+
+translator:
+  dictionary: wubi86
+  prism: wubi_pinyin
+  enable_charset_filter: true
+  enable_sentence: true
+  enable_encoder: true
+  encode_commit_history: true
+  max_phrase_length: 4
+  disable_user_dict_for_patterns:
+    - "^z.*$"
+
+abc_segmentor:
+  extra_tags:
+    - reverse_lookup
+
+reverse_lookup:
+  dictionary: rime_ice
+  prefix: "`"
+  suffix: "'"
+  tips: 〔拼音〕
+  preedit_format:
+    - xform/([jqxy])v/$1u/
+    - xform/([nl])v/$1v/
+    - xform/([nl])ue/$1ve/
+
+punctuator:
+  import_preset: default
+
+key_binder:
+  import_preset: default
+
+recognizer:
+  import_preset: default
+  patterns:
+    reverse_lookup: "`[a-z]*'?$"
+
+# Emoji
+emoji:
+  opencc_config: emoji.json
+  option_name: emoji
+
+# 简繁切换
+traditionalize:
+  option_name: traditionalization
+  opencc_config: s2t.json
+  tips: none
+  excluded_types: [ reverse_lookup ]

@@ -1,0 +1,377 @@
+[include]
+    path = ~/.config/delta/catppuccin.gitconfig
+
+[user]
+    name = arcthur
+    email = arthurtemptation@gmail.com
+    signingkey = ~/.ssh/id_ed25519.pub
+
+[github]
+    user = arcthur
+
+# =============================================================================
+# SECURITY
+# =============================================================================
+
+[commit]
+    gpgsign = true
+    verbose = true
+    # Prevent verbose diff from being included in commit message
+    cleanup = scissors
+
+[tag]
+    gpgSign = true
+    sort = -version:refname
+
+[gpg]
+    format = ssh
+
+[gpg "ssh"]
+    allowedSignersFile = ~/.config/git/allowed_signers
+
+[credential]
+    helper =
+    helper = !/opt/homebrew/bin/gh auth git-credential
+
+# Object integrity - prevent receiving corrupted/malicious objects
+[transfer]
+    fsckObjects = true
+
+[fetch]
+    fsckObjects = true
+    prune = true
+    prunetags = true
+    # Parallel fetching for performance
+    parallel = 0
+    # Write commit-graph to speed up graph operations
+    writeCommitGraph = true
+
+[receive]
+    fsckObjects = true
+
+# =============================================================================
+# CORE SETTINGS
+# =============================================================================
+
+[init]
+    defaultBranch = main
+
+[core]
+    excludesfile = ~/.gitignore_global
+    editor = nvim
+    pager = delta
+    # Performance: cache untracked files
+    untrackedCache = true
+    # Performance: filesystem monitor (requires watchman or built-in)
+    fsmonitor = true
+    # Prevent issues with long paths on some systems
+    longpaths = true
+    # Consistent line endings
+    autocrlf = input
+    # Fail on whitespace issues (optional - can be annoying)
+    # whitespace = error
+
+[index]
+    # index v4 for performance (no side effects unlike manyFiles)
+    version = 4
+    # Skip hash validation on index (faster, safe for local work)
+    # skipHash = true  # Git 2.40+
+
+# =============================================================================
+# DIFF & MERGE
+# =============================================================================
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    features = catppuccin-mocha
+    side-by-side = true
+    line-numbers = true
+
+[diff]
+    tool = difftastic
+    algorithm = histogram
+    colorMoved = default
+    colorMovedWS = allow-indentation-change
+    # Show renames with similarity threshold
+    renames = copies
+    # Submodule diff shows commit log instead of hash
+    submodule = log
+
+[difftool]
+    prompt = false
+
+[difftool "difftastic"]
+    cmd = difft "$LOCAL" "$REMOTE"
+
+[merge]
+    # zdiff3 shows base + both sides (most information)
+    conflictstyle = zdiff3
+    # Renormalize files during merge (helps with complex refactoring conflicts)
+    renormalize = true
+    # Show original in conflict markers
+    # ff = false  # Uncomment to always create merge commits
+
+[mergetool]
+    keepBackup = false
+    prompt = false
+
+[blame]
+    # Ignore formatting commits in blame (create .git-blame-ignore-revs in repo)
+    ignoreRevsFile = .git-blame-ignore-revs
+    # Show original commit for moved/copied lines
+    markIgnoredLines = true
+    markUnblamableLines = true
+
+# =============================================================================
+# WORKFLOW
+# =============================================================================
+
+[pull]
+    # Rebase by default (clean linear history)
+    rebase = true
+    # Alternative: only allow fast-forward (safest)
+    # ff = only
+
+[push]
+    # Push current branch to same name on remote
+    default = current
+    # Auto setup remote tracking
+    autoSetupRemote = true
+    # Push tags with commits
+    followTags = true
+
+[rebase]
+    # Auto-squash fixup!/squash! commits
+    autosquash = true
+    # Auto-stash before rebase
+    autostash = true
+    # Update dependent branches (stacked PRs)
+    updateRefs = true
+    # Warn about removed commits
+    missingCommitsCheck = warn
+
+[rerere]
+    # Remember conflict resolutions
+    enabled = true
+    autoupdate = true
+
+[stash]
+    # Show stash diff in stash list
+    showPatch = true
+
+[status]
+    showStash = true
+    # Show individual files in untracked directories
+    showUntrackedFiles = all
+    # Show submodule summary
+    submoduleSummary = true
+
+[branch]
+    # Sort branches by most recent commit
+    sort = -committerdate
+    # Auto setup rebase for new branches
+    autoSetupRebase = always
+
+[column]
+    ui = auto
+
+[log]
+    date = iso
+    # Show signature verification in log
+    # showSignature = true
+
+# =============================================================================
+# PERFORMANCE
+# =============================================================================
+
+[pack]
+    # Use all cores for packing
+    threads = 0
+
+[gc]
+    # Auto GC settings
+    auto = 256
+
+[maintenance]
+    # Let background scheduler handle maintenance instead of blocking commands
+    # Use `git maintenance start` in each repo to register it
+    auto = false
+    strategy = incremental
+
+# =============================================================================
+# MISC
+# =============================================================================
+
+[apply]
+    whitespace = nowarn
+
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+
+[url "git@github.com:"]
+    pushInsteadOf = https://github.com/
+
+# =============================================================================
+# ALIASES - Defensive by Design
+# =============================================================================
+
+[alias]
+    # add
+    a = add
+    aa = add --all
+    ap = add --patch
+    ai = add --interactive
+
+    # branch (sorted by recent)
+    b = branch -v
+    ba = branch -va
+    bd = branch -d
+    # Find branches containing a commit
+    contains = branch -a --contains
+
+    # switch (modern, replaces checkout for branches)
+    sw = switch
+    swc = switch -c
+    swd = switch --detach
+
+    # restore (modern, replaces checkout for files)
+    re = restore
+    res = restore --staged
+    rea = restore --staged --worktree
+
+    # commit
+    ci = commit
+    cm = commit -m
+    ca = commit --amend
+    can = commit --amend --no-edit
+    caf = commit -a --amend --no-edit
+
+    # Fixup commit (use with rebase autosquash)
+    fix = commit --fixup
+
+    # Auto-absorb staged changes into correct commits (requires: cargo install git-absorb)
+    absorb = !git-absorb --and-rebase
+
+    # Empty commit (for triggering CI)
+    empty = commit --allow-empty -m
+
+    # cherry-pick
+    cp = cherry-pick -x
+
+    # diff
+    d = diff
+    dc = diff --cached
+    ds = diff --staged
+    dw = diff --word-diff
+    last = diff @^
+    dt = difftool
+
+    # Show what would be committed
+    preview = diff --cached --stat
+
+    # log (multiple formats for different needs)
+    l = log --oneline -20
+    lg = log --oneline --graph --decorate -20
+    lga = log --oneline --graph --decorate --all
+    ll = log --pretty=format:'%C(yellow)%h%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset%C(auto)%d%Creset' --date=relative
+
+    # Show commits not yet pushed
+    unpushed = log @{u}.. --oneline
+
+    # Show last N commits with stats
+    recent = log -10 --stat
+
+    # pull & push
+    pl = pull
+    ps = push
+
+    # Safe force push (checks remote state)
+    pushf = push --force-with-lease --force-if-includes
+
+    # Push and create PR (requires gh cli)
+    pr = !gh pr create
+
+    # rebase
+    rb = rebase
+    rbi = rebase -i
+    rbc = rebase --continue
+    rbs = rebase --skip
+    rba = rebase --abort
+
+    # Rebase onto main (auto-detect default branch, fallback to main)
+    rbm = "!f() { target=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@'); git rebase origin/${target:-main}; }; f"
+
+    # remote
+    rv = remote -v
+
+    # reset (descriptive names, safer)
+    unstage = reset HEAD --
+    uncommit = reset --soft HEAD~1
+    # NOTE: No hard reset alias - should be explicit
+
+    # stash
+    st = stash push
+    stm = stash push -m
+    stu = stash push -u
+    stl = stash list
+    stp = stash pop
+    sta = stash apply
+    std = stash drop
+    sts = stash show -p
+
+    # status
+    s = status -sb
+    ss = status
+
+    # tag
+    t = tag -n
+
+    # -------------------------------------------------------------------------
+    # Utility Commands
+    # -------------------------------------------------------------------------
+
+    # Show current branch
+    current = rev-parse --abbrev-ref HEAD
+
+    # Show root directory
+    root = rev-parse --show-toplevel
+
+    # List contributors
+    contributors = shortlog -sne
+
+    # Find commits by message
+    find = log --oneline --all --grep
+
+    # Show files changed in a commit
+    files = diff-tree --no-commit-id --name-only -r
+
+    # Interactive cleanup (BE CAREFUL)
+    cleanup = "!git branch --merged | grep -v '\\*\\|main\\|master\\|dev' | xargs -n 1 git branch -d"
+
+    # Undo last action (uses reflog)
+    undo = "!git reflog | head -20 && echo '---' && echo 'Use: git reset HEAD@{n}'"
+
+    # WIP management
+    wip = "!git add -A && git commit -m 'WIP: $(date)'"
+    unwip = "!git log -1 --format='%s' | grep -q '^WIP' && git reset HEAD~1"
+
+    # submodule
+    sub = submodule update --init --recursive
+
+    # -------------------------------------------------------------------------
+    # Investigation
+    # -------------------------------------------------------------------------
+
+    # Who changed this file most
+    who = "!f() { git log --format='%an' -- \"$1\" | sort | uniq -c | sort -rn | head; }; f"
+
+    # When was file last modified
+    when = log -1 --format='%ai' --
+
+    # Show branch relationship
+    graph = log --oneline --graph --all --decorate
