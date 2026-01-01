@@ -6,8 +6,6 @@ patch:
     com.microsoft.VSCode:
       ascii_mode: true   # 初始爲西文模式
       vim_mode: true
-    org.alacritty:
-      ascii_mode: true   # 初始爲西文模式
   
   style:
     # 选择皮肤，亮色与暗色主题
