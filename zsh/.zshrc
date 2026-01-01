@@ -235,11 +235,8 @@ _cached_eval() {
   source $cache
 }
 
-# bat
-if (( $+commands[bat] )); then
-  export BAT_THEME="Catppuccin Mocha"
-  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-fi
+# bat (theme configured in ~/.config/bat/config)
+(( $+commands[bat] )) && export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # zoxide (z4m handles alias, add fzf opts)
 if (( $+commands[zoxide] )); then

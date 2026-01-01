@@ -1,0 +1,6 @@
+# Theme
+--theme="Catppuccin Mocha"
+
+# Use as man pager
+--style=plain
+--paging=never

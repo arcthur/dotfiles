@@ -42,6 +42,7 @@ stow_package() {
 
 echo ""
 echo "Stowing dotfiles..."
+stow_package bat
 stow_package git
 stow_package nvim
 stow_package topgrade
