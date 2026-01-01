@@ -2,6 +2,49 @@
 
 Configuration files for editors and other UNIX tools. This is to make it easier to setup programming environment for me.
 
+## Quick Start
+
+```bash
+./init.sh
+```
+
+This script will automatically install Nix, Devbox, and stow all dotfiles.
+
+## Nix
+
+Using [Determinate Systems Nix Installer](https://github.com/DeterminateSystems/nix-installer) for a better installation experience:
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+```
+
+To uninstall:
+
+```bash
+/nix/nix-installer uninstall
+```
+
+## Devbox
+
+[Devbox](https://www.jetify.com/devbox) creates isolated, reproducible development environments using Nix.
+
+```bash
+curl -fsSL https://get.jetify.com/devbox | bash
+```
+
+Usage:
+
+```bash
+# Initialize a new project
+devbox init
+
+# Add packages
+devbox add nodejs python
+
+# Enter the shell
+devbox shell
+```
+
 ## Brew
 
 `brew bundle install`

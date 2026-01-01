@@ -76,7 +76,15 @@ autoload -Uz edit-command-line
 zle -N edit-command-line
 
 # =============================================================================
-# 3. PATH
+# 3. NIX
+# =============================================================================
+
+# Nix (must be before PATH setup)
+[[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]] && \
+  source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+
+# =============================================================================
+# 4. PATH
 # =============================================================================
 
 typeset -U path fpath
@@ -98,7 +106,7 @@ path=(
 )
 
 # =============================================================================
-# 4. ENVIRONMENT
+# 5. ENVIRONMENT
 # =============================================================================
 
 export EDITOR=${EDITOR:-nvim}
@@ -108,7 +116,7 @@ export FZF_DEFAULT_OPTS="--reverse --multi \
 --bind=ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down"
 
 # =============================================================================
-# 5. FUNCTIONS
+# 6. FUNCTIONS
 # =============================================================================
 
 # Ctrl+Z: toggle foreground/background
@@ -140,7 +148,7 @@ gd() {
 }
 
 # =============================================================================
-# 6. KEY BINDINGS
+# 7. KEY BINDINGS
 # =============================================================================
 
 # Word
@@ -169,7 +177,7 @@ z4m bindkey undo Ctrl+/ Shift+Tab
 z4m bindkey redo Option+/
 
 # =============================================================================
-# 7. ALIASES
+# 8. ALIASES
 # =============================================================================
 
 # Core (safe defaults)
@@ -209,7 +217,7 @@ alias -s {md,markdown,rst,toml,json,yaml,yml}=code
 alias -s {avi,mkv,mov,mp3,mp4,webm}=iina
 
 # =============================================================================
-# 8. TOOL INTEGRATIONS
+# 9. TOOL INTEGRATIONS
 # =============================================================================
 
 _zsh_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
@@ -258,7 +266,7 @@ unset _zsh_cache
 [[ -f ~/.orbstack/shell/init.zsh ]] && source ~/.orbstack/shell/init.zsh
 
 # =============================================================================
-# 9. LOCAL CONFIG
+# 10. LOCAL CONFIG
 # =============================================================================
 
 z4m source ~/.env.zsh
