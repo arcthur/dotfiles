@@ -2,6 +2,7 @@
 # ---------------
 tap "homebrew/bundle"
 tap "brewforge/chinese"
+tap "raine/workmux"
 tap "steveyegge/beads"
 tap "moonrepo/tap"
 
@@ -76,6 +77,7 @@ brew "jq"           # Command-line JSON processor
 brew "just"         # Just a command runner
 brew "docker"       # Docker CLI client
 brew "mole"         # SSH tunnel tool
+brew "workmux"      # Git worktree + tmux workflow for parallel AI agents
 
 # Programming languages
 brew "mise"         # env vars, task runner

@@ -1,0 +1,21 @@
+# Workmux global configuration
+# Docs: https://github.com/joshka/workmux
+
+# Disable auto-modification of tmux window-status-format
+# (manually configured in tmux.conf for catppuccin compatibility)
+status_format: false
+
+# Status icons displayed in tmux window names
+status_icons:
+  working: "🤖"
+  waiting: "💬"
+  done: "✅"
+
+# Default agent command placeholder
+# agent: claude
+
+# Merge strategy: merge, rebase, squash
+# merge_strategy: rebase
+
+# Worktree directory (relative to project root)
+# worktree_dir: "../__worktrees"
