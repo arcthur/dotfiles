@@ -119,6 +119,14 @@ export FZF_DEFAULT_OPTS="--reverse --multi \
 # 6. FUNCTIONS
 # =============================================================================
 
+# Clear screen with prompt at bottom (no blank lines in scrollback)
+clear-screen-bottom() {
+  echoti clear .                # Clear viewport
+  echoti cup $((LINES-1)) 0     # Move cursor to bottom row
+  zle reset-prompt              # Redraw prompt
+}
+zle -N clear-screen-bottom
+
 # Ctrl+Z: toggle foreground/background
 my-ctrl-z() {
   if [[ $#BUFFER -eq 0 ]]; then
@@ -152,9 +160,9 @@ gd() {
 # =============================================================================
 
 # Word
-z4m bindkey z4m-backward-kill-word  Ctrl+Backspace
-z4m bindkey z4m-backward-kill-zword Ctrl+Alt+Backspace
-z4m bindkey z4m-kill-zword          Ctrl+Alt+Delete
+z4m bindkey z4m-backward-kill-word  Alt+Backspace
+z4m bindkey z4m-backward-kill-zword Ctrl+Alt+W
+z4m bindkey z4m-kill-zword          Ctrl+Alt+D
 
 # Line
 z4m bindkey backward-kill-line      Ctrl+U
@@ -173,8 +181,11 @@ z4m bindkey z4m-fzf-dir-history     Alt+J
 z4m bindkey my-ctrl-z               Ctrl+Z
 z4m bindkey edit-command-line       Alt+E
 z4m bindkey z4m-exit                Ctrl+D
-z4m bindkey undo Ctrl+/ Shift+Tab
-z4m bindkey redo Option+/
+z4m bindkey undo                    Ctrl+/ Shift+Tab
+z4m bindkey redo                    Alt+/
+z4m bindkey run-help                Ctrl+Alt+H
+
+bindkey '^[^L' clear-screen-bottom  # Ctrl+Alt+L
 
 # =============================================================================
 # 8. ALIASES
