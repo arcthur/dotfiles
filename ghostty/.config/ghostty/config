@@ -26,6 +26,8 @@ window-save-state = always
 window-inherit-working-directory = true
 window-inherit-font-size = true
 
+fullscreen = true
+
 # =============================================================================
 # Behavior
 # =============================================================================
@@ -61,5 +63,5 @@ keybind = cmd+s>-=new_split:down
 
 macos-option-as-alt = true
 macos-titlebar-style = hidden
-macos-non-native-fullscreen = true
+macos-non-native-fullscreen = padded-notch
 macos-window-shadow = false
