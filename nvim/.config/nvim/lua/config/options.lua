@@ -43,7 +43,3 @@ opt.timeoutlen = 300
 
 -- Completion
 opt.completeopt = { "menu", "menuone", "noselect" }
-
--- Disable netrw (using nvim-tree instead)
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1

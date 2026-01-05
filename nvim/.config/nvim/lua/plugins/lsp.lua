@@ -4,40 +4,38 @@ local icons = require("config.icons")
 
 return {
   -- Mason: Package manager for LSP servers
+  -- Lazy-loaded, will be triggered by mason-lspconfig
   {
     "williamboman/mason.nvim",
-    lazy = false,
-    config = function()
-      require("mason").setup({
-        ui = {
-          icons = {
-            package_installed = icons.ui.Check,
-            package_pending = icons.ui.ChevronRight,
-            package_uninstalled = icons.ui.Close,
-          },
-          border = "rounded",
+    cmd = "Mason",
+    build = ":MasonUpdate",
+    opts = {
+      ui = {
+        icons = {
+          package_installed = icons.ui.Check,
+          package_pending = icons.ui.ChevronRight,
+          package_uninstalled = icons.ui.Close,
         },
-      })
-    end,
+        border = "rounded",
+      },
+    },
   },
 
   -- Bridge between mason and lspconfig
+  -- Loaded as dependency of lspconfig
   {
     "williamboman/mason-lspconfig.nvim",
-    dependencies = { "williamboman/mason.nvim" },
-    config = function()
-      require("mason-lspconfig").setup({
-        ensure_installed = settings.lsp_servers,
-        automatic_installation = true,
-      })
-    end,
+    opts = {
+      ensure_installed = settings.lsp_servers,
+      automatic_installation = true,
+    },
   },
 
   -- Auto-install formatters, linters, etc.
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
-    dependencies = { "williamboman/mason.nvim" },
     event = "VeryLazy",
+    dependencies = { "williamboman/mason.nvim" },
     config = function()
       local tool_set = {}
       local function add_tool(tool)
@@ -72,6 +70,7 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
+      "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
     },
     config = function()
@@ -130,10 +129,9 @@ return {
       -- Enable all configured servers
       vim.lsp.enable(settings.lsp_servers)
 
-      -- Diagnostic config
+      -- Diagnostic config (virtual_text handled by tiny-inline-diagnostic in ux.lua)
       local diag_icons = icons.diagnostics
       vim.diagnostic.config({
-        virtual_text = settings.diagnostics_virtual_text and { prefix = "●" } or false,
         signs = {
           text = {
             [vim.diagnostic.severity.ERROR] = diag_icons.Error,

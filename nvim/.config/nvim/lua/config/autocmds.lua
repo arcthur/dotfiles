@@ -102,3 +102,22 @@ autocmd("FileType", {
     vim.opt_local.spell = true
   end,
 })
+
+-- Auto close NvimTree when it's the last window
+-- From nvimdots: prevents leaving an empty file tree
+autocmd("BufEnter", {
+  group = augroup("nvimtree_auto_close", { clear = true }),
+  pattern = "NvimTree_*",
+  callback = function()
+    local layout = vim.api.nvim_call_function("winlayout", {})
+    -- layout[1] == "leaf" means only one window remains
+    -- Check if that window is NvimTree
+    if
+      layout[1] == "leaf"
+      and vim.bo[vim.api.nvim_win_get_buf(layout[2])].filetype == "NvimTree"
+      and layout[3] == nil
+    then
+      vim.api.nvim_command([[confirm quit]])
+    end
+  end,
+})

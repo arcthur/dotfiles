@@ -1,115 +1,120 @@
--- Keymaps
-local map = vim.keymap.set
+-- Keymaps using chainable DSL (inspired by nvimdots)
+local bind = require("config.bind")
 
--- === FILE OPERATIONS ===
-map("n", "<C-s>", "<cmd>w<CR>", { desc = "Save file" })
-map("i", "<C-s>", "<Esc><cmd>w<CR>a", { desc = "Save file" })
-map("n", "<C-q>", "<cmd>q<CR>", { desc = "Quit" })
-map("n", "<leader>bn", "<cmd>enew<CR>", { desc = "buffer: New" })
+-- Shorthand aliases
+local cr = bind.map_cr       -- :cmd<CR>
+local cmd = bind.map_cmd     -- raw command
+local cu = bind.map_cu       -- :<C-u>cmd<CR>
+local cb = bind.map_callback -- Lua function
 
--- === QUICK ACCESS (Ctrl+) ===
-map("n", "<C-p>", "<cmd>Telescope find_files<CR>", { desc = "Find files" })
-map("n", "<C-b>", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file tree" })
+-- ============================================
+-- All Keymaps
+-- ============================================
+bind.load({
+  -- === FILE OPERATIONS ===
+  ["n|<C-s>"]       = cr("w"):with_desc("Save file"),
+  ["i|<C-s>"]       = cmd("<Esc><cmd>w<CR>a"):with_desc("Save file"),
+  ["n|<C-q>"]       = cr("q"):with_desc("Quit"),
+  ["n|<leader>bn"]  = cr("enew"):with_desc("buffer: New"),
 
--- Note: <leader>f* Telescope keymaps are defined in plugins/telescope.lua
--- Visual mode grep selection (not in telescope.lua)
-map("v", "<leader>fs", function()
-  -- Get actual visual selection
-  vim.cmd('noau normal! "vy')
-  local text = vim.fn.getreg("v")
-  text = vim.fn.trim(text:gsub("\n", " "))
-  if text == "" then
-    return
-  end
-  require("telescope.builtin").grep_string({ search = text })
-end, { desc = "Search selection" })
+  -- === QUICK ACCESS (Ctrl+) ===
+  ["n|<C-p>"]       = cr("Telescope find_files"):with_desc("Find files"),
+  ["n|<C-b>"]       = cr("NvimTreeToggle"):with_desc("Toggle file tree"),
 
--- === BUFFER (leader+b) ===
-map("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "buffer: Delete" })
-map("n", "<leader>bo", "<cmd>BufferLineCloseOthers<CR>", { desc = "buffer: Close others" })
-map("n", "<leader>bp", "<cmd>BufferLinePick<CR>", { desc = "buffer: Pick" })
-map("n", "<A-i>", "<cmd>BufferLineCycleNext<CR>", { desc = "buffer: Next", silent = true })
-map("n", "<A-o>", "<cmd>BufferLineCyclePrev<CR>", { desc = "buffer: Prev", silent = true })
-map("n", "<A-S-i>", "<cmd>BufferLineMoveNext<CR>", { desc = "buffer: Move next", silent = true })
-map("n", "<A-S-o>", "<cmd>BufferLineMovePrev<CR>", { desc = "buffer: Move prev", silent = true })
-map("n", "<A-1>", "<cmd>BufferLineGoToBuffer 1<CR>", { silent = true, desc = "buffer: Goto 1" })
-map("n", "<A-2>", "<cmd>BufferLineGoToBuffer 2<CR>", { silent = true, desc = "buffer: Goto 2" })
-map("n", "<A-3>", "<cmd>BufferLineGoToBuffer 3<CR>", { silent = true, desc = "buffer: Goto 3" })
-map("n", "<A-4>", "<cmd>BufferLineGoToBuffer 4<CR>", { silent = true, desc = "buffer: Goto 4" })
-map("n", "<A-5>", "<cmd>BufferLineGoToBuffer 5<CR>", { silent = true, desc = "buffer: Goto 5" })
-map("n", "<A-q>", "<cmd>bdelete<CR>", { desc = "buffer: Close", silent = true })
+  -- === VISUAL SELECTION SEARCH ===
+  ["v|<leader>fs"]  = cb(function()
+    vim.cmd('noau normal! "vy')
+    local text = vim.fn.getreg("v")
+    text = vim.fn.trim(text:gsub("\n", " "))
+    if text ~= "" then
+      require("telescope.builtin").grep_string({ search = text })
+    end
+  end):with_desc("Search selection"),
 
--- === TAB (<leader>t prefix, avoids breaking t{char} motion) ===
-map("n", "<leader>tn", "<cmd>tabnew<CR>", { desc = "tab: New" })
-map("n", "<leader>tc", "<cmd>tabclose<CR>", { desc = "tab: Close" })
-map("n", "<leader>to", "<cmd>tabonly<CR>", { desc = "tab: Close others" })
-map("n", "]<Tab>", "<cmd>tabnext<CR>", { desc = "tab: Next" })
-map("n", "[<Tab>", "<cmd>tabprevious<CR>", { desc = "tab: Prev" })
+  -- === BUFFER (leader+b) ===
+  ["n|<leader>bd"]  = cr("bdelete"):with_desc("buffer: Delete"),
+  ["n|<leader>bo"]  = cr("BufferLineCloseOthers"):with_desc("buffer: Close others"),
+  ["n|<leader>bp"]  = cr("BufferLinePick"):with_desc("buffer: Pick"),
+  ["n|<A-i>"]       = cr("BufferLineCycleNext"):with_silent():with_desc("buffer: Next"),
+  ["n|<A-o>"]       = cr("BufferLineCyclePrev"):with_silent():with_desc("buffer: Prev"),
+  ["n|<A-S-i>"]     = cr("BufferLineMoveNext"):with_silent():with_desc("buffer: Move next"),
+  ["n|<A-S-o>"]     = cr("BufferLineMovePrev"):with_silent():with_desc("buffer: Move prev"),
+  ["n|<A-1>"]       = cr("BufferLineGoToBuffer 1"):with_silent():with_desc("buffer: Goto 1"),
+  ["n|<A-2>"]       = cr("BufferLineGoToBuffer 2"):with_silent():with_desc("buffer: Goto 2"),
+  ["n|<A-3>"]       = cr("BufferLineGoToBuffer 3"):with_silent():with_desc("buffer: Goto 3"),
+  ["n|<A-4>"]       = cr("BufferLineGoToBuffer 4"):with_silent():with_desc("buffer: Goto 4"),
+  ["n|<A-5>"]       = cr("BufferLineGoToBuffer 5"):with_silent():with_desc("buffer: Goto 5"),
+  ["n|<A-q>"]       = cr("bdelete"):with_silent():with_desc("buffer: Close"),
 
--- === EDITOR ===
--- Note: <C-a> overrides number increment; use g<C-a> for visual increment if needed
-map("n", "<C-/>", "gcc", { desc = "Toggle comment", remap = true })
-map("v", "<C-/>", "gc", { desc = "Toggle comment", remap = true })
-map("n", "<C-a>", "ggVG", { desc = "Select all" })
+  -- === TAB ===
+  ["n|<leader>tn"]  = cr("tabnew"):with_desc("tab: New"),
+  ["n|<leader>tc"]  = cr("tabclose"):with_desc("tab: Close"),
+  ["n|<leader>to"]  = cr("tabonly"):with_desc("tab: Close others"),
+  ["n|]<Tab>"]      = cr("tabnext"):with_desc("tab: Next"),
+  ["n|[<Tab>"]      = cr("tabprevious"):with_desc("tab: Prev"),
 
--- === LINE OPERATIONS (Alt+Arrow) ===
-map("n", "<A-Up>", "<cmd>m .-2<CR>==", { desc = "Move line up", silent = true })
-map("n", "<A-Down>", "<cmd>m .+1<CR>==", { desc = "Move line down", silent = true })
-map("i", "<A-Up>", "<Esc><cmd>m .-2<CR>==gi", { desc = "Move line up", silent = true })
-map("i", "<A-Down>", "<Esc><cmd>m .+1<CR>==gi", { desc = "Move line down", silent = true })
-map("v", "<A-Up>", ":m '<-2<CR>gv=gv", { desc = "Move lines up", silent = true })
-map("v", "<A-Down>", ":m '>+1<CR>gv=gv", { desc = "Move lines down", silent = true })
-map("n", "<A-S-Up>", "yyP", { desc = "Duplicate line up" })
-map("n", "<A-S-Down>", "yyp", { desc = "Duplicate line down" })
-map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move lines down", silent = true })
-map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move lines up", silent = true })
+  -- === EDITOR ===
+  ["n|<C-/>"]       = cmd("gcc"):with_remap():with_desc("Toggle comment"),
+  ["v|<C-/>"]       = cmd("gc"):with_remap():with_desc("Toggle comment"),
+  ["n|<C-a>"]       = cmd("ggVG"):with_desc("Select all"),
 
--- === WINDOW/SPLIT ===
-map("n", "<C-\\>", "<cmd>vsplit<CR>", { desc = "Split right" })
-map("n", "<leader>wv", "<cmd>vsplit<CR>", { desc = "window: Split vertical" })
-map("n", "<leader>ws", "<cmd>split<CR>", { desc = "window: Split horizontal" })
-map("n", "<leader>wc", "<cmd>close<CR>", { desc = "window: Close" })
-map("n", "<leader>wo", "<cmd>only<CR>", { desc = "window: Close others" })
+  -- === LINE OPERATIONS (Alt+Arrow) ===
+  ["n|<A-Up>"]      = cmd("<cmd>m .-2<CR>=="):with_silent():with_desc("Move line up"),
+  ["n|<A-Down>"]    = cmd("<cmd>m .+1<CR>=="):with_silent():with_desc("Move line down"),
+  ["i|<A-Up>"]      = cmd("<Esc><cmd>m .-2<CR>==gi"):with_silent():with_desc("Move line up"),
+  ["i|<A-Down>"]    = cmd("<Esc><cmd>m .+1<CR>==gi"):with_silent():with_desc("Move line down"),
+  ["v|<A-Up>"]      = cmd(":m '<-2<CR>gv=gv"):with_silent():with_desc("Move lines up"),
+  ["v|<A-Down>"]    = cmd(":m '>+1<CR>gv=gv"):with_silent():with_desc("Move lines down"),
+  ["n|<A-S-Up>"]    = cmd("yyP"):with_desc("Duplicate line up"),
+  ["n|<A-S-Down>"]  = cmd("yyp"):with_desc("Duplicate line down"),
+  ["v|J"]           = cmd(":m '>+1<CR>gv=gv"):with_silent():with_desc("Move lines down"),
+  ["v|K"]           = cmd(":m '<-2<CR>gv=gv"):with_silent():with_desc("Move lines up"),
 
--- === BETTER DEFAULTS ===
-map("n", "<Esc>", "<cmd>nohlsearch<CR>", { silent = true, desc = "Clear search highlight" })
-map("v", "<", "<gv", { desc = "Indent left" })
-map("v", ">", ">gv", { desc = "Indent right" })
-map("n", "J", "mzJ`z", { desc = "Join lines (keep cursor)" })
-map("n", "n", "nzzzv", { desc = "Next match (centered)" })
-map("n", "N", "Nzzzv", { desc = "Prev match (centered)" })
-map("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
-map("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
-map("n", "Y", "y$", { desc = "Yank to EOL" })
-map("n", "D", "d$", { desc = "Delete to EOL" })
+  -- === WINDOW/SPLIT ===
+  ["n|<C-\\>"]      = cr("vsplit"):with_desc("Split right"),
+  ["n|<leader>wv"]  = cr("vsplit"):with_desc("window: Split vertical"),
+  ["n|<leader>ws"]  = cr("split"):with_desc("window: Split horizontal"),
+  ["n|<leader>wc"]  = cr("close"):with_desc("window: Close"),
+  ["n|<leader>wo"]  = cr("only"):with_desc("window: Close others"),
 
--- === FILETREE (leader+n) ===
--- Note: <leader>e is mapped in editor.lua (nvim-tree plugin)
-map("n", "<leader>nf", "<cmd>NvimTreeFindFile<CR>", { desc = "filetree: Find file" })
-map("n", "<leader>nr", "<cmd>NvimTreeRefresh<CR>", { desc = "filetree: Refresh" })
+  -- === BETTER DEFAULTS ===
+  ["n|<Esc>"]       = cr("nohlsearch"):with_silent():with_desc("Clear search highlight"),
+  ["v|<"]           = cmd("<gv"):with_desc("Indent left"),
+  ["v|>"]           = cmd(">gv"):with_desc("Indent right"),
+  ["n|J"]           = cmd("mzJ`z"):with_desc("Join lines (keep cursor)"),
+  ["n|n"]           = cmd("nzzzv"):with_desc("Next match (centered)"),
+  ["n|N"]           = cmd("Nzzzv"):with_desc("Prev match (centered)"),
+  ["n|<C-d>"]       = cmd("<C-d>zz"):with_desc("Half page down (centered)"),
+  ["n|<C-u>"]       = cmd("<C-u>zz"):with_desc("Half page up (centered)"),
+  ["n|Y"]           = cmd("y$"):with_desc("Yank to EOL"),
+  ["n|D"]           = cmd("d$"):with_desc("Delete to EOL"),
 
--- === LSP (leader+l) ===
-map("n", "<leader>li", "<cmd>LspInfo<CR>", { desc = "lsp: Info" })
-map("n", "<leader>lr", "<cmd>LspRestart<CR>", { desc = "lsp: Restart" })
-map("n", "gK", function()
-  local ok, blink = pcall(require, "blink.cmp")
-  if not ok then
-    return
-  end
-  if blink.is_signature_visible() then
-    blink.hide_signature()
-  else
-    blink.show_signature()
-  end
-end, { desc = "Signature help (blink)" })
+  -- === FILETREE (leader+n) ===
+  ["n|<leader>nf"]  = cr("NvimTreeFindFile"):with_desc("filetree: Find file"),
+  ["n|<leader>nr"]  = cr("NvimTreeRefresh"):with_desc("filetree: Refresh"),
 
--- === WHICH-KEY GROUPS ===
-map("n", "<leader>f", "", { desc = "+find" })
-map("n", "<leader>g", "", { desc = "+git" })
-map("n", "<leader>s", "", { desc = "+search/replace" })
-map("n", "<leader>q", "", { desc = "+session" })
-map("n", "<leader>x", "", { desc = "+diagnostics" })
-map("n", "<leader>b", "", { desc = "+buffer" })
-map("n", "<leader>w", "", { desc = "+window" })
-map("n", "<leader>n", "", { desc = "+filetree" })
-map("n", "<leader>l", "", { desc = "+lsp" })
+  -- === LSP (leader+l) ===
+  ["n|<leader>li"]  = cr("LspInfo"):with_desc("lsp: Info"),
+  ["n|<leader>lr"]  = cr("LspRestart"):with_desc("lsp: Restart"),
+  ["n|gK"]          = cb(function()
+    local ok, blink = pcall(require, "blink.cmp")
+    if not ok then return end
+    if blink.is_signature_visible() then
+      blink.hide_signature()
+    else
+      blink.show_signature()
+    end
+  end):with_desc("Signature help (blink)"),
+
+  -- === WHICH-KEY GROUPS ===
+  ["n|<leader>f"]   = cmd(""):with_desc("+find"),
+  ["n|<leader>g"]   = cmd(""):with_desc("+git"),
+  ["n|<leader>s"]   = cmd(""):with_desc("+search/replace"),
+  ["n|<leader>q"]   = cmd(""):with_desc("+session"),
+  ["n|<leader>x"]   = cmd(""):with_desc("+diagnostics"),
+  ["n|<leader>b"]   = cmd(""):with_desc("+buffer"),
+  ["n|<leader>w"]   = cmd(""):with_desc("+window"),
+  ["n|<leader>n"]   = cmd(""):with_desc("+filetree"),
+  ["n|<leader>l"]   = cmd(""):with_desc("+lsp"),
+  ["n|<leader>t"]   = cmd(""):with_desc("+tab"),
+})

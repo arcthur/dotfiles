@@ -35,10 +35,6 @@ settings.format_on_save = true
 ---@type number
 settings.format_timeout = 500
 
--- Show diagnostics virtual text
----@type boolean
-settings.diagnostics_virtual_text = true
-
 -- ============================================
 -- LSP Servers
 -- ============================================
