@@ -223,6 +223,12 @@ for i in {1..9}; do alias "$i"="cd -$i"; done; unset i
 (( $+commands[duf] ))  && alias df='duf'  || alias df='df -h'
 (( $+commands[dust] )) && alias du='dust' || alias du='du -csh'
 
+# AI agents
+(( $+commands[claude] )) && alias cc='claude'
+(( $+commands[claude] )) && alias ccd='claude --dangerously-skip-permissions'
+(( $+commands[codex] )) && alias cx='codex'
+(( $+commands[codex] )) && alias cxn='codex --sandbox workspace-write --ask-for-approval never'
+
 # Suffix aliases
 alias -s {md,markdown,rst,toml,json,yaml,yml}=code
 alias -s {avi,mkv,mov,mp3,mp4,webm}=iina

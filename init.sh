@@ -51,6 +51,14 @@ stow_package zsh
 stow_package fast-theme
 stow_package workmux
 stow_package ghostty
+stow_package codex
+
+# Claude Code symlink (not managed by stow)
+if [ ! -e ~/.claude/CLAUDE.md ]; then
+    mkdir -p ~/.claude
+    ln -s ~/dotfiles/codex/.codex/AGENTS.override.md ~/.claude/CLAUDE.md
+    echo -e "${GREEN}✓${NC} claude CLAUDE.md symlink"
+fi
 
 echo ""
 echo -e "${GREEN}Done!${NC}"

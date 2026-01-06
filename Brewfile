@@ -132,6 +132,8 @@ cask "font-hack-nerd-font"
 cask "ghostty"
 cask "visual-studio-code"
 cask "cursor"
+cask "claude-code"
+cask "codex"
 cask "orbstack"
 
 # Invest
