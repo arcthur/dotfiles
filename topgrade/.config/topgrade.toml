@@ -8,15 +8,7 @@ cleanup = true
 disable = [
   "system",      # macOS system updates - do manually
   "containers",  # No container updates needed
-  "node",        # Managed by fnm, not topgrade
 ]
-
-[git]
-repos = [
-  "~/.config/nvim",
-  "~/dotfiles/",
-]
-arguments = "--rebase --autostash"
 
 [brew]
 greedy_cask = true
