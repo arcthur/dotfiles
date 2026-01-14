@@ -8,6 +8,7 @@ cleanup = true
 disable = [
   "system",      # macOS system updates - do manually
   "containers",  # No container updates needed
+  "nix",         # Use `nix upgrade-nix` instead of nix-env
 ]
 
 [brew]
