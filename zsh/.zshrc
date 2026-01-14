@@ -83,6 +83,9 @@ zle -N edit-command-line
 [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]] && \
   source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
+# Use system SSL certs (user profile may not have nix-cacert)
+export NIX_SSL_CERT_FILE=/etc/ssl/cert.pem
+
 # =============================================================================
 # 4. PATH
 # =============================================================================
