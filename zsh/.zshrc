@@ -226,6 +226,9 @@ for i in {1..9}; do alias "$i"="cd -$i"; done; unset i
 (( $+commands[duf] ))  && alias df='duf'  || alias df='df -h'
 (( $+commands[dust] )) && alias du='dust' || alias du='du -csh'
 
+# image viewer (kitty graphics protocol)
+(( $+commands[viu] )) && alias img='viu'
+
 # AI agents
 (( $+commands[claude] )) && alias cc='claude'
 (( $+commands[claude] )) && alias ccd='claude --dangerously-skip-permissions'
