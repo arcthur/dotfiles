@@ -43,6 +43,7 @@ brew "tealdeer"     # Community-maintained docs (better man)
 brew "gping"        # Interactive ping tool (better ping)
 brew "broot"        # Navigate directory trees (better tree)
 brew "bottom"       # Cross-platform graphical process/system monitor (better top)
+brew "viu"          # Terminal image viewer (kitty graphics protocol)
 
 # Utilities
 brew "fzf"          # Fuzzy Finder
