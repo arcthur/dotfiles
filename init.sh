@@ -52,8 +52,9 @@ stow_package fast-theme
 stow_package workmux
 stow_package ghostty
 stow_package codex
+stow_package claude
 
-# Claude Code symlink (not managed by stow)
+# Claude Code CLAUDE.md symlink (reuses codex config, not managed by stow)
 if [ ! -e ~/.claude/CLAUDE.md ]; then
     mkdir -p ~/.claude
     ln -s ~/dotfiles/codex/.codex/AGENTS.override.md ~/.claude/CLAUDE.md
