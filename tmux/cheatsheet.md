@@ -27,9 +27,10 @@
 | `C-a _` | Split full-height |
 | `C-a h/j/k/l` | Select pane |
 | `C-a H/J/K/L` | Resize pane |
-| `C-a C-j/C-k` | Swap pane |
+| `C-a C-h/j/k/l` | Swap pane |
 | `C-a b` | Break to window |
 | `C-a m/M` | Merge from window |
+| `C-a t` | Thumbs (pick/copy/open) |
 
 ### Copy Mode
 | Key | Action |
@@ -52,7 +53,8 @@
 | Key | Action |
 |-----|--------|
 | `C-a r` | Reload config |
-| `C-a C-l` | Clear screen |
+| `C-a g` | Menus |
+| `C-a C-o` | Clear screen |
 | `C-a ?` | This cheatsheet |
 
 ---

@@ -5,6 +5,7 @@ tap "brewforge/chinese"
 tap "raine/workmux"
 tap "steveyegge/beads"
 tap "moonrepo/tap"
+tap "nikitabobko/tap"
 
 # BINARIES
 # ---------------
@@ -85,6 +86,8 @@ brew "mise"         # env vars, task runner
 
 # Mac OS X
 brew "mas"          # Mac App Store command-line interface
+brew "sketchybar"   # Custom macOS statusbar
+cask "aerospace"    # Tiling window manager
 
 # CASK
 # ---------------
@@ -130,6 +133,8 @@ cask "bitwarden"
 
 # Development
 cask "font-hack-nerd-font"
+cask "font-jetbrains-mono-nerd-font"
+cask "font-sketchybar-app-font"
 cask "ghostty"
 cask "visual-studio-code"
 cask "cursor"

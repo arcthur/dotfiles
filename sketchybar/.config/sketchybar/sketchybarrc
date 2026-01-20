@@ -1,0 +1,28 @@
+#!/bin/bash
+
+export CONFIG_DIR="$HOME/.config/sketchybar"
+export PLUGIN_DIR="$CONFIG_DIR/plugins"
+ITEM_DIR="$CONFIG_DIR/items"
+
+source "$CONFIG_DIR/settings.sh"
+
+sketchybar --bar "${bar[@]}" --default "${default[@]}"
+
+# --- Left Side Items ---
+source "$ITEM_DIR/spaces.sh"
+source "$ITEM_DIR/front_app.sh"
+
+# --- Right Side Items ---
+# source "$ITEM_DIR/clock.sh"
+# source "$ITEM_DIR/eject_menu.sh"
+# source "$ITEM_DIR/volume.sh"
+# source "$ITEM_DIR/wifi.sh"
+source "$ITEM_DIR/network.sh"
+source "$ITEM_DIR/battery.sh"
+source "$ITEM_DIR/cpu.sh"
+source "$ITEM_DIR/ram.sh"
+source "$ITEM_DIR/storage.sh"
+source "$ITEM_DIR/media.sh"
+
+sketchybar --update
+sketchybar --trigger storage battery cpu.percent ram.percent
