@@ -53,6 +53,8 @@ stow_package workmux
 stow_package ghostty
 stow_package codex
 stow_package claude
+stow_package sketchybar
+stow_package aerospace
 
 # Claude Code CLAUDE.md symlink (reuses codex config, not managed by stow)
 if [ ! -e ~/.claude/CLAUDE.md ]; then
