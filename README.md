@@ -1,6 +1,6 @@
 # dotfiles
 
-Configuration files for macOS development environment.
+Opinionated dotfiles for a macOS development workstation.
 
 > **Note:** This script supports macOS only.
 
@@ -26,14 +26,14 @@ If Nix is newly installed, restart your shell and re-run `./init.sh` to complete
 - Homebrew (with analytics disabled)
 
 **Phase 2: Package Managers & Frameworks**
-- `brew bundle` (installs all packages from Brewfile)
+- `brew bundle` (installs packages from the default Brewfile location)
 - Nix (official installer)
 - Devbox
 - zsh4monkey (zsh framework)
 - TPM (Tmux Plugin Manager)
 
 **Phase 3: Stow Dotfiles**
-- bat, git, nvim, topgrade, tmux, zsh
+- homebrew, bat, git, nvim, topgrade, tmux, zsh
 - fast-theme, workmux, ghostty
 - codex, claude, sketchybar, aerospace
 
@@ -52,6 +52,7 @@ If Nix is newly installed, restart your shell and re-run `./init.sh` to complete
 | `bat` | Cat with syntax highlighting |
 | `git` | Git config + delta + SSH signing |
 | `nvim` | Neovim with lazy.nvim |
+| `homebrew` | Brewfile config (bundle packages) |
 | `topgrade` | System upgrade tool |
 | `tmux` | Terminal multiplexer |
 | `zsh` | Shell config with zsh4monkey |
@@ -62,16 +63,6 @@ If Nix is newly installed, restart your shell and re-run `./init.sh` to complete
 | `claude` | Claude Code skills |
 | `sketchybar` | macOS status bar |
 | `aerospace` | macOS tiling window manager |
-
-### Brewfile
-
-```bash
-# Install all packages
-brew bundle
-
-# Check what would be installed
-brew bundle check
-```
 
 ## Manual Setup
 
