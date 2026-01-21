@@ -26,6 +26,7 @@ brew "difftastic"   # Structural diff tool
 brew "wget"         # Resuming download util
 
 # Terminal
+brew "bash"         # Bourne-Again SHell (modern version)
 brew "zsh"          # Z shell
 brew "tmux"         # terminal workspace
 
