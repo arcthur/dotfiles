@@ -1,4 +1,12 @@
 # =============================================================================
+# 0. XDG BASE DIRECTORIES
+# =============================================================================
+
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
+export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
+export XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
+
+# =============================================================================
 # 1. Z4M PRE-INIT CONFIGURATION
 # =============================================================================
 
@@ -37,7 +45,7 @@ z4m install eza bat fd rg zoxide || return
 z4m init || return
 
 # Syntax highlighting theme (Catppuccin Mocha)
-(( $+functions[fast-theme] )) && fast-theme -q ~/.config/fast-theme/catppuccin-mocha.ini
+(( $+functions[fast-theme] )) && fast-theme -q $XDG_CONFIG_HOME/fast-theme/catppuccin-mocha.ini
 
 # =============================================================================
 # 2. SHELL OPTIONS
@@ -258,7 +266,7 @@ _cached_eval() {
   source $cache
 }
 
-# bat (theme configured in ~/.config/bat/config)
+# bat (theme configured in $XDG_CONFIG_HOME/bat/config)
 (( $+commands[bat] )) && export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # zoxide (z4m handles alias, add fzf opts)
