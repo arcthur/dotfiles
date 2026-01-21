@@ -17,7 +17,7 @@ sketchybar --add item        ram.top right                       \
                              padding_right=5                     \
                              width=40                            \
                              icon.drawing=off                    \
-                             update_freq=2                       \
+                             update_freq=$UPDATE_FAST            \
                              script="$PLUGIN_DIR/memory.sh"      \
                                                                  \
            --add graph       ram.graph right 35                  \

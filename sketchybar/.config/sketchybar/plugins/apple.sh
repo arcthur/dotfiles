@@ -38,7 +38,7 @@ apple_lock=(
 apple_off=(
   icon=⏻
   label="Shut Down"
-  click_script="osascript -e 'tell app \"System Events\" to shut down' $POPUP_OFF"
+  click_script="osascript -e 'tell app \"System Events\" to shut down'; $POPUP_OFF"
 )
 sketchybar --add item apple.logo left                  \
            --set apple.logo "${apple_logo[@]}"         \

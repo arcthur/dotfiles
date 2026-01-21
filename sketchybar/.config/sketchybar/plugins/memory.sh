@@ -2,8 +2,9 @@
 
 source "$HOME/.config/sketchybar/colors.sh"
 
-MEMORY_USAGE=$(memory_pressure | grep "System-wide memory free percentage:" | awk '{ printf("%02.0f\n", 100-$5"%") }')
-MEMORY_GRAPH=$(memory_pressure | grep "System-wide memory free percentage:" | awk '{ printf("%0.02f\n", (100-$5)/100"%") }')
+MP_OUT="$(memory_pressure)"
+MEMORY_USAGE=$(grep "System-wide memory free percentage:" <<<"$MP_OUT" | awk '{ printf("%02.0f\n", 100-$5) }')
+MEMORY_GRAPH=$(grep "System-wide memory free percentage:" <<<"$MP_OUT" | awk '{ printf("%0.02f\n", (100-$5)/100) }')
 
 COLOR=$ACTUAL_WHITE
 case "$MEMORY_USAGE" in

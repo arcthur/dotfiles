@@ -14,7 +14,7 @@ sketchybar --add item space_separator left                       \
                                  background.color=$GREY     \
                                  background.border_width=0       \
                                  padding_right=10                \
-           --subscribe front_app front_app_switched              \
+           --subscribe front_app front_app_switched aerospace_workspace_change \
                                                                  \
            --add bracket left_side front_app                     \
            --set         left_side background.padding_right=32   \
