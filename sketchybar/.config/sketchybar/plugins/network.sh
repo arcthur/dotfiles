@@ -2,23 +2,39 @@
 
 CACHE_FILE="/tmp/sketchybar_network_cache"
 
+have_cmd() { command -v "$1" >/dev/null 2>&1; }
+
 # Auto-detect active network interface
-INTERFACE=$(route -n get default 2>/dev/null | awk '/interface:/ {print $2}')
+INTERFACE=""
+if have_cmd route; then
+    INTERFACE=$(route -n get default 2>/dev/null | awk '/interface:/ {print $2}')
+fi
+if [ -z "$INTERFACE" ] && have_cmd netstat; then
+    INTERFACE=$(netstat -ibn 2>/dev/null | awk '$1 !~ /^lo0$/ && /Link/ {print $1; exit}')
+fi
 [ -z "$INTERFACE" ] && INTERFACE="en0"
 
-# --- WiFi Status ---
-WIFI_DEV=$(networksetup -listallhardwareports | awk '/Wi-Fi/{getline; print $2}')
-SSID=$(ipconfig getsummary "$WIFI_DEV" 2>/dev/null | awk -F ' SSID : ' '/ SSID : / {print $2}')
+# --- WiFi Status (only if items exist and deps available) ---
+if sketchybar --query wifi >/dev/null 2>&1 && have_cmd networksetup && have_cmd ipconfig; then
+    WIFI_DEV=$(networksetup -listallhardwareports | awk '/Wi-Fi/{getline; print $2}')
+    SSID=$(ipconfig getsummary "$WIFI_DEV" 2>/dev/null | awk -F ' SSID : ' '/ SSID : / {print $2}')
 
-if [ -n "$SSID" ]; then
-    sketchybar --set wifi label="$SSID" \
-               --set wifiPopup icon="󰖩" icon.color=0xff94e2d5
-else
-    sketchybar --set wifi label="N/A" \
-               --set wifiPopup icon="󰤭" icon.color=0xfff38ba8
+    if [ -n "$SSID" ]; then
+        sketchybar --set wifi label="$SSID" \
+                   --set wifiPopup icon="󰖩" icon.color=0xff94e2d5
+    else
+        sketchybar --set wifi label="N/A" \
+                   --set wifiPopup icon="󰤭" icon.color=0xfff38ba8
+    fi
 fi
 
 # --- Network Speed ---
+if ! have_cmd netstat; then
+    sketchybar --set net.down label="--" \
+               --set net.up label="--"
+    exit 0
+fi
+
 read -r rx tx <<< "$(netstat -ibn | awk -v iface="$INTERFACE" '$1 == iface && /Link/ {print $7, $10; exit}')"
 now=$(date +%s)
 
@@ -45,9 +61,9 @@ UP=$(( (tx - prev_tx) / elapsed ))
 human_readable() {
     local bytes=$1
     if [ "$bytes" -ge 1048576 ]; then
-        printf "%.1f MB/s" "$(echo "scale=1; $bytes/1048576" | bc)"
+        awk -v b="$bytes" 'BEGIN { printf "%.1f MB/s", b/1048576 }'
     elif [ "$bytes" -ge 1024 ]; then
-        printf "%.0f KB/s" "$(echo "scale=0; $bytes/1024" | bc)"
+        awk -v b="$bytes" 'BEGIN { printf "%.0f KB/s", b/1024 }'
     else
         printf "%d B/s" "$bytes"
     fi

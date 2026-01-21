@@ -7,6 +7,12 @@ FONT="JetBrainsMono Nerd Font"
 APP_FONT="sketchybar-app-font"
 LABEL_FONT="TX-02"
 
+# Update frequencies (seconds)
+UPDATE_CLOCK=1
+UPDATE_FAST=3
+UPDATE_MED=60
+UPDATE_SLOW=300
+
 # Bar configuration
 bar=(
     height=40

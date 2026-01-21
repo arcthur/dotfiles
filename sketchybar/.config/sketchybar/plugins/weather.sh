@@ -10,7 +10,7 @@ if [ -f "$SECRETS_FILE" ]; then
   source "$SECRETS_FILE"
 fi
 
-if [ -z "${LOCATION:-}" ] || ! command -v jq >/dev/null 2>&1; then
+if [ -z "${LOCATION:-}" ] || ! command -v jq >/dev/null 2>&1 || ! command -v curl >/dev/null 2>&1; then
   sketchybar --set "$NAME" label="--" icon="" icon.color="0xff8bd5ca"
   exit 0
 fi

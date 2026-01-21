@@ -2,8 +2,13 @@
 
 source "$HOME/.config/sketchybar/colors.sh"
 
-# Get disk free percentage
-DISK_USED=$(df -H / | awk 'NR==2 {gsub(/%/,""); print $5}')
+# Get disk free percentage (prefer Data volume on macOS)
+MOUNT_POINT="/System/Volumes/Data"
+if [ ! -d "$MOUNT_POINT" ]; then
+  MOUNT_POINT="/"
+fi
+
+DISK_USED=$(df -H "$MOUNT_POINT" | awk 'NR==2 {gsub(/%/,""); print $5}')
 DISK_FREE=$((100 - DISK_USED))
 
 # Color based on free space (warning when low)

@@ -3,7 +3,7 @@
 storage=(
     icon=󰋊
     icon.color=$GREEN
-    update_freq=300
+    update_freq=$UPDATE_SLOW
     script="$PLUGIN_DIR/storage.sh"
 )
 

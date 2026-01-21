@@ -3,9 +3,8 @@
 source "$HOME/.config/sketchybar/colors.sh"
 
 CORE_COUNT=$(sysctl -n machdep.cpu.thread_count)
-CPU_INFO=$(ps -eo pcpu,user)
-CPU_SYS=$(echo "$CPU_INFO" | grep -v $(whoami) | sed "s/[^ 0-9\.]//g" | awk "{sum+=\$1} END {print sum/(100.0 * $CORE_COUNT)}")
-CPU_USER=$(echo "$CPU_INFO" | grep $(whoami) | sed "s/[^ 0-9\.]//g" | awk "{sum+=\$1} END {print sum/(100.0 * $CORE_COUNT)}")
+USER_NAME=$(id -un)
+read -r CPU_SYS CPU_USER <<< "$(ps -A -o pcpu= -o user= | awk -v u="$USER_NAME" -v cores="$CORE_COUNT" '{cpu=$1; user=$2; if (user==u) user_sum+=cpu; else sys_sum+=cpu} END {printf "%.6f %.6f\n", sys_sum/(100*cores), user_sum/(100*cores)}')"
 
 
 CPU_PERCENT="$(echo "$CPU_SYS $CPU_USER" | awk '{printf "%.0f\n", ($1 + $2)*100}')"

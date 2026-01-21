@@ -17,7 +17,7 @@ sketchybar --add item        cpu.top right                       \
                              padding_right=5                    \
                              width=40                            \
                              icon.drawing=off                    \
-                             update_freq=2                       \
+                             update_freq=$UPDATE_FAST            \
                              script="$PLUGIN_DIR/cpu.sh"         \
                                                                  \
            --add graph       cpu.graph right 35                  \
