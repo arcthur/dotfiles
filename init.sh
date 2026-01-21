@@ -25,6 +25,7 @@ STOW_PACKAGES=(
     bat
     git
     nvim
+    homebrew
     topgrade
     tmux
     zsh
@@ -91,6 +92,29 @@ backup_or_remove() {
     fi
 }
 
+resolve_path() {
+    local target="$1"
+    local resolved=""
+
+    if command -v realpath &>/dev/null; then
+        resolved=$(realpath "$target" 2>/dev/null || true)
+    elif command -v perl &>/dev/null; then
+        resolved=$(perl -MCwd=realpath -e 'print realpath($ARGV[0])' "$target" 2>/dev/null || true)
+    elif command -v python3 &>/dev/null; then
+        resolved=$(python3 - <<'PY' "$target" 2>/dev/null || true
+import os, sys
+print(os.path.realpath(sys.argv[1]))
+PY
+)
+    fi
+
+    if [[ -z "$resolved" ]]; then
+        printf '%s\n' "$target"
+    else
+        printf '%s\n' "$resolved"
+    fi
+}
+
 preprocess_conflicts() {
     local pkg="$1"
     local pkg_dir="$SCRIPT_DIR/$pkg"
@@ -102,16 +126,21 @@ preprocess_conflicts() {
         relative="${relative//dot-/.}"
         local target="$HOME/$relative"
 
+        if [[ "$target" != "$HOME/"* ]]; then
+            err "Unsafe target outside HOME detected: $target"
+            exit 1
+        fi
+
         if [[ -e "$target" || -L "$target" ]]; then
             # Skip if target resolves to our dotfiles repo (already stowed correctly)
             local real_path
-            real_path=$(realpath "$target" 2>/dev/null || true)
+            real_path=$(resolve_path "$target")
             if [[ "$real_path" == "$SCRIPT_DIR"/* ]]; then
                 continue
             fi
             backup_or_remove "$target"
         fi
-    done < <(find "$pkg_dir" \( -type f -o -type l \) \
+    done < <(find "$pkg_dir" \( -type f -o -type l -o -type d \) \
         ! -name '.DS_Store' ! -name '*.swp' ! -name '*~' -print0)
 }
 
@@ -161,8 +190,10 @@ install_xcode_cli() {
 install_homebrew() {
     if command -v brew &>/dev/null; then
         success "Homebrew already installed"
-        # Ensure analytics is off
-        brew analytics off &>/dev/null || true
+        if [[ "$DRY_RUN" == false ]]; then
+            # Ensure analytics is off
+            brew analytics off &>/dev/null || true
+        fi
         return 0
     fi
 
@@ -186,11 +217,6 @@ install_homebrew() {
 }
 
 install_brew_packages() {
-    if [[ ! -f "$SCRIPT_DIR/Brewfile" ]]; then
-        warn "Brewfile not found, skipping brew bundle"
-        return 0
-    fi
-
     # Ensure stow is installed (required for dotfiles)
     if ! command -v stow &>/dev/null; then
         if [[ "$DRY_RUN" == true ]]; then
@@ -207,8 +233,11 @@ install_brew_packages() {
     fi
 
     info "Installing Brewfile packages..."
-    brew bundle --file="$SCRIPT_DIR/Brewfile" || warn "Some brew packages failed to install"
-    success "Brew packages installed"
+    if brew bundle --global; then
+        success "Brew packages installed"
+    else
+        warn "Some brew packages failed to install"
+    fi
 }
 
 install_nix() {
@@ -367,7 +396,7 @@ setup_claude_symlink() {
     if [[ -L "$dest" ]]; then
         local current_target
         current_target=$(readlink "$dest")
-        if [[ "$current_target" == "$src" ]]; then
+        if [[ "$(resolve_path "$current_target")" == "$(resolve_path "$src")" ]]; then
             success "Claude CLAUDE.md symlink (already correct)"
             return 0
         fi
