@@ -11,10 +11,10 @@ sketchybar --add item space_separator left                       \
            --set front_app       script="$PLUGIN_DIR/front_app.sh" \
                                  icon.drawing=off                \
                                  background.height=22            \
-                                 background.color=$GREY     \
+                                 background.color=$GREY          \
                                  background.border_width=0       \
                                  padding_right=10                \
-           --subscribe front_app front_app_switched aerospace_workspace_change \
+           --subscribe front_app front_app_switched \
                                                                  \
            --add bracket left_side front_app                     \
            --set         left_side background.padding_right=32   \
