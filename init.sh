@@ -30,7 +30,6 @@ STOW_PACKAGES=(
     tmux
     zsh
     fast-theme
-    workmux
     ghostty
     codex
     claude
