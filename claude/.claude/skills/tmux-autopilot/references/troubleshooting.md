@@ -48,7 +48,7 @@ Format: Symptom → Possible cause → Diagnosis → Fix
 → `C-a I` to install; verify fzf is in PATH
 → Check `~/.tmux/plugins/tmux-sessionx`
 
-### Thumbs (C-a j) unresponsive
+### Thumbs (C-a t) unresponsive
 → tmux-thumbs requires Rust compilation
 → First use triggers auto-compile, wait briefly
 → Check `~/.tmux/plugins/tmux-thumbs/target`

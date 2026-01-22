@@ -51,7 +51,7 @@ C-a _    Full-height vertical split
 ```text
 C-a h/j/k/l    Select pane (left/down/up/right)
 C-a H/J/K/L    Resize pane (repeatable)
-C-a C-j/C-k    Swap pane position
+C-a C-h/j/k/l  Swap pane position
 C-a b          Break pane to new window
 C-a m/M        Merge window as pane (horizontal/vertical)
 ```
@@ -92,7 +92,7 @@ C-a ?          Cheatsheet (glow)
 
 **Plugin Shortcuts**
 ```text
-C-a j          Thumbs (quick copy screen content)
+C-a t          Thumbs (quick copy screen content)
 C-a f          Sessionx (fzf + zoxide session picker)
 C-a F          Tmux-fzf (fzf search window/pane/session)
 ```
@@ -100,7 +100,7 @@ C-a F          Tmux-fzf (fzf search window/pane/session)
 **Miscellaneous**
 ```text
 C-a r          Reload config
-C-a C-l        Clear screen
+C-a C-o        Clear screen
 ```
 
 ### Common Command Patterns
@@ -124,7 +124,8 @@ tmux send-keys -t <session>:<window>.<pane> "y" Enter
 
 **Safely interrupt stuck task**
 ```bash
-tmux send-keys -t <session>:<window>.<pane> C-c
+tmux capture-pane -t <session>:<window>.<pane> -p -S -20 | grep -qi "safe to interrupt" && \
+  tmux send-keys -t <session>:<window>.<pane> C-c
 ```
 
 **Window broadcast toggle**
@@ -133,10 +134,10 @@ tmux set-window-option synchronize-panes on
 tmux set-window-option synchronize-panes off
 ```
 
-**Inspect all windows and capture output**
+**Inspect all panes and capture output**
 ```bash
-for w in $(tmux list-windows -a -F '#S:#I'); do
-  tmux capture-pane -t "$w" -p -S -80 | sed "s/^/[$w] /";
+for p in $(tmux list-panes -a -F '#S:#I.#P'); do
+  tmux capture-pane -t "$p" -p -S -80 | sed "s/^/[$p] /";
 done
 ```
 

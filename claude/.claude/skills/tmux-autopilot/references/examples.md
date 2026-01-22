@@ -4,7 +4,7 @@
 
 ```bash
 #!/usr/bin/env bash
-# Inspect all windows, annotate output, auto-confirm (y/n) prompts
+# Inspect all panes, annotate output, auto-confirm (y/n) prompts
 # Note: Arthur's config windows start at 1
 set -euo pipefail
 
@@ -117,7 +117,7 @@ tmux list-sessions -F '#{session_name}' | fzf | xargs -I{} tmux switch-client -t
 ## Example 7: Thumbs Quick Copy
 
 ```bash
-# Thumbs bound to C-a j
+# Thumbs bound to C-a t
 # After triggering:
 # 1. Copyable text on screen gets labeled
 # 2. Type label character to copy to clipboard
