@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # Sync workspaces across monitors: main=N, secondary=N+10
+# Single monitor: switch to 1-10 only
+# Dual monitors: sync main (1-10) and secondary (11-20)
 
 set -euo pipefail
 
@@ -12,15 +14,19 @@ target="${1:-}"
 SYNC_LOCK="/tmp/aerospace_workspace_sync_lock"
 touch "$SYNC_LOCK"
 
-# Get current focused monitor before switching
-focused_monitor="$(aerospace list-monitors --focused --format '%{monitor-name}')"
+# Count monitors
+monitor_count="$(aerospace list-monitors | wc -l | tr -d ' ')"
 
-# Switch both monitors
-aerospace workspace "$target" 2>/dev/null || true
-aerospace workspace "$((target + 10))" 2>/dev/null || true
-
-# Restore focus to original monitor
-aerospace focus-monitor "$focused_monitor" 2>/dev/null || true
+if [ "$monitor_count" -gt 1 ]; then
+  # Dual monitor: sync both
+  focused_monitor="$(aerospace list-monitors --focused --format '%{monitor-name}')"
+  aerospace workspace "$target" 2>/dev/null || true
+  aerospace workspace "$((target + 10))" 2>/dev/null || true
+  aerospace focus-monitor "$focused_monitor" 2>/dev/null || true
+else
+  # Single monitor: just switch workspace
+  aerospace workspace "$target" 2>/dev/null || true
+fi
 
 # Direct update (faster than event trigger), then release lock
 APP="$(lsappinfo info -only name "$(lsappinfo front)" 2>/dev/null | cut -d'"' -f4)"
