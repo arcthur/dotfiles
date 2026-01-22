@@ -1,25 +1,24 @@
 #!/bin/bash
 
-# Some events send additional information specific to the event in the $INFO
-# variable. E.g. the front_app_switched event sends the name of the newly
-# focused application in the $INFO variable:
-# https://felixkratz.github.io/SketchyBar/config/events#events-and-scripting
+# Display focused workspace and app name
+# Skips update during workspace sync to prevent flicker
 
-if [ "$SENDER" = "front_app_switched" ] || [ "$SENDER" = "aerospace_workspace_change" ]; then
-  FOCUSED_WORKSPACE=""
-  APP_NAME="$INFO"
+[ "$SENDER" = "front_app_switched" ] || exit 0
 
-  if command -v aerospace >/dev/null 2>&1; then
-    FOCUSED_WORKSPACE="$(aerospace list-workspaces --focused 2>/dev/null || true)"
-    # aerospace_workspace_change doesn't pass $INFO, so fetch app name manually
-    if [ -z "$APP_NAME" ]; then
-      APP_NAME="$(aerospace list-windows --focused --format '%{app-name}' 2>/dev/null || true)"
-    fi
-  fi
+# Skip if workspace sync in progress
+SYNC_LOCK="/tmp/aerospace_workspace_sync_lock"
+[ -f "$SYNC_LOCK" ] && exit 0
 
-  if [ -n "$FOCUSED_WORKSPACE" ]; then
-    sketchybar --set "$NAME" label="$FOCUSED_WORKSPACE::$APP_NAME"
-  else
-    sketchybar --set "$NAME" label="$APP_NAME"
-  fi
+APP_NAME="$INFO"
+WORKSPACE="$(aerospace list-workspaces --focused 2>/dev/null || true)"
+
+# Normalize workspace display: 11-20 shown as 1-10
+if [ -n "$WORKSPACE" ] && [ "$WORKSPACE" -gt 10 ] 2>/dev/null; then
+  WORKSPACE=$((WORKSPACE - 10))
+fi
+
+if [ -n "$WORKSPACE" ]; then
+  sketchybar --set "$NAME" label="${WORKSPACE}::${APP_NAME}"
+else
+  sketchybar --set "$NAME" label="$APP_NAME"
 fi

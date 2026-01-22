@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export CONFIG_DIR="$HOME/.config/sketchybar"
+export CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/sketchybar"
 export PLUGIN_DIR="$CONFIG_DIR/plugins"
 ITEM_DIR="$CONFIG_DIR/items"
 
