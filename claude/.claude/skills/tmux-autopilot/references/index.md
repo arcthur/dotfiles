@@ -36,7 +36,7 @@ Based on Arthur's dotfiles configuration (TPM + Catppuccin + custom keybindings)
 | tpm | `C-a I` / `C-a U` | Plugin install/update |
 | tmux-sessionx | `C-a f` | fzf + zoxide session picker |
 | tmux-fzf | `C-a F` | fzf search window/pane/session |
-| tmux-thumbs | `C-a j` | Quick copy screen content |
+| tmux-thumbs | `C-a t` | Quick copy screen content |
 | tmux-yank | - | Enhanced copy |
 | tmux-resurrect | `C-a C-s` / `C-a C-r` | Session save/restore |
 | tmux-continuum | - | Auto save/restore |

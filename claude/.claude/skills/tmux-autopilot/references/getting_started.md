@@ -64,7 +64,7 @@ tmux send-keys -t demo:1.1 "echo ok" Enter
 |----------|--------|----------|
 | `C-a f` | sessionx | fzf + zoxide session picker |
 | `C-a F` | tmux-fzf | fzf search window/pane/session |
-| `C-a j` | thumbs | Quick copy screen content |
+| `C-a t` | thumbs | Quick copy screen content |
 | `C-a C-s` | resurrect | Save session |
 | `C-a C-r` | resurrect | Restore session |
 | `C-a I` | tpm | Install plugins |
