@@ -34,7 +34,7 @@ If Nix is newly installed, restart your shell and re-run `./init.sh` to complete
 
 **Phase 3: Stow Dotfiles**
 - homebrew, bat, git, nvim, topgrade, tmux, zsh
-- fast-theme, workmux, ghostty
+- fast-theme, ghostty
 - codex, claude, sketchybar, aerospace
 
 **Phase 4: Post-install Setup**
@@ -57,7 +57,6 @@ If Nix is newly installed, restart your shell and re-run `./init.sh` to complete
 | `tmux` | Terminal multiplexer |
 | `zsh` | Shell config with zsh4monkey |
 | `fast-theme` | Zsh theme |
-| `workmux` | Tmux workspace tool |
 | `ghostty` | Terminal emulator |
 | `codex` | OpenAI Codex config |
 | `claude` | Claude Code skills |

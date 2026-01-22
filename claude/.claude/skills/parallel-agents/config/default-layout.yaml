@@ -1,0 +1,6 @@
+# Default pane layout for parallel-agents
+# Agent only, full window
+
+panes:
+  - command: <agent>
+    focus: true
