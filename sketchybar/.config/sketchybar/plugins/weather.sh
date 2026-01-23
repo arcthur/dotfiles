@@ -3,6 +3,7 @@
 # the item invoking this script:
 # https://felixkratz.github.io/SketchyBar/config/events#events-and-scripting
 CONFIG_DIR="${CONFIG_DIR:-$HOME/.config/sketchybar}"
+source "$CONFIG_DIR/colors.sh"
 SECRETS_FILE="$CONFIG_DIR/secrets.sh"
 
 if [ -f "$SECRETS_FILE" ]; then
@@ -11,7 +12,7 @@ if [ -f "$SECRETS_FILE" ]; then
 fi
 
 if [ -z "${LOCATION:-}" ] || ! command -v jq >/dev/null 2>&1 || ! command -v curl >/dev/null 2>&1; then
-  sketchybar --set "$NAME" label="--" icon="" icon.color="0xff8bd5ca"
+  sketchybar --set "$NAME" label="--" icon="" icon.color="$TEAL"
   exit 0
 fi
 
@@ -23,7 +24,7 @@ ICON="$(jq -r '.properties.periods[0].shortForecast // empty' <<<"$JSON" 2>/dev/
 SKY="$(jq -r '.properties.periods[0].isDaytime // empty' <<<"$JSON" 2>/dev/null || true)"
 
 if [ -z "$TEMP" ] || [ -z "$ICON" ] || [ -z "$SKY" ]; then
-  sketchybar --set "$NAME" label="--" icon="" icon.color="0xff8bd5ca"
+  sketchybar --set "$NAME" label="--" icon="" icon.color="$TEAL"
   exit 0
 fi
 
@@ -88,5 +89,5 @@ BARICON="$(weather_icon_map "$SKY" "$ICON")"
 
 sketchybar --set "$NAME" label="${TEMP}°F" \
                    icon="${BARICON}" \
-                   icon.color="0xff8bd5ca" \
+                   icon.color="$TEAL" \
                    click_script="/usr/bin/open /System/Applications/Weather.app"

@@ -28,21 +28,37 @@ if command -v aerospace >/dev/null 2>&1; then
         sketchybar --add item "space.$workspace" left                     \
             --subscribe "space.$workspace" aerospace_workspace_change     \
             --set "space.$workspace"                                      \
+            drawing=off                                                   \
             display="$display_id"                                         \
-            background.color=$HIGHLIGHT                                   \
-            background.corner_radius=7                                    \
-            background.height=22                                          \
-            background.drawing=off                                        \
+            background.color=$SURFACE0                                    \
+            background.corner_radius=5                                    \
+            background.height=24                                          \
+            background.border_width=1                                     \
+            background.border_color=$SURFACE1                             \
+            background.drawing=on                                         \
             label="$label"                                                \
             label.font="$LABEL_FONT:Regular:13.0"                         \
+            label.color=$OVERLAY1                                         \
             label.padding_left=5                                          \
             label.padding_right=5                                         \
             icon.drawing=on                                               \
             icon.font="$APP_FONT:Regular:16.0"                            \
+            icon.color=$OVERLAY1                                          \
             icon.padding_left=6                                           \
             icon.padding_right=6                                          \
             click_script="bash \"$AEROSPACE_CONFIG_DIR/scripts/workspace-sync.sh\" $sync_index" \
             script="$PLUGIN_DIR/aerospace.sh $workspace"
+
+        # Double border bracket for enhanced highlight effect
+        sketchybar --add bracket "space_bracket.$workspace" "space.$workspace" \
+            --set "space_bracket.$workspace"                              \
+            drawing=off                                                   \
+            display="$display_id"                                         \
+            background.color=$TRANSPARENT                                 \
+            background.border_color=$TRANSPARENT                          \
+            background.border_width=2                                     \
+            background.corner_radius=7                                    \
+            background.height=28
     }
 
     if [ -n "$main_display_id" ]; then
@@ -57,4 +73,14 @@ if command -v aerospace >/dev/null 2>&1; then
             add_space_item "$workspace" "$i" "$i" "$secondary_display_id"
         done
     fi
+
+    # Trigger initial update for all workspaces
+    sketchybar --trigger aerospace_workspace_change
+
+    # Periodic refresh observer - catches window open/close events that aerospace might miss
+    sketchybar --add item spaces_refresh left \
+        --set spaces_refresh \
+            drawing=off \
+            update_freq=5 \
+            script="sketchybar --trigger aerospace_workspace_change"
 fi

@@ -5,7 +5,7 @@ sketchybar --add item clock right                                \
                        icon.font="$FONT:Bold:14.0"               \
                        label.font="$LABEL_FONT:Regular:13.0"     \
                        script="$PLUGIN_DIR/clock.sh"             \
-                       icon.color=$RED                     \
+                       icon.color=$RED                           \
                        click_script="open -a 'Calendar'"         \
                                                                  \
            --add item temp right                                 \
@@ -15,7 +15,7 @@ sketchybar --add item clock right                                \
                       icon.font="$FONT:Bold:19.0"                \
                                                                  \
            --add bracket utils clock temp                        \
-           --set         utils background.color=$SURFACE       \
+           --set         utils background.color=$SURFACE0        \
                                background.corner_radius=7        \
                                background.height=32              \
                                shadow=off                        \

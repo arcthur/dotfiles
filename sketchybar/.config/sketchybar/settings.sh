@@ -34,9 +34,9 @@ bar=(
 # Default item configuration
 default=(
     icon.font="$FONT:Bold:17.0"
-    icon.color=$ACTUAL_WHITE
+    icon.color=$WHITE
     label.font="$LABEL_FONT:Regular:13.0"
-    label.color=$ACTUAL_WHITE
+    label.color=$WHITE
     padding_left=5
     padding_right=5
     label.padding_left=4

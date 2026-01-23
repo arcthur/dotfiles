@@ -5,8 +5,10 @@ after-startup-command = []
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 on-focus-changed = "move-mouse window-lazy-center"
 
-# Notify sketchybar on workspace change
-exec-on-workspace-change = ['/bin/bash', '-c', 'sketchybar --trigger aerospace_workspace_change']
+# Notify sketchybar on workspace change (pass focused workspace to avoid extra query)
+exec-on-workspace-change = ['/bin/bash', '-c',
+    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+]
 
 # Normalizations
 enable-normalization-flatten-containers = true

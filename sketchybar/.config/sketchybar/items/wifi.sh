@@ -14,11 +14,11 @@ sketchybar --add item wifiPopup right                            \
                                                                  \
            --add item wifi popup.wifiPopup                       \
            --set wifi    icon=󰤨                                  \
-                         icon.color=$GREY                   \
+                         icon.color=$OVERLAY2                    \
                          background.padding_right=12             \
                                                                  \
            --add item wifiSettings popup.wifiPopup               \
            --set wifiSettings icon=󱚾                             \
-                              icon.color=$GREY              \
+                              icon.color=$OVERLAY2               \
                               label="Settings"                   \
                               click_script="open '/System/Library/PreferencePanes/Network.prefPane/'; $WIFI_POPUP_OFF"

@@ -5,7 +5,7 @@ source "$HOME/.config/sketchybar/colors.sh"
 BATT_PERCENT=$(pmset -g batt | grep -Eo "\d+%" | cut -d% -f1)
 CHARGING=$(pmset -g batt | grep 'AC Power')
 
-sketchybar --set "${NAME}" icon.color=$GREY
+sketchybar --set "${NAME}" icon.color=$OVERLAY2
 
 if [[ ${CHARGING} != "" ]]; then
     case ${BATT_PERCENT} in
@@ -15,8 +15,8 @@ if [[ ${CHARGING} != "" ]]; then
         7[0-9]) ICON="󰢞" COLOR="$GREEN" ;;
         6[0-9]) ICON="󰂉" COLOR="$YELLOW" ;;
         5[0-9]) ICON="󰢝" COLOR="$YELLOW" ;;
-        4[0-9]) ICON="󰂈" COLOR="$ORANGE" ;;
-        3[0-9]) ICON="󰂇" COLOR="$ORANGE" ;;
+        4[0-9]) ICON="󰂈" COLOR="$PEACH" ;;
+        3[0-9]) ICON="󰂇" COLOR="$PEACH" ;;
         2[0-9]) ICON="󰂆" COLOR="$RED" ;;
         1[0-9]) ICON="󰢜" COLOR="$RED" ;;
         *) ICON="󰢜"  COLOR="$RED" ;;
@@ -33,8 +33,8 @@ case ${BATT_PERCENT} in
     7[0-9]) ICON="󰂀" COLOR="$GREEN" ;;
     6[0-9]) ICON="󰁿" COLOR="$YELLOW" ;;
     5[0-9]) ICON="󰁾" COLOR="$YELLOW" ;;
-    4[0-9]) ICON="󰁽" COLOR="$ORANGE" ;;
-    3[0-9]) ICON="󰁼" COLOR="$ORANGE" ;;
+    4[0-9]) ICON="󰁽" COLOR="$PEACH" ;;
+    3[0-9]) ICON="󰁼" COLOR="$PEACH" ;;
     2[0-9]) ICON="󰁻" COLOR="$RED" ;;
     1[0-9]) ICON="󰁺!" COLOR="$RED" ;;
     *) ICON="󰂎"  COLOR="$RED" ;;

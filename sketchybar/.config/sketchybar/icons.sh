@@ -23,3 +23,7 @@ VOLUME_66=􀊧
 VOLUME_33=􀊥
 VOLUME_10=􀊡
 VOLUME_0=􀊣
+
+# Switch Icons
+SWITCH_ON=􀯶
+SWITCH_OFF=􀯷

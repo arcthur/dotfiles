@@ -8,7 +8,7 @@ sketchybar --add item ejectMenu right                            \
                            icon=󰇮                                \
                            icon.font.size=15                     \
                            icon.padding_right=4                  \
-                           icon.color=$LAVENDER                 \
+                           icon.color=$LAVENDER                  \
                            icon.padding_left=0                   \
                            background.padding_right=0            \
                            background.padding_left=0             \
@@ -23,7 +23,7 @@ sketchybar --add item ejectMenu right                            \
            --add item termFiles popup.ejectMenu                  \
            --set termFiles click_script="osascript /Users/srijan/Library/Scripts/files-iterm-window.scpt; $USB_POPUP_OFF" \
                            label="Files Terminal"                \
-                           icon=                                \
+                           icon=                                 \
                                                                  \
            --add item generalStorage popup.ejectMenu             \
            --set generalStorage click_script="open /System/Volumes/Data/Volumes/General-T7; $USB_POPUP_OFF" \
@@ -33,7 +33,7 @@ sketchybar --add item ejectMenu right                            \
            --add item termGeneral popup.ejectMenu                \
            --set termGeneral click_script="osascript /Users/srijan/Library/Scripts/general-iterm-window.scpt; $USB_POPUP_OFF" \
                              label="General Terminal"            \
-                             icon=                              \
+                             icon=                               \
                                                                  \
            --add item backups popup.ejectMenu                    \
            --set backups click_script="open /System/Volumes/Data/Volumes/Backup\ T7; $USB_POPUP_OFF" \

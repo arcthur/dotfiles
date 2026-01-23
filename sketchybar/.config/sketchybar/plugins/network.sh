@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source "$HOME/.config/sketchybar/colors.sh"
 CACHE_FILE="/tmp/sketchybar_network_cache"
 
 have_cmd() { command -v "$1" >/dev/null 2>&1; }
@@ -21,10 +22,10 @@ if sketchybar --query wifi >/dev/null 2>&1 && have_cmd networksetup && have_cmd 
 
     if [ -n "$SSID" ]; then
         sketchybar --set wifi label="$SSID" \
-                   --set wifiPopup icon="󰖩" icon.color=0xff94e2d5
+                   --set wifiPopup icon="󰖩" icon.color=$TEAL
     else
         sketchybar --set wifi label="N/A" \
-                   --set wifiPopup icon="󰤭" icon.color=0xfff38ba8
+                   --set wifiPopup icon="󰤭" icon.color=$RED
     fi
 fi
 

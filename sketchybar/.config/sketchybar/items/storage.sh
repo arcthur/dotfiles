@@ -7,6 +7,6 @@ storage=(
     script="$PLUGIN_DIR/storage.sh"
 )
 
-sketchybar --add item storage right \
-    --set storage "${storage[@]}" \
-    --subscribe storage system_woke
+sketchybar --add item storage right        \
+           --set storage "${storage[@]}"   \
+           --subscribe storage system_woke

@@ -9,11 +9,11 @@ read -r CPU_SYS CPU_USER <<< "$(ps -A -o pcpu= -o user= | awk -v u="$USER_NAME" 
 
 CPU_PERCENT="$(echo "$CPU_SYS $CPU_USER" | awk '{printf "%.0f\n", ($1 + $2)*100}')"
 
-COLOR=$ACTUAL_WHITE
+COLOR=$WHITE
 case "$CPU_PERCENT" in
-  [1-2][0-9]) COLOR=$ACTUAL_WHITE
+  [1-2][0-9]) COLOR=$WHITE
   ;;
-  [3-6][0-9]) COLOR=$ORANGE
+  [3-6][0-9]) COLOR=$PEACH
   ;;
   [7-9][0-9]|100) COLOR=$RED
   ;;

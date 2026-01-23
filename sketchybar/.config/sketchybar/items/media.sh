@@ -5,7 +5,7 @@ sketchybar --add item media right                                \
                        icon.color=$MAUVE                        \
                        icon.padding=10                           \
                        icon.font.size=14                         \
-                       background.color=$SURFACE                 \
+                       background.color=$SURFACE0                 \
                        icon.padding_left=9                       \
                        background.corner_radius=7                \
                        background.height=32                      \

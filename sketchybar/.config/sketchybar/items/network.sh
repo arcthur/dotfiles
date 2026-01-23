@@ -13,7 +13,7 @@ up=(
     icon=⇡
     label.font.size=$SIZE
     icon.font.size=$SIZE
-    icon.color=$GREEN
+    icon.color=$PEACH
     script="$PLUGIN_DIR/network.sh"
 )
 
@@ -24,11 +24,11 @@ down=(
     icon=⇣
     label.font.size=$SIZE
     icon.font.size=$SIZE
-    icon.color=$RED
+    icon.color=$SAPPHIRE
 )
 
-sketchybar --add item net.up right \
-    --set net.up "${up[@]}" \
-    \
-    --add item net.down right \
-    --set net.down "${down[@]}"
+sketchybar --add item net.up right          \
+           --set net.up "${up[@]}"          \
+                                            \
+           --add item net.down right        \
+           --set net.down "${down[@]}"
