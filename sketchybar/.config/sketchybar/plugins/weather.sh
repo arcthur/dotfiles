@@ -1,93 +1,47 @@
-#!/bin/bash
-# The $NAME variable is passed from sketchybar and holds the name of
-# the item invoking this script:
-# https://felixkratz.github.io/SketchyBar/config/events#events-and-scripting
-CONFIG_DIR="${CONFIG_DIR:-$HOME/.config/sketchybar}"
+#!/usr/bin/env bash
+
+CONFIG_DIR=${CONFIG_DIR:-$HOME/.config/sketchybar}
 source "$CONFIG_DIR/colors.sh"
-SECRETS_FILE="$CONFIG_DIR/secrets.sh"
 
-if [ -f "$SECRETS_FILE" ]; then
-  # shellcheck source=/dev/null
-  source "$SECRETS_FILE"
+LOCATION=${WEATHER_LOCATION:-Singapore}
+DATA=$(curl -fsSL "wttr.in/${LOCATION}?format=%t|%C" 2>/dev/null)
+DATA=${DATA//+/}
+
+if [[ -z $DATA || $DATA == *Unknown* ]]; then
+    sketchybar --set "$NAME" label="--" icon=󰖐 icon.color="$TEAL"
+    exit 0
 fi
 
-if [ -z "${LOCATION:-}" ] || ! command -v jq >/dev/null 2>&1 || ! command -v curl >/dev/null 2>&1; then
-  sketchybar --set "$NAME" label="--" icon="" icon.color="$TEAL"
-  exit 0
+TEMP=${DATA%%|*}
+TEMP=${TEMP//[°C ]/}
+CONDITION=${DATA#*|}
+CONDITION=${CONDITION,,}
+
+HOUR=$(date +%H)
+((HOUR >= 6 && HOUR < 18)) && DAY=1
+
+if [[ -n $DAY ]]; then
+    case $CONDITION in
+        *snow*)                     ICON=󰼶 ;;
+        *rain*|*shower*|*drizzle*)  ICON=󰖗 ;;
+        *partly*|*overcast*)        ICON=󰖕 ;;
+        *sunny*|*clear*)            ICON=󰖙 ;;
+        *cloud*)                    ICON=󰖐 ;;
+        *haze*|*mist*|*fog*)        ICON=󰖑 ;;
+        *thunder*)                  ICON=󰖓 ;;
+        *)                          ICON=󰖙 ;;
+    esac
+else
+    case $CONDITION in
+        *snow*)                     ICON=󰼶 ;;
+        *rain*|*shower*|*drizzle*)  ICON=󰖗 ;;
+        *clear*)                    ICON=󰖔 ;;
+        *cloud*|*overcast*|*partly*) ICON=󰼱 ;;
+        *fog*|*mist*|*haze*)        ICON=󰖑 ;;
+        *thunder*)                  ICON=󰖓 ;;
+        *)                          ICON=󰖔 ;;
+    esac
 fi
 
-URL="https://api.weather.gov/gridpoints/FFC/${LOCATION}/forecast/hourly"
-JSON="$(curl -fsSL "$URL" 2>/dev/null || true)"
-
-TEMP="$(jq -r '.properties.periods[0].temperature // empty' <<<"$JSON" 2>/dev/null || true)"
-ICON="$(jq -r '.properties.periods[0].shortForecast // empty' <<<"$JSON" 2>/dev/null || true)"
-SKY="$(jq -r '.properties.periods[0].isDaytime // empty' <<<"$JSON" 2>/dev/null || true)"
-
-if [ -z "$TEMP" ] || [ -z "$ICON" ] || [ -z "$SKY" ]; then
-  sketchybar --set "$NAME" label="--" icon="" icon.color="$TEAL"
-  exit 0
-fi
-
-weather_icon_map() {
-	shopt -s extglob
-	# check if first argument is true or false to determine whether day or night
-	# then check if second argument wildcard contains a string for determining which icon to show
-	# if no match, return default icon
-	if [ "$1" = "true" ]; then # Daytime
-		case $2 in
-		*Snow*)
-			icon_result=""
-			;;
-		*Rain* | *Showers*)
-			icon_result=""
-			;;
-		*"Partly Sunny"* | *"Partly Cloudy"*)
-			icon_result=""
-			;;
-		*Sunny* | *Clear* )
-			icon_result=""
-			;;
-		*Cloudy*)
-			icon_result=""
-			;;
-        *Haze*)
-            icon_result=""
-            ;;
-		*)
-			icon_result=""
-			;;
-		esac
-	else
-		case $2 in # Night
-		*Snow*)
-			icon_result=""
-			;;
-		*Rain* | *Showers*)
-			icon_result=""
-			;;
-		*Clear*)
-			icon_result=""
-			;;
-		*Cloudy*)
-			icon_result=""
-			;;
-		*Fog*)
-			icon_result=""
-			;;
-        *Haze*)
-            icon_result="󰖑"
-            ;;
-		*)
-			icon_result=""
-			;;
-		esac
-	fi
-	echo $icon_result
-}
-
-BARICON="$(weather_icon_map "$SKY" "$ICON")"
-
-sketchybar --set "$NAME" label="${TEMP}°F" \
-                   icon="${BARICON}" \
-                   icon.color="$TEAL" \
-                   click_script="/usr/bin/open /System/Applications/Weather.app"
+sketchybar --set "$NAME" label="${TEMP}°C" icon="$ICON" icon.color="$TEAL" \
+           click_script="/usr/bin/open /System/Applications/Weather.app"

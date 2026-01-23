@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 sketchybar --add item space_separator left                       \
            --set space_separator icon=󰡙                          \

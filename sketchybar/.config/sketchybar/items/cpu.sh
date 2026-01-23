@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # CPU: text overlaid on graph background (compact stacked style)
 sketchybar --add graph       cpu.graph right 35                  \
@@ -20,6 +20,7 @@ sketchybar --add graph       cpu.graph right 35                  \
                              width=0                             \
                              padding_right=5                     \
                              y_offset=6                          \
+                             click_script="open -a 'Activity Monitor'"                          \
                                                                  \
            --add item        cpu.percent right                   \
            --set cpu.percent label.font="$LABEL_FONT:Regular:12" \
@@ -30,6 +31,7 @@ sketchybar --add graph       cpu.graph right 35                  \
                              icon.drawing=off                    \
                              update_freq=$UPDATE_FAST            \
                              script="$PLUGIN_DIR/cpu.sh"         \
+                             click_script="open -a 'Activity Monitor'"         \
                                                                  \
            --add item        cpu.spacer right                    \
            --set cpu.spacer  width=10                            \

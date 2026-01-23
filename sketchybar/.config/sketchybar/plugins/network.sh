@@ -1,74 +1,57 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 source "$HOME/.config/sketchybar/colors.sh"
 CACHE_FILE="/tmp/sketchybar_network_cache"
 
-have_cmd() { command -v "$1" >/dev/null 2>&1; }
-
 # Auto-detect active network interface
-INTERFACE=""
-if have_cmd route; then
-    INTERFACE=$(route -n get default 2>/dev/null | awk '/interface:/ {print $2}')
-fi
-if [ -z "$INTERFACE" ] && have_cmd netstat; then
-    INTERFACE=$(netstat -ibn 2>/dev/null | awk '$1 !~ /^lo0$/ && /Link/ {print $1; exit}')
-fi
-[ -z "$INTERFACE" ] && INTERFACE="en0"
+INTERFACE=$(route -n get default 2>/dev/null | awk '/interface:/ {print $2}')
+[[ -z $INTERFACE ]] && INTERFACE=$(netstat -ibn 2>/dev/null | awk '$1 !~ /^lo0$/ && /Link/ {print $1; exit}')
+: "${INTERFACE:=en0}"
 
-# --- WiFi Status (only if items exist and deps available) ---
-if sketchybar --query wifi >/dev/null 2>&1 && have_cmd networksetup && have_cmd ipconfig; then
+# --- WiFi Status (only if wifi item exists) ---
+if sketchybar --query wifi >/dev/null 2>&1 && command -v ipconfig >/dev/null 2>&1; then
     WIFI_DEV=$(networksetup -listallhardwareports | awk '/Wi-Fi/{getline; print $2}')
-    SSID=$(ipconfig getsummary "$WIFI_DEV" 2>/dev/null | awk -F ' SSID : ' '/ SSID : / {print $2}')
+    CONNECTED=$(ipconfig getsummary "$WIFI_DEV" 2>/dev/null | awk '/State : BOUND/ {print 1; exit}')
 
-    if [ -n "$SSID" ]; then
-        sketchybar --set wifi label="$SSID" \
-                   --set wifiPopup icon="󰖩" icon.color=$TEAL
+    if [[ -n $CONNECTED ]]; then
+        sketchybar --set wifi icon="󰖩" icon.color=$TEAL
     else
-        sketchybar --set wifi label="N/A" \
-                   --set wifiPopup icon="󰤭" icon.color=$RED
+        sketchybar --set wifi icon="󰤭" icon.color=$RED
     fi
 fi
 
-# --- Network Speed ---
-if ! have_cmd netstat; then
-    sketchybar --set net.down label="--" \
-               --set net.up label="--"
-    exit 0
-fi
+# Network Speed
+command -v netstat &>/dev/null || { sketchybar --set net.down label="--" --set net.up label="--"; exit 0; }
 
 read -r rx tx <<< "$(netstat -ibn | awk -v iface="$INTERFACE" '$1 == iface && /Link/ {print $7, $10; exit}')"
 now=$(date +%s)
+: "${rx:=0}" "${tx:=0}"
 
-[ -z "$rx" ] && rx=0
-[ -z "$tx" ] && tx=0
-
-if [ -f "$CACHE_FILE" ]; then
+if [[ -f $CACHE_FILE ]]; then
     read -r prev_time prev_rx prev_tx < "$CACHE_FILE"
 else
     prev_time=$now prev_rx=$rx prev_tx=$tx
 fi
 
-echo "$now $rx $tx" > "$CACHE_FILE"
+printf '%s %s %s\n' "$now" "$rx" "$tx" > "$CACHE_FILE"
 
 elapsed=$((now - prev_time))
-[ "$elapsed" -le 0 ] && elapsed=1
+((elapsed <= 0)) && elapsed=1
 
 DOWN=$(( (rx - prev_rx) / elapsed ))
 UP=$(( (tx - prev_tx) / elapsed ))
+((DOWN < 0)) && DOWN=0
+((UP < 0)) && UP=0
 
-[ "$DOWN" -lt 0 ] && DOWN=0
-[ "$UP" -lt 0 ] && UP=0
-
-human_readable() {
-    local bytes=$1
-    if [ "$bytes" -ge 1048576 ]; then
-        awk -v b="$bytes" 'BEGIN { printf "%.1f MB/s", b/1048576 }'
-    elif [ "$bytes" -ge 1024 ]; then
-        awk -v b="$bytes" 'BEGIN { printf "%.0f KB/s", b/1024 }'
+human() {
+    local b=$1
+    if ((b >= 1048576)); then
+        printf "%d.%d MB/s" "$((b / 1048576))" "$(((b % 1048576) * 10 / 1048576))"
+    elif ((b >= 1024)); then
+        printf "%d KB/s" "$((b / 1024))"
     else
-        printf "%d B/s" "$bytes"
+        printf "%d B/s" "$b"
     fi
 }
 
-sketchybar --set net.down label="$(human_readable $DOWN)" \
-           --set net.up label="$(human_readable $UP)"
+sketchybar --set net.down label="$(human $DOWN)" --set net.up label="$(human $UP)"

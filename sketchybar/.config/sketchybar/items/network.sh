@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Network rates display with vertical stacking
 SIZE=11
@@ -31,4 +31,16 @@ sketchybar --add item net.up right          \
            --set net.up "${up[@]}"          \
                                             \
            --add item net.down right        \
-           --set net.down "${down[@]}"
+           --set net.down "${down[@]}"      \
+                                            \
+           --add bracket network wifi net.up net.down \
+           --set         network background.color=$SURFACE0 \
+                                  background.corner_radius=7 \
+                                  background.height=32       \
+                                  shadow=off                 \
+                                                             \
+           --add item net.divider right                      \
+           --set net.divider width=8                         \
+                             background.drawing=off          \
+                             icon.drawing=off                \
+                             label.drawing=off

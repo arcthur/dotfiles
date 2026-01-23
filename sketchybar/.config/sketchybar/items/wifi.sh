@@ -1,24 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-WIFI_POPUP_OFF='sketchybar --set wifiPopup popup.drawing=off'
-
-sketchybar --add item wifiPopup right                            \
-           --set wifiPopup popup.drawing=off                     \
-                           popup.height=32                       \
-                           icon.padding_right=7                  \
-                           icon.padding_left=2                   \
-                           background.padding_right=1            \
-                           icon=󰤨                                \
-                           icon.font="$FONT:Bold:19.0"           \
-                           click_script="${POPUP_CLICK_SCRIPT}"  \
-                                                                 \
-           --add item wifi popup.wifiPopup                       \
-           --set wifi    icon=󰤨                                  \
-                         icon.color=$OVERLAY2                    \
-                         background.padding_right=12             \
-                                                                 \
-           --add item wifiSettings popup.wifiPopup               \
-           --set wifiSettings icon=󱚾                             \
-                              icon.color=$OVERLAY2               \
-                              label="Settings"                   \
-                              click_script="open '/System/Library/PreferencePanes/Network.prefPane/'; $WIFI_POPUP_OFF"
+sketchybar --add item wifi right \
+           --set wifi icon=󰖩 \
+                      icon.font="$FONT:Bold:19.0" \
+                      icon.color=$TEAL \
+                      icon.padding_right=7 \
+                      icon.padding_left=2 \
+                      background.padding_right=1 \
+                      click_script="open 'x-apple.systempreferences:com.apple.Network-Settings.extension'"

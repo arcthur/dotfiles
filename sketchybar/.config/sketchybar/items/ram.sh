@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # RAM: text overlaid on graph background (compact stacked style)
 sketchybar --add graph       ram.graph right 35                  \
@@ -36,3 +36,15 @@ sketchybar --add graph       ram.graph right 35                  \
                              background.drawing=off              \
                              icon.drawing=off                    \
                              label.drawing=off
+
+sketchybar --add bracket sysinfo battery storage cpu.graph cpu.top cpu.percent ram.graph ram.top ram.percent \
+           --set         sysinfo background.color=$SURFACE0 \
+                                  background.corner_radius=7 \
+                                  background.height=32       \
+                                  shadow=off                 \
+                                                             \
+           --add item sysinfo.divider right                  \
+           --set sysinfo.divider width=8                     \
+                                 background.drawing=off      \
+                                 icon.drawing=off            \
+                                 label.drawing=off

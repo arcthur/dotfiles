@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Catppuccin Mocha Palette
 # https://github.com/catppuccin/catppuccin
