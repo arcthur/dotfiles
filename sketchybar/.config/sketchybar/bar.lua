@@ -6,7 +6,8 @@ local colors = require("colors")
 sbar.bar({
     height        = 40,
     blur_radius   = 10,
-    position      = "top",
+    position      = "bottom",
+    topmost       = "window",
     sticky        = true,
     padding_left  = 10,
     padding_right = 10,

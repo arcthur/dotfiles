@@ -24,8 +24,8 @@ preset = 'qwerty'
 
 # Gaps
 [gaps]
-outer.top = 40  # space for sketchybar
-outer.bottom = 2
+outer.top = 2
+outer.bottom = 40  # space for sketchybar
 inner.horizontal = 2
 inner.vertical = 2
 outer.left = 2
