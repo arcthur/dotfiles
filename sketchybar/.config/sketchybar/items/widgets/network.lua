@@ -1,5 +1,5 @@
 -- items/widgets/network.lua
--- Network speed display with upload/download rates
+-- Network speed display with upload/download rates (using C event provider)
 
 local colors = require("colors")
 local settings = require("settings")
@@ -9,11 +9,13 @@ local SIZE = 11
 local WIDTH = 70
 local CACHE_FILE = "/tmp/sketchybar_network_cache"
 
+-- Register network update event (triggered by C event provider)
+sbar.add("event", "network_update")
+
 -- Upload speed item
 local net_up = sbar.add("item", "net.up", {
     position    = "right",
     width       = 0,
-    update_freq = settings.update.fast,
     y_offset    = 5,
     icon = {
         string = icons.net.up,
@@ -62,6 +64,15 @@ sbar.add("item", "net.divider", {
     label    = { drawing = false },
 })
 
+-- Handle network update event from C provider
+net_up:subscribe("network_update", function(env)
+    local speed_down_str = env.SPEED_DOWN_STR or "0 B/s"
+    local speed_up_str = env.SPEED_UP_STR or "0 B/s"
+
+    net_down:set({ label = speed_down_str })
+    net_up:set({ label = speed_up_str })
+end)
+
 -- Format bytes to human readable
 local function human_readable(bytes)
     if bytes >= 1048576 then
@@ -73,9 +84,8 @@ local function human_readable(bytes)
     end
 end
 
--- Update network speeds
-local function update_network()
-    -- Get active network interface and calculate speeds
+-- Fallback: shell-based update if C provider not running
+local function update_network_fallback()
     local script = [[
         INTERFACE=$(route -n get default 2>/dev/null | awk '/interface:/ {print $2}')
         [ -z "$INTERFACE" ] && INTERFACE=$(netstat -ibn 2>/dev/null | awk '$1 !~ /^lo0$/ && /Link/ {print $1; exit}')
@@ -152,4 +162,5 @@ local function update_network()
     end)
 end
 
-net_up:subscribe({ "routine", "forced", "system_woke" }, update_network)
+-- Subscribe to forced and system_woke for fallback
+net_up:subscribe({ "forced", "system_woke" }, update_network_fallback)

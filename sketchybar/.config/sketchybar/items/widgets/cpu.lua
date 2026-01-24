@@ -1,8 +1,11 @@
 -- items/widgets/cpu.lua
--- CPU usage with graph display
+-- CPU usage with graph display (using C event provider)
 
 local colors = require("colors")
 local settings = require("settings")
+
+-- Register CPU update event (triggered by C event provider)
+sbar.add("event", "cpu_update")
 
 -- CPU graph
 local cpu_graph = sbar.add("graph", "cpu.graph", 35, {
@@ -47,7 +50,6 @@ local cpu_percent = sbar.add("item", "cpu.percent", {
     width       = 40,
     padding_right = 5,
     y_offset    = -4,
-    update_freq = settings.update.fast,
     label = {
         font = {
             family = settings.font.label,
@@ -69,8 +71,30 @@ sbar.add("item", "cpu.spacer", {
     label    = { drawing = false },
 })
 
--- Update CPU usage
-local function update_cpu()
+-- Handle CPU update event from C provider
+cpu_percent:subscribe("cpu_update", function(env)
+    local total = tonumber(env.TOTAL_PERCENT) or 0
+    local graph_value = tonumber(env.GRAPH_VALUE) or 0
+
+    -- Color based on usage
+    local color
+    if total >= 70 then
+        color = colors.red
+    elseif total >= 30 then
+        color = colors.peach
+    else
+        color = colors.white
+    end
+
+    cpu_percent:set({
+        label = { string = total .. "%", color = color },
+    })
+
+    cpu_graph:push({ graph_value })
+end)
+
+-- Fallback: also support routine updates if C provider not running
+local function update_cpu_fallback()
     local script = [[
         ps -A -o pcpu= -o user= | awk -v u="$(id -un)" -v cores="$(sysctl -n machdep.cpu.thread_count)" '
             {if ($2==u) user+=$1; else sys+=$1}
@@ -91,7 +115,6 @@ local function update_cpu()
         cpu_pct = tonumber(cpu_pct) or 0
         cpu_user = tonumber(cpu_user) or 0
 
-        -- Color based on usage
         local color
         if cpu_pct >= 70 then
             color = colors.red
@@ -109,4 +132,5 @@ local function update_cpu()
     end)
 end
 
-cpu_percent:subscribe({ "routine", "forced" }, update_cpu)
+-- Subscribe to forced for initial update and fallback
+cpu_percent:subscribe("forced", update_cpu_fallback)
