@@ -6,7 +6,8 @@ require("items.apple")
 require("items.spaces")
 require("items.front_app")
 
--- Right side items (clock.sh includes weather/temp)
+-- Right side items
+require("items.weather")
 require("items.clock")
 
 -- Widgets: wifi, network, battery, storage, cpu, ram
