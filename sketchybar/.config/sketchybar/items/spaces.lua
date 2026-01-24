@@ -1,5 +1,5 @@
 -- items/spaces.lua
--- Aerospace workspace integration with rainbow colors
+-- Aerospace workspace integration with rainbow colors and hover animations
 
 local colors = require("colors")
 local settings = require("settings")
@@ -12,6 +12,7 @@ sbar.add("event", "aerospace_workspace_change")
 local space_items = {}
 local bracket_items = {}
 local space_colors = {}  -- Store rainbow color for each workspace
+local space_states = {}  -- Store current state (visible/has_windows)
 
 -- Get app icon from mapping
 local function get_app_icon(app_name)
@@ -29,6 +30,7 @@ local function create_space_item(workspace, label, sync_index)
     -- Get rainbow color for this workspace (based on label 1-10)
     local ws_color = colors.get_rainbow(tonumber(label) or workspace)
     space_colors[workspace] = ws_color
+    space_states[workspace] = { visible = false, has_windows = false }
 
     -- Create space item
     local space = sbar.add("item", space_name, {
@@ -87,6 +89,75 @@ local function create_space_item(workspace, label, sync_index)
         update_space(workspace)
     end)
 
+    -- Hover animation: mouse entered
+    space:subscribe("mouse.entered", function(env)
+        local state = space_states[workspace]
+        if not state then return end
+
+        sbar.animate("tanh", 15, function()
+            if state.visible then
+                -- Active: brighten and add glow
+                space:set({
+                    background = { height = 26 },
+                    icon  = { color = colors.white },
+                    label = { color = colors.white },
+                })
+                bracket:set({
+                    background = { border_color = ws_color },
+                })
+            else
+                -- Inactive: highlight with rainbow color
+                space:set({
+                    background = {
+                        color = colors.with_alpha(ws_color, 0.2),
+                        height = 26,
+                    },
+                    icon  = { color = ws_color },
+                    label = { color = ws_color },
+                })
+                bracket:set({
+                    background = { border_color = colors.with_alpha(ws_color, 0.5) },
+                })
+            end
+        end)
+    end)
+
+    -- Hover animation: mouse exited
+    space:subscribe("mouse.exited", function(env)
+        local state = space_states[workspace]
+        if not state then return end
+
+        sbar.animate("tanh", 15, function()
+            if state.visible then
+                -- Restore active state
+                space:set({
+                    background = {
+                        color  = ws_color,
+                        height = 24,
+                    },
+                    icon  = { color = colors.crust },
+                    label = { color = colors.crust },
+                })
+                bracket:set({
+                    background = { border_color = colors.with_alpha(ws_color, 0.5) },
+                })
+            else
+                -- Restore inactive state
+                space:set({
+                    background = {
+                        color  = colors.surface0,
+                        height = 24,
+                    },
+                    icon  = { color = colors.with_alpha(ws_color, 0.6) },
+                    label = { color = colors.with_alpha(ws_color, 0.6) },
+                })
+                bracket:set({
+                    background = { border_color = colors.transparent },
+                })
+            end
+        end)
+    end)
+
     return space, bracket
 end
 
@@ -112,6 +183,9 @@ function update_space(workspace)
 
         sbar.exec("aerospace list-windows --workspace " .. workspace .. " 2>/dev/null", function(windows_output)
             local has_windows = windows_output and windows_output:match("%S") ~= nil
+
+            -- Update state
+            space_states[workspace] = { visible = is_visible, has_windows = has_windows }
 
             -- Show/hide logic
             if is_visible or has_windows then
