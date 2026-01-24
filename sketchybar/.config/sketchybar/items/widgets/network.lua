@@ -133,7 +133,7 @@ local function update_network_fallback()
         local prev_time, prev_rx, prev_tx = now, rx, tx
         local cache_file = io.open(CACHE_FILE, "r")
         if cache_file then
-            local line = cache_file:read("l")  -- Lua 5.4+ syntax
+            local line = cache_file:read("*l")  -- Compatible with Lua 5.3+
             if line then
                 prev_time, prev_rx, prev_tx = line:match("(%d+) (%d+) (%d+)")
                 prev_time = tonumber(prev_time) or now

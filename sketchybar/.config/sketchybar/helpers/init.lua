@@ -15,8 +15,11 @@ M.provider_dir = M.config_dir .. "/helpers/event_providers"
 function M.start_providers(base_interval)
     base_interval = base_interval or 2
 
-    -- Kill existing providers first
-    os.execute("killall cpu memory network battery 2>/dev/null")
+    -- Kill existing providers using full path matching (safe, won't kill unrelated processes)
+    os.execute(string.format("pkill -f '%s/cpu_load/cpu' 2>/dev/null", M.provider_dir))
+    os.execute(string.format("pkill -f '%s/memory_load/memory' 2>/dev/null", M.provider_dir))
+    os.execute(string.format("pkill -f '%s/network_load/network' 2>/dev/null", M.provider_dir))
+    os.execute(string.format("pkill -f '%s/battery_load/battery' 2>/dev/null", M.provider_dir))
 
     -- Compile and start each provider
     -- CPU provider

@@ -35,8 +35,9 @@ local popup_items = {
     {
         name   = "prefs",
         icon   = icons.preferences,
-        label  = "Preferences",
-        script = "open -a 'System Preferences'; " .. POPUP_OFF,
+        label  = "Settings",
+        -- macOS Ventura+ uses "System Settings", older uses "System Preferences"
+        script = "open -a 'System Settings' 2>/dev/null || open -a 'System Preferences'; " .. POPUP_OFF,
     },
     {
         name   = "activity",
