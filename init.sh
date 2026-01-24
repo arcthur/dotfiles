@@ -325,6 +325,69 @@ install_tpm() {
     success "TPM installed (run prefix+I in tmux to install plugins)"
 }
 
+install_sketchybar_deps() {
+    local sbarlua_path="$HOME/.local/share/sketchybar_lua"
+    local providers_path="$HOME/.config/sketchybar/helpers/event_providers"
+
+    # Install SbarLua (Lua API for SketchyBar)
+    if [[ -f "$sbarlua_path/sketchybar.so" ]]; then
+        success "SbarLua already installed"
+    elif [[ "$DRY_RUN" == true ]]; then
+        info "[dry-run] Would install SbarLua"
+    else
+        info "Installing SbarLua..."
+        if git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua 2>/dev/null && \
+           cd /tmp/SbarLua && make install && rm -rf /tmp/SbarLua; then
+            success "SbarLua installed"
+        else
+            warn "SbarLua installation failed"
+        fi
+    fi
+
+    # Compile C event providers (cpu/memory/network/battery)
+    if [[ -d "$providers_path" ]]; then
+        if [[ "$DRY_RUN" == true ]]; then
+            info "[dry-run] Would compile sketchybar event providers"
+        else
+            info "Compiling sketchybar event providers..."
+            if (cd "$providers_path" && make all 2>/dev/null); then
+                success "Sketchybar event providers compiled"
+            else
+                warn "Sketchybar event providers compilation failed"
+            fi
+        fi
+    fi
+}
+
+setup_sleepwatcher_hooks() {
+    # sleepwatcher triggers scripts on sleep/wake events
+    # Used to refresh sketchybar weather after wake (network needs time to recover)
+    local wakeup_script="$HOME/.wakeup"
+    local sleep_script="$HOME/.sleep"
+
+    if [[ "$DRY_RUN" == true ]]; then
+        info "[dry-run] Would create sleepwatcher hooks (~/.wakeup, ~/.sleep)"
+        return 0
+    fi
+
+    # Create .wakeup script - triggers sketchybar refresh after wake
+    cat > "$wakeup_script" << 'EOF'
+#!/bin/bash
+# Wait for network to recover after wake
+sleep 3
+/opt/homebrew/bin/sketchybar --trigger system_woke
+EOF
+    chmod +x "$wakeup_script"
+
+    # Create .sleep script - placeholder for future use
+    cat > "$sleep_script" << 'EOF'
+#!/bin/bash
+EOF
+    chmod +x "$sleep_script"
+
+    success "Sleepwatcher hooks created"
+}
+
 # ==============================================================================
 # Stow Functions
 # ==============================================================================
@@ -486,6 +549,8 @@ main() {
 
     # Phase 4: Post-install setup
     sync_nvim_plugins
+    install_sketchybar_deps
+    setup_sleepwatcher_hooks
 
     # Phase 5: Special symlinks
     setup_claude_symlink

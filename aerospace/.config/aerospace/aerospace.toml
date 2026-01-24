@@ -5,8 +5,10 @@ after-startup-command = []
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 on-focus-changed = "move-mouse window-lazy-center"
 
-# Notify sketchybar on workspace change
-exec-on-workspace-change = ['/bin/bash', '-c', 'sketchybar --trigger aerospace_workspace_change']
+# Notify sketchybar on workspace change (pass focused workspace to avoid extra query)
+exec-on-workspace-change = ['/bin/bash', '-c',
+    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+]
 
 # Normalizations
 enable-normalization-flatten-containers = true
@@ -22,8 +24,8 @@ preset = 'qwerty'
 
 # Gaps
 [gaps]
-outer.top = 40  # space for sketchybar
-outer.bottom = 2
+outer.top = 0
+outer.bottom = 40
 inner.horizontal = 2
 inner.vertical = 2
 outer.left = 2
@@ -57,7 +59,7 @@ outer.right = 2
 # ==============================================================================
 
 [mode.main.binding]
-ctrl-b = 'mode prefix'
+ctrl-b = ['mode prefix', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=prefix']
 
 # Workspace switching (alt + number) - direct access without prefix
 alt-1 = "exec-and-forget /bin/bash -lc \"${XDG_CONFIG_HOME:-$HOME/.config}/aerospace/scripts/workspace-sync.sh 1\""
@@ -87,7 +89,7 @@ alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
 [mode.prefix.binding]
 # Exit prefix mode with escape
-esc = ['reload-config', 'mode main']
+esc = ['reload-config', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 
 # ==============================================================================
 # WINDOW FOCUS (prefix + hjkl)
@@ -124,41 +126,41 @@ ctrl-l = 'move right'
 # JOIN WITH NEIGHBOR (prefix + alt + hjkl) - similar to yabai warp
 # ==============================================================================
 
-alt-h = ['join-with left', 'mode main']
-alt-j = ['join-with down', 'mode main']
-alt-k = ['join-with up', 'mode main']
-alt-l = ['join-with right', 'mode main']
+alt-h = ['join-with left', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
+alt-j = ['join-with down', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
+alt-k = ['join-with up', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
+alt-l = ['join-with right', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 
 # ==============================================================================
 # LAYOUT OPERATIONS (prefix + key)
 # ==============================================================================
 
 # Rotate layout (flatten and re-tile)
-r = ['flatten-workspace-tree', 'mode main']
+r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 # Toggle between horizontal and vertical
-o = ['layout tiles horizontal vertical', 'mode main']
+o = ['layout tiles horizontal vertical', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 # Accordion layout
-a = ['layout accordion horizontal vertical', 'mode main']
+a = ['layout accordion horizontal vertical', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 # Balance windows
-b = ['balance-sizes', 'mode main']
+b = ['balance-sizes', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 # Close all windows but current
-backspace = ['close-all-windows-but-current', 'mode main']
+backspace = ['close-all-windows-but-current', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 
 # ==============================================================================
 # WINDOW TOGGLES (prefix + key)
 # ==============================================================================
 
 # Maximize (fullscreen)
-m = ['fullscreen', 'mode main']
+m = ['fullscreen', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 # Toggle float
-t = ['layout floating tiling', 'mode main']
+t = ['layout floating tiling', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 
 # ==============================================================================
 # MOVE WINDOW BETWEEN MONITORS (prefix + d/f)
 # ==============================================================================
 
-d = ['move-node-to-monitor left', 'focus-monitor left', 'mode main']
-f = ['move-node-to-monitor right', 'focus-monitor right', 'mode main']
+d = ['move-node-to-monitor left', 'focus-monitor left', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
+f = ['move-node-to-monitor right', 'focus-monitor right', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 
 # ==============================================================================
 # APP-SPECIFIC RULES

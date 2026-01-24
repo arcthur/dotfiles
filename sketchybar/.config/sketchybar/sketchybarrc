@@ -1,28 +1,44 @@
-#!/bin/bash
+#!/usr/bin/env lua
 
-export CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/sketchybar"
-export PLUGIN_DIR="$CONFIG_DIR/plugins"
-ITEM_DIR="$CONFIG_DIR/items"
+-- Sketchybar Configuration
+-- Migrated from Bash to Lua + SbarLua
+-- https://github.com/FelixKratz/SbarLua
 
-source "$CONFIG_DIR/settings.sh"
+-- Set config directory
+local home = os.getenv("HOME")
+local config_dir = home .. "/.config/sketchybar"
 
-sketchybar --bar "${bar[@]}" --default "${default[@]}"
+-- Add config dir to package path (including subdirectories)
+package.path = table.concat({
+    config_dir .. "/?.lua",
+    config_dir .. "/?/init.lua",
+    package.path,
+}, ";")
 
-# --- Left Side Items ---
-source "$ITEM_DIR/spaces.sh"
-source "$ITEM_DIR/front_app.sh"
+-- Add SbarLua to package cpath
+package.cpath = package.cpath .. ";" .. home .. "/.local/share/sketchybar_lua/?.so"
 
-# --- Right Side Items ---
-# source "$ITEM_DIR/clock.sh"
-# source "$ITEM_DIR/eject_menu.sh"
-# source "$ITEM_DIR/volume.sh"
-# source "$ITEM_DIR/wifi.sh"
-source "$ITEM_DIR/network.sh"
-source "$ITEM_DIR/battery.sh"
-source "$ITEM_DIR/cpu.sh"
-source "$ITEM_DIR/ram.sh"
-source "$ITEM_DIR/storage.sh"
-source "$ITEM_DIR/media.sh"
+-- Load SbarLua
+sbar = require("sketchybar")
 
-sketchybar --hotload on
-sketchybar --update
+-- Begin configuration
+sbar.begin_config()
+
+-- Load all configuration modules
+require("bar")
+require("default")
+require("items")
+
+-- Finalize configuration
+sbar.hotload(true)
+sbar.end_config()
+
+-- Start event providers (compile if needed)
+local helpers = require("helpers")
+helpers.start_providers(2)  -- base interval: 2 seconds
+
+-- Trigger initial update
+sbar.trigger("forced")
+
+-- Run the event loop (required for subscribe callbacks to work)
+sbar.event_loop()
