@@ -2,9 +2,15 @@
  * memory.c - Memory Load Event Provider for SketchyBar
  *
  * Monitors RAM usage and sends updates to SketchyBar via Mach messaging.
- * Usage: ./memory <update_interval_seconds> <event_name>
+ * Uses adaptive polling: more frequent updates when memory pressure is high.
  *
+ * Usage: ./memory <base_interval_seconds> <event_name>
  * Example: ./memory 2 memory_update
+ *
+ * Adaptive intervals:
+ *   - High pressure (>=70%): 1 second
+ *   - Medium pressure (>=50%): base interval
+ *   - Low pressure (<50%): base interval * 2 (max 5s)
  */
 
 #include <mach/mach.h>
@@ -76,18 +82,35 @@ static void format_memory(uint64_t bytes, char *buf, size_t buf_size) {
     snprintf(buf, buf_size, "%.1f GB", gb);
 }
 
+// Get adaptive sleep interval based on memory pressure
+static int get_adaptive_interval(int base_interval, int mem_percent) {
+    if (mem_percent >= 70) {
+        return 1;  // High pressure: update every second
+    } else if (mem_percent >= 50) {
+        return base_interval;  // Medium pressure: use base interval
+    } else {
+        // Low pressure: slower updates (max 5 seconds)
+        int slow_interval = base_interval * 2;
+        return slow_interval > 5 ? 5 : slow_interval;
+    }
+}
+
 int main(int argc, char **argv) {
     if (argc < 3) {
-        fprintf(stderr, "Usage: %s <interval_seconds> <event_name>\n", argv[0]);
+        fprintf(stderr, "Usage: %s <base_interval_seconds> <event_name>\n", argv[0]);
         fprintf(stderr, "Example: %s 2 memory_update\n", argv[0]);
+        fprintf(stderr, "\nAdaptive polling:\n");
+        fprintf(stderr, "  - High pressure (>=70%%): 1 second\n");
+        fprintf(stderr, "  - Medium pressure (>=50%%): base interval\n");
+        fprintf(stderr, "  - Low pressure (<50%%): base interval * 2 (max 5s)\n");
         return 1;
     }
 
-    int interval = atoi(argv[1]);
+    int base_interval = atoi(argv[1]);
     char *event_name = argv[2];
 
-    if (interval < 1) {
-        interval = 1;
+    if (base_interval < 1) {
+        base_interval = 1;
     }
 
     char message[256];
@@ -114,6 +137,9 @@ int main(int argc, char **argv) {
                  event_name, used_percent, used_str, total_str, graph_value);
 
         sketchybar(message);
+
+        // Adaptive sleep based on current memory pressure
+        int interval = get_adaptive_interval(base_interval, used_percent);
         sleep(interval);
     }
 

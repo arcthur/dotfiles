@@ -2,9 +2,15 @@
  * cpu.c - CPU Load Event Provider for SketchyBar
  *
  * Monitors CPU usage and sends updates to SketchyBar via Mach messaging.
- * Usage: ./cpu <update_interval_seconds> <event_name>
+ * Uses adaptive polling: more frequent updates when CPU load is high.
  *
+ * Usage: ./cpu <base_interval_seconds> <event_name>
  * Example: ./cpu 2 cpu_update
+ *
+ * Adaptive intervals:
+ *   - High load (>=70%): 1 second
+ *   - Medium load (>=40%): base interval
+ *   - Low load (<40%): base interval * 2 (max 5s)
  */
 
 #include <mach/mach.h>
@@ -92,18 +98,35 @@ static void calculate_cpu_usage(int *total_percent, int *user_percent,
     if (*sys_percent < 0) *sys_percent = 0;
 }
 
+// Get adaptive sleep interval based on CPU load
+static int get_adaptive_interval(int base_interval, int cpu_percent) {
+    if (cpu_percent >= 70) {
+        return 1;  // High load: update every second
+    } else if (cpu_percent >= 40) {
+        return base_interval;  // Medium load: use base interval
+    } else {
+        // Low load: slower updates (max 5 seconds)
+        int slow_interval = base_interval * 2;
+        return slow_interval > 5 ? 5 : slow_interval;
+    }
+}
+
 int main(int argc, char **argv) {
     if (argc < 3) {
-        fprintf(stderr, "Usage: %s <interval_seconds> <event_name>\n", argv[0]);
+        fprintf(stderr, "Usage: %s <base_interval_seconds> <event_name>\n", argv[0]);
         fprintf(stderr, "Example: %s 2 cpu_update\n", argv[0]);
+        fprintf(stderr, "\nAdaptive polling:\n");
+        fprintf(stderr, "  - High load (>=70%%): 1 second\n");
+        fprintf(stderr, "  - Medium load (>=40%%): base interval\n");
+        fprintf(stderr, "  - Low load (<40%%): base interval * 2 (max 5s)\n");
         return 1;
     }
 
-    int interval = atoi(argv[1]);
+    int base_interval = atoi(argv[1]);
     char *event_name = argv[2];
 
-    if (interval < 1) {
-        interval = 1;
+    if (base_interval < 1) {
+        base_interval = 1;
     }
 
     // Initial tick read
@@ -118,7 +141,7 @@ int main(int argc, char **argv) {
         calculate_cpu_usage(&total, &user, &sys);
 
         // Calculate graph value (0.0 - 1.0)
-        double graph_value = (double)user / 100.0;
+        double graph_value = (double)total / 100.0;
         if (graph_value > 1.0) graph_value = 1.0;
         if (graph_value < 0.0) graph_value = 0.0;
 
@@ -129,6 +152,9 @@ int main(int argc, char **argv) {
                  event_name, total, user, sys, graph_value);
 
         sketchybar(message);
+
+        // Adaptive sleep based on current load
+        int interval = get_adaptive_interval(base_interval, total);
         sleep(interval);
     }
 
