@@ -1,6 +1,6 @@
 # Master Makefile for all event providers
 
-PROVIDERS = cpu_load network_load memory_load
+PROVIDERS = cpu_load network_load memory_load battery_load
 
 .PHONY: all clean $(PROVIDERS)
 
@@ -22,4 +22,5 @@ install: all
 	@cp cpu_load/cpu bin/
 	@cp network_load/network bin/
 	@cp memory_load/memory bin/
+	@cp battery_load/battery bin/
 	@echo "Installed to bin/"

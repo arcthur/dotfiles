@@ -7,6 +7,7 @@ require("items.spaces")
 require("items.front_app")
 
 -- Right side items
+require("items.aerospace_mode")
 require("items.weather")
 require("items.clock")
 

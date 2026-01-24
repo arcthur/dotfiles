@@ -1,13 +1,15 @@
 -- items/widgets/battery.lua
--- Battery status with charging indicator
+-- Battery status with charging indicator (using C event provider)
 
 local colors = require("colors")
 local settings = require("settings")
 
+-- Register battery update event (triggered by C event provider)
+sbar.add("event", "battery_update")
+
 -- Battery item
 local battery = sbar.add("item", "battery", {
-    position    = "right",
-    update_freq = settings.update.medium,
+    position = "right",
     icon = {
         font = {
             family = settings.font.text,
@@ -73,8 +75,30 @@ local function get_battery_display(percent, charging)
     return icon, color
 end
 
--- Update battery status
-local function update_battery()
+-- Handle battery update event from C provider
+battery:subscribe("battery_update", function(env)
+    local percent = tonumber(env.PERCENT) or 0
+    local charging = env.CHARGING == "1"
+    local has_battery = env.HAS_BATTERY == "1"
+
+    if not has_battery then
+        battery:set({
+            icon  = { string = "󰚥", color = colors.green },  -- Plugged in, no battery
+            label = { string = "AC" },
+        })
+        return
+    end
+
+    local icon, color = get_battery_display(percent, charging)
+
+    battery:set({
+        icon  = { string = icon, color = color },
+        label = { string = percent .. "%", color = color },
+    })
+end)
+
+-- Fallback: shell-based update if C provider not running
+local function update_battery_fallback()
     sbar.exec("pmset -g batt", function(output)
         if not output or output == "" then
             battery:set({
@@ -105,4 +129,5 @@ local function update_battery()
     end)
 end
 
-battery:subscribe({ "routine", "forced", "system_woke", "power_source_change" }, update_battery)
+-- Subscribe to forced and power events for fallback
+battery:subscribe({ "forced", "system_woke", "power_source_change" }, update_battery_fallback)

@@ -23,12 +23,13 @@ compile_if_needed() {
 }
 
 # Kill existing providers
-killall cpu memory network 2>/dev/null || true
+killall cpu memory network battery 2>/dev/null || true
 
 # Compile all providers
 compile_if_needed "cpu_load" "cpu"
 compile_if_needed "memory_load" "memory"
 compile_if_needed "network_load" "network"
+compile_if_needed "battery_load" "battery"
 
 echo "Starting event providers (interval: ${INTERVAL}s)..."
 
@@ -36,8 +37,10 @@ echo "Starting event providers (interval: ${INTERVAL}s)..."
 "$SCRIPT_DIR/cpu_load/cpu" "$INTERVAL" "cpu_update" &
 "$SCRIPT_DIR/memory_load/memory" "$INTERVAL" "memory_update" &
 "$SCRIPT_DIR/network_load/network" "en0" "$INTERVAL" "network_update" &
+"$SCRIPT_DIR/battery_load/battery" "battery_update" &
 
 echo "Event providers started:"
 echo "  - cpu_load: $SCRIPT_DIR/cpu_load/cpu"
 echo "  - memory_load: $SCRIPT_DIR/memory_load/memory"
 echo "  - network_load: $SCRIPT_DIR/network_load/network"
+echo "  - battery_load: $SCRIPT_DIR/battery_load/battery (adaptive interval)"
