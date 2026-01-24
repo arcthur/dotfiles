@@ -82,10 +82,12 @@ brew "mole"         # SSH tunnel tool
 
 # Programming languages
 brew "mise"         # env vars, task runner
+brew "lua"          # Powerful, efficient scripting language
 
 # Mac OS X
 brew "mas"          # Mac App Store command-line interface
 brew "sketchybar"   # Custom macOS statusbar
+brew "sleepwatcher" # Run scripts on sleep/wake events
 cask "aerospace"    # Tiling window manager
 
 # CASK
