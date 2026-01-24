@@ -1,9 +1,16 @@
--- colors.lua
--- Catppuccin Mocha Palette
--- https://github.com/catppuccin/catppuccin
+--- colors.lua
+--- Catppuccin Mocha color palette for SketchyBar
+--- @see https://github.com/catppuccin/catppuccin
+--- @module colors
 
--- Utility: Convert hex string to 0xAARRGGBB
-local function hex(color)
+-- ============================================================================
+-- Private Utility Functions
+-- ============================================================================
+
+--- Convert hex string to 0xAARRGGBB format
+--- @param color string Hex color string (#RRGGBB or #RRGGBBAA)
+--- @return number Color in 0xAARRGGBB format
+local function _hex(color)
     local h = color:gsub("#", "")
     if #h == 6 then
         return tonumber("FF" .. h, 16)
@@ -15,8 +22,11 @@ local function hex(color)
     return 0xFFFFFFFF
 end
 
--- Utility: Apply alpha to color
-local function with_alpha(color, alpha)
+--- Apply alpha transparency to a color
+--- @param color number Base color in 0xAARRGGBB format
+--- @param alpha number Alpha value (0.0 to 1.0)
+--- @return number Color with applied alpha
+local function _with_alpha(color, alpha)
     if alpha > 1.0 or alpha < 0.0 then return color end
     local r = (color >> 16) & 0xFF
     local g = (color >> 8) & 0xFF
@@ -24,8 +34,12 @@ local function with_alpha(color, alpha)
     return (math.floor(alpha * 255.0 + 0.5) << 24) | (r << 16) | (g << 8) | b
 end
 
--- Rainbow colors for workspaces (Catppuccin accent colors)
-local rainbow = {
+-- ============================================================================
+-- Constants
+-- ============================================================================
+
+--- Rainbow colors for workspaces (Catppuccin accent colors, 1-10)
+local RAINBOW = {
     0xfff38ba8,  -- red (1)
     0xfffab387,  -- peach (2)
     0xfff9e2af,  -- yellow (3)
@@ -38,9 +52,11 @@ local rainbow = {
     0xffb4befe,  -- lavender (10)
 }
 
--- Get rainbow color for workspace (cycles through 1-10)
-local function get_rainbow(index)
-    return rainbow[((index - 1) % #rainbow) + 1]
+--- Get rainbow color for workspace index (cycles through 1-10)
+--- @param index number Workspace index
+--- @return number Color value
+local function _get_rainbow(index)
+    return RAINBOW[((index - 1) % #RAINBOW) + 1]
 end
 
 return {
@@ -95,11 +111,12 @@ return {
     highlight    = 0x44ffffff,
     background_1 = 0x60313244,
 
-    -- Rainbow colors array
-    rainbow = rainbow,
+    -- Rainbow colors array (constant)
+    RAINBOW = RAINBOW,
+    rainbow = RAINBOW,  -- Alias for backwards compatibility
 
     -- Utility functions
-    hex        = hex,
-    with_alpha = with_alpha,
-    get_rainbow = get_rainbow,
+    hex         = _hex,
+    with_alpha  = _with_alpha,
+    get_rainbow = _get_rainbow,
 }

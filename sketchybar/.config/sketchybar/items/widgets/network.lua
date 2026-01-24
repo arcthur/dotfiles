@@ -4,6 +4,7 @@
 local colors = require("colors")
 local settings = require("settings")
 local icons = require("icons")
+local utils = require("helpers.utils")
 
 local SIZE = 11
 local WIDTH = 70
@@ -129,26 +130,21 @@ local function update_network_fallback()
             })
         end
 
-        -- Read previous values from cache
+        -- Read previous values from cache (using safe file I/O)
         local prev_time, prev_rx, prev_tx = now, rx, tx
-        local cache_file = io.open(CACHE_FILE, "r")
-        if cache_file then
-            local line = cache_file:read("*l")  -- Compatible with Lua 5.3+
+        local cache_content = utils.safe_read_file(CACHE_FILE)
+        if cache_content then
+            local line = cache_content:match("([^\n]+)")
             if line then
                 prev_time, prev_rx, prev_tx = line:match("(%d+) (%d+) (%d+)")
                 prev_time = tonumber(prev_time) or now
                 prev_rx = tonumber(prev_rx) or rx
                 prev_tx = tonumber(prev_tx) or tx
             end
-            cache_file:close()
         end
 
-        -- Write current values to cache
-        cache_file = io.open(CACHE_FILE, "w")
-        if cache_file then
-            cache_file:write(string.format("%d %d %d", now, rx, tx))
-            cache_file:close()
-        end
+        -- Write current values to cache (using safe file I/O)
+        utils.safe_write_file(CACHE_FILE, string.format("%d %d %d", now, rx, tx))
 
         -- Calculate speeds
         local elapsed = now - prev_time

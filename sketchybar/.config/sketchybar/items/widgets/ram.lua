@@ -3,6 +3,7 @@
 
 local colors = require("colors")
 local settings = require("settings")
+local utils = require("helpers.utils")
 
 -- Register memory update event (triggered by C event provider)
 sbar.add("event", "memory_update")
@@ -97,15 +98,8 @@ ram_percent:subscribe("memory_update", function(env)
     local mem_used = tonumber(env.USED_PERCENT) or 0
     local graph_value = tonumber(env.GRAPH_VALUE) or 0
 
-    -- Color based on usage (applied to both label and graph)
-    local color
-    if mem_used >= 70 then
-        color = colors.red
-    elseif mem_used >= 50 then
-        color = colors.peach
-    else
-        color = colors.green
-    end
+    -- Color based on usage (using shared utility)
+    local color = utils.get_usage_color(mem_used, colors, utils.THRESHOLDS.memory)
 
     ram_percent:set({
         label = { string = mem_used .. "%", color = color },
@@ -129,14 +123,8 @@ local function update_ram_fallback()
         local mem_free = tonumber(output:match("%d+")) or 0
         local mem_used = 100 - mem_free
 
-        local color
-        if mem_used >= 70 then
-            color = colors.red
-        elseif mem_used >= 30 then
-            color = colors.peach
-        else
-            color = colors.white
-        end
+        -- Color based on usage (using shared utility)
+        local color = utils.get_usage_color(mem_used, colors, utils.THRESHOLDS.memory)
 
         ram_percent:set({
             label = { string = mem_used .. "%", color = color },

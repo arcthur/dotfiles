@@ -3,6 +3,7 @@
 
 local colors = require("colors")
 local settings = require("settings")
+local utils = require("helpers.utils")
 
 -- Register CPU update event (triggered by C event provider)
 sbar.add("event", "cpu_update")
@@ -76,15 +77,8 @@ cpu_percent:subscribe("cpu_update", function(env)
     local total = tonumber(env.TOTAL_PERCENT) or 0
     local graph_value = tonumber(env.GRAPH_VALUE) or 0
 
-    -- Color based on usage (applied to both label and graph)
-    local color
-    if total >= 70 then
-        color = colors.red
-    elseif total >= 40 then
-        color = colors.peach
-    else
-        color = colors.blue
-    end
+    -- Color based on usage (using shared utility)
+    local color = utils.get_usage_color(total, colors, utils.THRESHOLDS.cpu)
 
     cpu_percent:set({
         label = { string = total .. "%", color = color },
@@ -119,14 +113,8 @@ local function update_cpu_fallback()
         cpu_pct = tonumber(cpu_pct) or 0
         cpu_user = tonumber(cpu_user) or 0
 
-        local color
-        if cpu_pct >= 70 then
-            color = colors.red
-        elseif cpu_pct >= 30 then
-            color = colors.peach
-        else
-            color = colors.white
-        end
+        -- Color based on usage (using shared utility)
+        local color = utils.get_usage_color(cpu_pct, colors, utils.THRESHOLDS.cpu)
 
         cpu_percent:set({
             label = { string = cpu_pct .. "%", color = color },

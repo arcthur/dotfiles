@@ -114,4 +114,101 @@ function M.lerp(a, b, t)
     return a + (b - a) * M.clamp(t, 0, 1)
 end
 
+-- ============================================================================
+-- Color Utilities (reduce duplication across widgets)
+-- ============================================================================
+
+--- Default color thresholds for usage indicators
+--- @type table<string, {high: number, medium: number}>
+M.THRESHOLDS = {
+    cpu     = { high = 70, medium = 40 },
+    memory  = { high = 70, medium = 50 },
+    battery = { high = 20, medium = 40 },  -- Inverted: low battery is critical
+    storage = { high = 80, medium = 60 },
+}
+
+--- Get color based on usage percentage and thresholds
+--- @param percent number Usage percentage (0-100)
+--- @param colors table Colors table with red, peach, green, blue fields
+--- @param thresholds table|nil Optional {high, medium} thresholds (default: cpu)
+--- @param inverted boolean|nil If true, low values are critical (e.g., battery)
+--- @return number Color value
+function M.get_usage_color(percent, colors, thresholds, inverted)
+    thresholds = thresholds or M.THRESHOLDS.cpu
+
+    if inverted then
+        -- Low is critical (battery-style)
+        if percent <= thresholds.high then
+            return colors.red
+        elseif percent <= thresholds.medium then
+            return colors.peach
+        else
+            return colors.green
+        end
+    else
+        -- High is critical (cpu/memory-style)
+        if percent >= thresholds.high then
+            return colors.red
+        elseif percent >= thresholds.medium then
+            return colors.peach
+        else
+            return colors.green
+        end
+    end
+end
+
+-- ============================================================================
+-- Safe File I/O (with pcall protection)
+-- ============================================================================
+
+--- Safely read a file with error handling
+--- @param path string File path to read
+--- @return string|nil content File content or nil on error
+--- @return string|nil error Error message if failed
+function M.safe_read_file(path)
+    local ok, file = pcall(io.open, path, "r")
+    if not ok or not file then
+        return nil, "Failed to open file: " .. path
+    end
+
+    local ok2, content = pcall(file.read, file, "*a")
+    file:close()
+
+    if not ok2 then
+        return nil, "Failed to read file: " .. path
+    end
+
+    return content, nil
+end
+
+--- Safely write to a file with error handling
+--- @param path string File path to write
+--- @param content string Content to write
+--- @return boolean success True if successful
+--- @return string|nil error Error message if failed
+function M.safe_write_file(path, content)
+    local ok, file = pcall(io.open, path, "w")
+    if not ok or not file then
+        return false, "Failed to open file for writing: " .. path
+    end
+
+    local ok2, err = pcall(file.write, file, content)
+    file:close()
+
+    if not ok2 then
+        return false, "Failed to write file: " .. (err or path)
+    end
+
+    return true, nil
+end
+
+--- Safely execute a function with pcall wrapper
+--- @param fn function Function to execute
+--- @param ... any Arguments to pass to function
+--- @return boolean success True if successful
+--- @return any result Result or error message
+function M.safe_call(fn, ...)
+    return pcall(fn, ...)
+end
+
 return M
