@@ -14,9 +14,140 @@ local bracket_items = {}
 local space_colors = {}  -- Store rainbow color for each workspace
 local space_states = {}  -- Store current state (visible/has_windows)
 
--- Get app icon from mapping
-local function get_app_icon(app_name)
-    return app_icons[app_name] or ":default:"
+-- ============================================================================
+-- Regex Batch Update Helpers
+-- ============================================================================
+
+-- Batch set properties on all space items matching regex pattern
+local function batch_set_spaces(props)
+    sbar.set("/space\\..*/", props)
+end
+
+-- Batch set properties on all bracket items matching regex pattern
+local function batch_set_brackets(props)
+    sbar.set("/space_bracket\\..*/", props)
+end
+
+-- Hide all spaces (used before showing only visible ones)
+local function hide_all_spaces()
+    batch_set_spaces({ drawing = false })
+    batch_set_brackets({ drawing = false })
+end
+
+-- ============================================================================
+-- Bulk Update: Update all workspaces in one efficient operation
+-- ============================================================================
+
+local function update_all_spaces()
+    -- Get visible workspaces and all window info in parallel via a single script
+    local cmd = [[
+        visible=$(aerospace list-workspaces --monitor all --visible 2>/dev/null | tr '\n' ' ')
+        echo "VISIBLE:$visible"
+        for ws in $(aerospace list-workspaces --monitor all 2>/dev/null); do
+            windows=$(aerospace list-windows --workspace "$ws" 2>/dev/null)
+            if [ -n "$windows" ]; then
+                echo "HAS_WINDOWS:$ws"
+            fi
+        done
+    ]]
+
+    sbar.exec(cmd, function(output)
+        if not output then return end
+
+        -- Parse visible workspaces
+        local visible_set = {}
+        local visible_line = output:match("VISIBLE:([^\n]*)")
+        if visible_line then
+            for ws in visible_line:gmatch("%S+") do
+                visible_set[ws] = true
+            end
+        end
+
+        -- Parse workspaces with windows
+        local has_windows_set = {}
+        for ws in output:gmatch("HAS_WINDOWS:(%S+)") do
+            has_windows_set[ws] = true
+        end
+
+        -- Step 1: Batch hide all spaces first
+        hide_all_spaces()
+
+        -- Step 2: Update only visible/active spaces individually
+        for workspace, space in pairs(space_items) do
+            local ws_str = tostring(workspace)
+            local is_visible = visible_set[ws_str]
+            local has_windows = has_windows_set[ws_str]
+            local bracket = bracket_items[workspace]
+            local ws_color = space_colors[workspace] or colors.blue
+
+            -- Update state
+            space_states[workspace] = { visible = is_visible, has_windows = has_windows }
+
+            if is_visible or has_windows then
+                -- Show this space
+                space:set({ drawing = true })
+                if bracket then bracket:set({ drawing = true }) end
+
+                -- Apply appropriate style
+                if is_visible then
+                    space:set({
+                        background = {
+                            color        = ws_color,
+                            border_color = colors.with_alpha(ws_color, 0.8),
+                            height       = 24,
+                        },
+                        label = { color = colors.crust },
+                        icon  = { color = colors.crust },
+                    })
+                    if bracket then
+                        bracket:set({
+                            background = { border_color = colors.with_alpha(ws_color, 0.5) },
+                        })
+                    end
+                else
+                    space:set({
+                        background = {
+                            color        = colors.surface0,
+                            border_color = colors.with_alpha(ws_color, 0.3),
+                            height       = 24,
+                        },
+                        label = { color = colors.with_alpha(ws_color, 0.6) },
+                        icon  = { color = colors.with_alpha(ws_color, 0.6) },
+                    })
+                    if bracket then
+                        bracket:set({
+                            background = { border_color = colors.transparent },
+                        })
+                    end
+                end
+            end
+        end
+
+        -- Step 3: Update icons for spaces with windows (async, parallel)
+        for workspace, _ in pairs(has_windows_set) do
+            local ws_num = tonumber(workspace)
+            if ws_num and space_items[ws_num] then
+                sbar.exec("aerospace list-windows --workspace " .. workspace .. " 2>/dev/null", function(windows_output)
+                    local icons = {}
+                    if windows_output then
+                        for line in windows_output:gmatch("[^\r\n]+") do
+                            local app_name = line:match("|%s*([^|]+)%s*|")
+                            if app_name then
+                                app_name = app_name:match("^%s*(.-)%s*$")
+                                if app_name and app_name ~= "" then
+                                    local icon = app_icons[app_name] or ":default:"
+                                    table.insert(icons, icon)
+                                end
+                            end
+                        end
+                    end
+                    space_items[ws_num]:set({
+                        icon = { string = table.concat(icons, "") },
+                    })
+                end)
+            end
+        end
+    end)
 end
 
 -- Create a space item with rainbow color
@@ -84,10 +215,8 @@ local function create_space_item(workspace, label, sync_index)
     space_items[workspace] = space
     bracket_items[workspace] = bracket
 
-    -- Subscribe to workspace change event
-    space:subscribe("aerospace_workspace_change", function(env)
-        update_space(workspace)
-    end)
+    -- NOTE: Workspace change is now handled by a single global observer
+    -- that calls update_all_spaces() for efficient batch updates
 
     -- Hover animation: mouse entered
     space:subscribe("mouse.entered", function(env)
@@ -161,100 +290,6 @@ local function create_space_item(workspace, label, sync_index)
     return space, bracket
 end
 
--- Update a single space item
-function update_space(workspace)
-    local space = space_items[workspace]
-    local bracket = bracket_items[workspace]
-    local ws_color = space_colors[workspace] or colors.blue
-
-    if not space or not bracket then return end
-
-    -- Get visible workspaces and windows
-    sbar.exec("aerospace list-workspaces --monitor all --visible 2>/dev/null", function(visible_output)
-        local is_visible = false
-        if visible_output then
-            for ws in visible_output:gmatch("%S+") do
-                if ws == tostring(workspace) then
-                    is_visible = true
-                    break
-                end
-            end
-        end
-
-        sbar.exec("aerospace list-windows --workspace " .. workspace .. " 2>/dev/null", function(windows_output)
-            local has_windows = windows_output and windows_output:match("%S") ~= nil
-
-            -- Update state
-            space_states[workspace] = { visible = is_visible, has_windows = has_windows }
-
-            -- Show/hide logic
-            if is_visible or has_windows then
-                space:set({ drawing = true })
-                bracket:set({ drawing = true })
-            else
-                space:set({ drawing = false })
-                bracket:set({ drawing = false })
-                return
-            end
-
-            -- Style based on visibility with rainbow colors
-            if is_visible then
-                -- Active workspace: full rainbow color
-                sbar.animate("tanh", 20, function()
-                    space:set({
-                        background = {
-                            color        = ws_color,
-                            border_color = colors.with_alpha(ws_color, 0.8),
-                        },
-                        label = { color = colors.crust },
-                        icon  = { color = colors.crust },
-                    })
-                    bracket:set({
-                        background = { border_color = colors.with_alpha(ws_color, 0.5) },
-                    })
-                end)
-            else
-                -- Has windows but not visible: dimmed rainbow color
-                sbar.animate("tanh", 20, function()
-                    space:set({
-                        background = {
-                            color        = colors.surface0,
-                            border_color = colors.with_alpha(ws_color, 0.3),
-                        },
-                        label = { color = colors.with_alpha(ws_color, 0.6) },
-                        icon  = { color = colors.with_alpha(ws_color, 0.6) },
-                    })
-                    bracket:set({
-                        background = { border_color = colors.transparent },
-                    })
-                end)
-            end
-
-            -- Collect app icons from windows
-            local icons = {}
-            if windows_output then
-                for line in windows_output:gmatch("[^\r\n]+") do
-                    local app_name = line:match("|%s*([^|]+)%s*|")
-                    if app_name then
-                        app_name = app_name:match("^%s*(.-)%s*$")
-                        if app_name and app_name ~= "" then
-                            local icon = get_app_icon(app_name)
-                            table.insert(icons, icon)
-                        end
-                    end
-                end
-            end
-
-            -- Update icon with animation
-            sbar.animate("tanh", 10, function()
-                space:set({
-                    icon = { string = table.concat(icons, "") },
-                })
-            end)
-        end)
-    end)
-end
-
 -- Initialize spaces based on monitor configuration
 local function init_spaces()
     sbar.exec("command -v aerospace", function(output)
@@ -297,19 +332,27 @@ local function init_spaces()
                 end
             end
 
-            -- Create periodic refresh observer
-            local refresh = sbar.add("item", "spaces_refresh", {
+            -- Create global workspace observer (single observer for batch updates)
+            local workspace_observer = sbar.add("item", "spaces_observer", {
                 position    = "left",
                 drawing     = false,
                 update_freq = 5,
             })
 
-            refresh:subscribe("routine", function()
-                sbar.trigger("aerospace_workspace_change")
+            -- Subscribe to workspace change event - uses efficient bulk update
+            workspace_observer:subscribe("aerospace_workspace_change", function()
+                update_all_spaces()
             end)
 
-            -- Delay initial trigger
-            sbar.exec("sleep 0.5 && sketchybar --trigger aerospace_workspace_change")
+            -- Periodic refresh for sync
+            workspace_observer:subscribe("routine", function()
+                update_all_spaces()
+            end)
+
+            -- Delay initial update
+            sbar.exec("sleep 0.5", function()
+                update_all_spaces()
+            end)
         end)
     end)
 end
