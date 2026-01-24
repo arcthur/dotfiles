@@ -1,3 +1,0 @@
--- init.lua
--- This file is kept for backwards compatibility
--- Main initialization is now in sketchybarrc
