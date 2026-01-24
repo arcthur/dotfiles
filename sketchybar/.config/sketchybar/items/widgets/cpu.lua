@@ -76,20 +76,24 @@ cpu_percent:subscribe("cpu_update", function(env)
     local total = tonumber(env.TOTAL_PERCENT) or 0
     local graph_value = tonumber(env.GRAPH_VALUE) or 0
 
-    -- Color based on usage
+    -- Color based on usage (applied to both label and graph)
     local color
     if total >= 70 then
         color = colors.red
-    elseif total >= 30 then
+    elseif total >= 40 then
         color = colors.peach
     else
-        color = colors.white
+        color = colors.blue
     end
 
     cpu_percent:set({
         label = { string = total .. "%", color = color },
     })
 
+    -- Dynamic graph color based on load
+    cpu_graph:set({
+        graph = { color = color },
+    })
     cpu_graph:push({ graph_value })
 end)
 

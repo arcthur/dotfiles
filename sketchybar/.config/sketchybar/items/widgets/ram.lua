@@ -97,20 +97,24 @@ ram_percent:subscribe("memory_update", function(env)
     local mem_used = tonumber(env.USED_PERCENT) or 0
     local graph_value = tonumber(env.GRAPH_VALUE) or 0
 
-    -- Color based on usage
+    -- Color based on usage (applied to both label and graph)
     local color
     if mem_used >= 70 then
         color = colors.red
-    elseif mem_used >= 30 then
+    elseif mem_used >= 50 then
         color = colors.peach
     else
-        color = colors.white
+        color = colors.green
     end
 
     ram_percent:set({
         label = { string = mem_used .. "%", color = color },
     })
 
+    -- Dynamic graph color based on memory pressure
+    ram_graph:set({
+        graph = { color = color },
+    })
     ram_graph:push({ graph_value })
 end)
 

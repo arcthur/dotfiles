@@ -33,5 +33,9 @@ require("items")
 sbar.hotload(true)
 sbar.end_config()
 
+-- Start event providers (compile if needed)
+local helpers = require("helpers")
+helpers.start_providers(2)  -- base interval: 2 seconds
+
 -- Trigger initial update
 sbar.trigger("forced")

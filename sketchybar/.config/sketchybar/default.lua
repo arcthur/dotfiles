@@ -5,6 +5,10 @@ local colors = require("colors")
 local settings = require("settings")
 
 sbar.default({
+    -- Performance optimizations
+    updates = "when_shown",  -- Only update when item is visible
+    scroll_texts = true,      -- Enable text scrolling for long labels
+
     icon = {
         font = {
             family = settings.font.text,

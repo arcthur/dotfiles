@@ -2,18 +2,8 @@
 -- Global configuration constants
 
 return {
-    -- Fonts
-    font = {
-        text    = "JetBrainsMono Nerd Font",
-        numbers = "JetBrainsMono Nerd Font",
-        app     = "sketchybar-app-font",
-        label   = "TX-02",
-        style = {
-            regular  = "Regular",
-            semibold = "Semibold",
-            bold     = "Bold",
-        },
-    },
+    -- Fonts (loaded from helpers/fonts.lua for easy switching)
+    font = require("helpers.fonts"),
 
     -- Update frequencies (seconds)
     update = {
