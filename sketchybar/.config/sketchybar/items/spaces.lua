@@ -1,5 +1,5 @@
 -- items/spaces.lua
--- Aerospace workspace integration with rainbow colors and hover animations
+-- Aerospace workspace integration with vertical pill style (BenjaminBini inspired)
 
 local colors = require("colors")
 local settings = require("settings")
@@ -10,9 +10,17 @@ sbar.add("event", "aerospace_workspace_change")
 
 -- Store space items for later reference
 local space_items = {}
-local bracket_items = {}
 local space_colors = {}  -- Store rainbow color for each workspace
 local space_states = {}  -- Store current state (visible/has_windows)
+
+-- ============================================================================
+-- Style Constants (BenjaminBini vertical pill style)
+-- ============================================================================
+
+local PILL_HEIGHT_UNFOCUSED = 10
+local PILL_HEIGHT_FOCUSED = 62
+local PILL_Y_OFFSET = 18
+local ANIMATION_DURATION = 10
 
 -- ============================================================================
 -- Regex Batch Update Helpers
@@ -23,15 +31,9 @@ local function batch_set_spaces(props)
     sbar.set("/space\\..*/", props)
 end
 
--- Batch set properties on all bracket items matching regex pattern
-local function batch_set_brackets(props)
-    sbar.set("/space_bracket\\..*/", props)
-end
-
--- Hide all spaces (used before showing only visible ones)
+-- Hide all spaces
 local function hide_all_spaces()
     batch_set_spaces({ drawing = false })
-    batch_set_brackets({ drawing = false })
 end
 
 -- ============================================================================
@@ -77,7 +79,6 @@ local function update_all_spaces()
             local ws_str = tostring(workspace)
             local is_visible = visible_set[ws_str]
             local has_windows = has_windows_set[ws_str]
-            local bracket = bracket_items[workspace]
             local ws_color = space_colors[workspace] or colors.blue
 
             -- Update state
@@ -86,44 +87,33 @@ local function update_all_spaces()
             if is_visible or has_windows then
                 -- Show this space
                 space:set({ drawing = true })
-                if bracket then bracket:set({ drawing = true }) end
 
-                -- Apply appropriate style
-                if is_visible then
-                    space:set({
-                        background = {
-                            color        = ws_color,
-                            border_color = colors.with_alpha(ws_color, 0.8),
-                            height       = 24,
-                        },
-                        label = { color = colors.crust },
-                        icon  = { color = colors.crust },
-                    })
-                    if bracket then
-                        bracket:set({
-                            background = { border_color = colors.with_alpha(ws_color, 0.5) },
+                -- Apply vertical pill style with animation
+                sbar.animate("tanh", ANIMATION_DURATION, function()
+                    if is_visible then
+                        -- Focused: tall pill with full color
+                        space:set({
+                            background = {
+                                color  = ws_color,
+                                height = PILL_HEIGHT_FOCUSED,
+                            },
+                            icon = { color = colors.crust },
+                        })
+                    else
+                        -- Has windows but not focused: short pill
+                        space:set({
+                            background = {
+                                color  = colors.with_alpha(ws_color, 0.3),
+                                height = PILL_HEIGHT_UNFOCUSED,
+                            },
+                            icon = { color = colors.with_alpha(ws_color, 0.6) },
                         })
                     end
-                else
-                    space:set({
-                        background = {
-                            color        = colors.surface0,
-                            border_color = colors.with_alpha(ws_color, 0.3),
-                            height       = 24,
-                        },
-                        label = { color = colors.with_alpha(ws_color, 0.6) },
-                        icon  = { color = colors.with_alpha(ws_color, 0.6) },
-                    })
-                    if bracket then
-                        bracket:set({
-                            background = { border_color = colors.transparent },
-                        })
-                    end
-                end
+                end)
             end
         end
 
-        -- Step 3: Update icons for spaces with windows (async, parallel)
+        -- Step 3: Update icons for spaces with windows (show app icons)
         for workspace, _ in pairs(has_windows_set) do
             local ws_num = tonumber(workspace)
             if ws_num and space_items[ws_num] then
@@ -141,8 +131,10 @@ local function update_all_spaces()
                             end
                         end
                     end
+                    -- Only show first icon to keep pill compact
+                    local display_icon = icons[1] or ""
                     space_items[ws_num]:set({
-                        icon = { string = table.concat(icons, "") },
+                        icon = { string = display_icon },
                     })
                 end)
             end
@@ -150,10 +142,9 @@ local function update_all_spaces()
     end)
 end
 
--- Create a space item with rainbow color
+-- Create a space item with vertical pill style
 local function create_space_item(workspace, label, sync_index)
     local space_name = "space." .. workspace
-    local bracket_name = "space_bracket." .. workspace
 
     local home = os.getenv("HOME")
     local aerospace_config = home .. "/.config/aerospace"
@@ -163,131 +154,96 @@ local function create_space_item(workspace, label, sync_index)
     space_colors[workspace] = ws_color
     space_states[workspace] = { visible = false, has_windows = false }
 
-    -- Create space item
+    -- Create space item with vertical pill style
     local space = sbar.add("item", space_name, {
         position = "left",
         drawing  = false,
+        padding_left  = 4,
+        padding_right = 4,
         background = {
-            color         = colors.surface0,
+            color         = colors.with_alpha(ws_color, 0.3),
             corner_radius = 5,
-            height        = 24,
-            border_width  = 1,
-            border_color  = colors.with_alpha(ws_color, 0.3),
+            height        = PILL_HEIGHT_UNFOCUSED,
+            y_offset      = PILL_Y_OFFSET,
+            border_width  = 0,
             drawing       = true,
-        },
-        label = {
-            string        = label,
-            font = {
-                family = settings.font.label,
-                style  = settings.font.style.regular,
-                size   = 13.0,
-            },
-            color         = colors.with_alpha(ws_color, 0.6),
-            padding_left  = 5,
-            padding_right = 5,
         },
         icon = {
+            string        = label,
             drawing       = true,
             font = {
-                family = settings.font.app,
-                style  = settings.font.style.regular,
-                size   = 16.0,
+                family = settings.font.label,
+                style  = settings.font.style.semibold,
+                size   = 12.0,
             },
             color         = colors.with_alpha(ws_color, 0.6),
             padding_left  = 6,
             padding_right = 6,
+            y_offset      = -8,  -- Position icon at bottom of pill
         },
+        label = { drawing = false },  -- No label, icon-only
         click_script = string.format('bash "%s/scripts/workspace-sync.sh" %d', aerospace_config, sync_index),
     })
 
-    -- Create bracket for glow effect
-    local bracket = sbar.add("bracket", bracket_name, { space_name }, {
-        drawing = false,
-        background = {
-            color        = colors.transparent,
-            border_color = colors.transparent,
-            border_width = 2,
-            corner_radius = 7,
-            height       = 28,
-        },
-    })
-
     space_items[workspace] = space
-    bracket_items[workspace] = bracket
 
     -- NOTE: Workspace change is now handled by a single global observer
     -- that calls update_all_spaces() for efficient batch updates
 
-    -- Hover animation: mouse entered
+    -- Hover animation: mouse entered - grow pill
     space:subscribe("mouse.entered", function(env)
         local state = space_states[workspace]
         if not state then return end
 
-        sbar.animate("tanh", 15, function()
+        sbar.animate("tanh", ANIMATION_DURATION, function()
             if state.visible then
-                -- Active: brighten and add glow
+                -- Already focused, just brighten
                 space:set({
-                    background = { height = 26 },
-                    icon  = { color = colors.white },
-                    label = { color = colors.white },
-                })
-                bracket:set({
-                    background = { border_color = ws_color },
+                    background = { height = PILL_HEIGHT_FOCUSED + 4 },
+                    icon = { color = colors.white },
                 })
             else
-                -- Inactive: highlight with rainbow color
+                -- Inactive: grow and highlight
                 space:set({
                     background = {
-                        color = colors.with_alpha(ws_color, 0.2),
-                        height = 26,
+                        color  = colors.with_alpha(ws_color, 0.5),
+                        height = PILL_HEIGHT_UNFOCUSED + 20,
                     },
-                    icon  = { color = ws_color },
-                    label = { color = ws_color },
-                })
-                bracket:set({
-                    background = { border_color = colors.with_alpha(ws_color, 0.5) },
+                    icon = { color = ws_color },
                 })
             end
         end)
     end)
 
-    -- Hover animation: mouse exited
+    -- Hover animation: mouse exited - restore pill
     space:subscribe("mouse.exited", function(env)
         local state = space_states[workspace]
         if not state then return end
 
-        sbar.animate("tanh", 15, function()
+        sbar.animate("tanh", ANIMATION_DURATION, function()
             if state.visible then
-                -- Restore active state
+                -- Restore focused state
                 space:set({
                     background = {
                         color  = ws_color,
-                        height = 24,
+                        height = PILL_HEIGHT_FOCUSED,
                     },
-                    icon  = { color = colors.crust },
-                    label = { color = colors.crust },
-                })
-                bracket:set({
-                    background = { border_color = colors.with_alpha(ws_color, 0.5) },
+                    icon = { color = colors.crust },
                 })
             else
                 -- Restore inactive state
                 space:set({
                     background = {
-                        color  = colors.surface0,
-                        height = 24,
+                        color  = colors.with_alpha(ws_color, 0.3),
+                        height = PILL_HEIGHT_UNFOCUSED,
                     },
-                    icon  = { color = colors.with_alpha(ws_color, 0.6) },
-                    label = { color = colors.with_alpha(ws_color, 0.6) },
-                })
-                bracket:set({
-                    background = { border_color = colors.transparent },
+                    icon = { color = colors.with_alpha(ws_color, 0.6) },
                 })
             end
         end)
     end)
 
-    return space, bracket
+    return space
 end
 
 -- Initialize spaces based on monitor configuration
