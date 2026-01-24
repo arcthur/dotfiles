@@ -53,8 +53,8 @@ sbar.add("bracket", "spaces_group", { "/space\\..*/" , "space_separator", "left_
 
 -- Update front app on switch
 front_app:subscribe("front_app_switched", function(env)
-    -- Check for sync lock
-    local lock_file = io.open("/tmp/aerospace_workspace_sync_lock", "r")
+    -- Check for sync lock (prevents update during workspace switch)
+    local lock_file = io.open(settings.locks.workspace_sync, "r")
     if lock_file then
         lock_file:close()
         return

@@ -26,6 +26,16 @@ local weather_icons = {
 }
 
 local LOCATION = os.getenv("WEATHER_LOCATION") or "Singapore"
+local TIMEOUT = 5  -- curl timeout in seconds
+
+-- URL encode a string (handle spaces and special characters)
+local function url_encode(str)
+    if not str then return "" end
+    str = str:gsub("([^%w%-%.%_%~])", function(c)
+        return string.format("%%%02X", string.byte(c))
+    end)
+    return str
+end
 
 -- Weather/Temp item
 local temp = sbar.add("item", "temp", {
@@ -92,10 +102,13 @@ end
 
 -- Update weather
 local function update_weather()
-    local url = string.format("wttr.in/%s?format=%%t|%%C", LOCATION)
+    local encoded_location = url_encode(LOCATION)
+    local url = string.format("wttr.in/%s?format=%%t|%%C", encoded_location)
 
-    sbar.exec("curl -fsSL '" .. url .. "' 2>/dev/null", function(output)
-        if not output or output == "" or output:find("Unknown") then
+    -- Use timeout to prevent blocking, -m for max time
+    local cmd = string.format("curl -fsSL -m %d '%s' 2>/dev/null", TIMEOUT, url)
+    sbar.exec(cmd, function(output)
+        if not output or output == "" or output:find("Unknown") or output:find("ERROR") then
             temp:set({
                 label = { string = "--" },
                 icon  = { string = "󰖐", color = colors.teal },

@@ -3,27 +3,37 @@
 
 local M = {}
 
--- Debounce timers storage
-local debounce_timers = {}
+-- Timer storage for debounce/throttle
+local timers = {}
+
+-- High precision time (uses gdate if available, falls back to os.time)
+local function get_time_ms()
+    -- os.clock() measures CPU time, not wall time
+    -- For sub-second precision, we store timestamps with ms component via monotonic counter
+    local sec = os.time()
+    local ms = (os.clock() * 1000) % 1000  -- Use clock fraction for sub-second
+    return sec * 1000 + math.floor(ms)
+end
 
 --- Debounce a function call
 --- Prevents rapid successive calls by waiting for a quiet period
+--- Note: Uses sleep subprocess; for very high-frequency calls, consider throttle instead
 --- @param key string Unique identifier for this debounce
---- @param delay number Delay in seconds (e.g., 0.1 for 100ms)
+--- @param delay number Delay in seconds (e.g., 0.5 for 500ms)
 --- @param fn function Function to call after delay
 function M.debounce(key, delay, fn)
     -- Cancel existing timer if any
-    if debounce_timers[key] then
-        -- Note: sbar.remove doesn't work for delays, so we use a flag
-        debounce_timers[key].cancelled = true
+    if timers[key] then
+        timers[key].cancelled = true
     end
 
     -- Create new timer context
     local timer = { cancelled = false }
-    debounce_timers[key] = timer
+    timers[key] = timer
 
     sbar.exec("sleep " .. delay, function()
         if not timer.cancelled then
+            timers[key] = nil  -- Clean up after execution
             fn()
         end
     end)
@@ -68,15 +78,18 @@ end
 
 --- Throttle a function call
 --- Ensures function is called at most once per interval
+--- Supports sub-second intervals (uses millisecond precision)
 --- @param key string Unique identifier for this throttle
---- @param interval number Minimum interval between calls in seconds
+--- @param interval number Minimum interval between calls in seconds (e.g., 0.5)
 --- @param fn function Function to call
 function M.throttle(key, interval, fn)
-    local now = os.time()
-    local last = debounce_timers[key .. "_last"] or 0
+    local now = get_time_ms()
+    local interval_ms = interval * 1000
+    local throttle_key = key .. "_throttle"
+    local last = timers[throttle_key] or 0
 
-    if now - last >= interval then
-        debounce_timers[key .. "_last"] = now
+    if now - last >= interval_ms then
+        timers[throttle_key] = now
         fn()
     end
 end

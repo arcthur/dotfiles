@@ -1,6 +1,8 @@
 -- settings.lua
 -- Global configuration constants
 
+local home = os.getenv("HOME")
+
 return {
     -- Fonts (loaded from helpers/fonts.lua for easy switching)
     font = require("helpers.fonts"),
@@ -19,4 +21,12 @@ return {
 
     -- Icon type: "sf-symbols" or "nerdfont"
     icons = "nerdfont",
+
+    -- Cache/temp files directory
+    cache_dir = os.getenv("SKETCHYBAR_CACHE_DIR") or "/tmp",
+
+    -- Lock files
+    locks = {
+        workspace_sync = "/tmp/aerospace_workspace_sync_lock",
+    },
 }

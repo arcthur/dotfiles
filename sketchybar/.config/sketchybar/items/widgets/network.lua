@@ -7,7 +7,7 @@ local icons = require("icons")
 
 local SIZE = 11
 local WIDTH = 70
-local CACHE_FILE = "/tmp/sketchybar_network_cache"
+local CACHE_FILE = settings.cache_dir .. "/sketchybar_network_cache"
 
 -- Register network update event (triggered by C event provider)
 sbar.add("event", "network_update")
