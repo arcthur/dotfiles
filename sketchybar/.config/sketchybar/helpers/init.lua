@@ -1,16 +1,12 @@
 -- helpers/init.lua
--- Setup module paths for SbarLua
+-- Helper utilities and constants
+
+local M = {}
 
 local home = os.getenv("HOME")
 
--- Add SbarLua to package path
-package.cpath = package.cpath .. ";" .. home .. "/.local/share/sketchybar_lua/?.so"
+-- Global config directory
+M.config_dir = home .. "/.config/sketchybar"
+M.plugin_dir = M.config_dir .. "/plugins"
 
--- Set global config directory
-CONFIG_DIR = home .. "/.config/sketchybar"
-
--- Load SbarLua
-sbar = require("sketchybar")
-
--- Start the event loop at the end of config
-sbar.begin_config()
+return M

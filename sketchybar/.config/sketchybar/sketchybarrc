@@ -4,11 +4,34 @@
 -- Migrated from Bash to Lua + SbarLua
 -- https://github.com/FelixKratz/SbarLua
 
--- Ensure Homebrew apps are found when started by launchd
-os.execute("export PATH='/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'")
+-- Set config directory
+local home = os.getenv("HOME")
+local config_dir = home .. "/.config/sketchybar"
 
--- Load helpers (sets up module paths and initializes sbar)
-require("helpers")
+-- Add config dir to package path (including subdirectories)
+package.path = table.concat({
+    config_dir .. "/?.lua",
+    config_dir .. "/?/init.lua",
+    package.path,
+}, ";")
 
--- Load main configuration
-require("init")
+-- Add SbarLua to package cpath
+package.cpath = package.cpath .. ";" .. home .. "/.local/share/sketchybar_lua/?.so"
+
+-- Load SbarLua
+sbar = require("sketchybar")
+
+-- Begin configuration
+sbar.begin_config()
+
+-- Load all configuration modules
+require("bar")
+require("default")
+require("items")
+
+-- Finalize configuration
+sbar.hotload(true)
+sbar.end_config()
+
+-- Trigger initial update
+sbar.trigger("forced")

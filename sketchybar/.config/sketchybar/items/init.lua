@@ -1,14 +1,13 @@
 -- items/init.lua
--- Load all bar items
+-- Load all bar items (order matches original bash config)
 
--- Left side items
+-- Left side items (spaces.sh includes apple menu)
 require("items.apple")
 require("items.spaces")
 require("items.front_app")
 
--- Right side items (load in reverse order for proper positioning)
+-- Right side items (clock.sh includes weather/temp)
 require("items.clock")
-require("items.weather")
 
--- Widgets (system monitoring)
+-- Widgets: wifi, network, battery, storage, cpu, ram
 require("items.widgets")
