@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
                      curr_state.charging ? 1 : 0,
                      curr_state.has_battery ? 1 : 0);
 
-            sketchybar(message);
+            sketchybar_trigger(message);
             prev_state = curr_state;
         }
 

@@ -8,6 +8,7 @@
  */
 
 #include <ifaddrs.h>
+#include <inttypes.h>
 #include <net/if.h>
 #include <net/if_var.h>
 #include <net/route.h>
@@ -84,9 +85,9 @@ static void format_bytes(uint64_t bytes, char *buf, size_t buf_size) {
     if (bytes >= 1048576) {
         snprintf(buf, buf_size, "%.1f MB/s", (double)bytes / 1048576.0);
     } else if (bytes >= 1024) {
-        snprintf(buf, buf_size, "%llu KB/s", bytes / 1024);
+        snprintf(buf, buf_size, "%" PRIu64 " KB/s", bytes / 1024);
     } else {
-        snprintf(buf, buf_size, "%llu B/s", bytes);
+        snprintf(buf, buf_size, "%" PRIu64 " B/s", bytes);
     }
 }
 
@@ -197,12 +198,12 @@ int main(int argc, char **argv) {
 
         // Send trigger with network data
         snprintf(message, sizeof(message),
-                 "--trigger %s SPEED_DOWN=%llu SPEED_UP=%llu "
+                 "--trigger %s SPEED_DOWN=%" PRIu64 " SPEED_UP=%" PRIu64 " "
                  "SPEED_DOWN_STR=\"%s\" SPEED_UP_STR=\"%s\" INTERFACE=%s",
                  event_name, speed_in, speed_out,
                  speed_in_str, speed_out_str, g_interface);
 
-        sketchybar(message);
+        sketchybar_trigger(message);
         sleep(interval);
     }
 

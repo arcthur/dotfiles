@@ -61,7 +61,7 @@ static inline mach_port_t mach_get_bs_port(char *bs_name) {
 }
 
 static inline char *mach_send_message(mach_port_t port, char *message,
-                                       uint32_t len) {
+                                       uint32_t len, bool wait_response) {
     if (!message || !port) {
         return NULL;
     }
@@ -76,6 +76,7 @@ static inline char *mach_send_message(mach_port_t port, char *message,
 
     if (mach_port_insert_right(task, response_port, response_port,
                                 MACH_MSG_TYPE_MAKE_SEND) != KERN_SUCCESS) {
+        mach_port_mod_refs(task, response_port, MACH_PORT_RIGHT_RECEIVE, -1);
         return NULL;
     }
 
@@ -97,19 +98,19 @@ static inline char *mach_send_message(mach_port_t port, char *message,
     mach_msg(&msg.header, MACH_SEND_MSG, sizeof(struct mach_message), 0,
              MACH_PORT_NULL, 2000, MACH_PORT_NULL);
 
-    struct mach_buffer buffer = {0};
-    mach_msg(&buffer.message.header,
-             MACH_RCV_MSG | MACH_RCV_TIMEOUT, 0,
-             sizeof(struct mach_buffer), response_port, 400, MACH_PORT_NULL);
-
-    if (buffer.message.descriptor.address) {
-        // Response received
+    char *response = NULL;
+    if (wait_response) {
+        struct mach_buffer buffer = {0};
+        mach_msg(&buffer.message.header,
+                 MACH_RCV_MSG | MACH_RCV_TIMEOUT, 0,
+                 sizeof(struct mach_buffer), response_port, 400, MACH_PORT_NULL);
+        response = buffer.message.descriptor.address;
     }
 
     mach_port_mod_refs(task, response_port, MACH_PORT_RIGHT_RECEIVE, -1);
     mach_port_deallocate(task, response_port);
 
-    return buffer.message.descriptor.address;
+    return response;
 }
 
 static inline uint32_t format_message(char *message, uint32_t len) {
@@ -130,6 +131,7 @@ static inline uint32_t format_message(char *message, uint32_t len) {
     return len + 1;
 }
 
+// Send message and wait for response (caller must deallocate response with mach_vm_deallocate)
 static inline char *sketchybar(char *message) {
     if (!g_mach_port) {
         g_mach_port = mach_get_bs_port("git.felix.sketchybar");
@@ -137,13 +139,31 @@ static inline char *sketchybar(char *message) {
 
     uint32_t len = strlen(message);
     char *copy = (char *)malloc(len + 1);
+    if (!copy) return NULL;
     memcpy(copy, message, len);
     copy[len] = '\0';
     len = format_message(copy, len);
 
-    char *response = mach_send_message(g_mach_port, copy, len);
+    char *response = mach_send_message(g_mach_port, copy, len, true);
     free(copy);
     return response;
+}
+
+// Send trigger/command without waiting for response (fire-and-forget, no memory leak)
+static inline void sketchybar_trigger(char *message) {
+    if (!g_mach_port) {
+        g_mach_port = mach_get_bs_port("git.felix.sketchybar");
+    }
+
+    uint32_t len = strlen(message);
+    char *copy = (char *)malloc(len + 1);
+    if (!copy) return;
+    memcpy(copy, message, len);
+    copy[len] = '\0';
+    len = format_message(copy, len);
+
+    mach_send_message(g_mach_port, copy, len, false);
+    free(copy);
 }
 
 static inline char *env_get_value_for_key(char *env, char *key) {

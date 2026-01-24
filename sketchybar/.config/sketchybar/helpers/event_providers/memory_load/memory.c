@@ -136,7 +136,7 @@ int main(int argc, char **argv) {
                  "TOTAL_STR=\"%s\" GRAPH_VALUE=%.2f",
                  event_name, used_percent, used_str, total_str, graph_value);
 
-        sketchybar(message);
+        sketchybar_trigger(message);
 
         // Adaptive sleep based on current memory pressure
         int interval = get_adaptive_interval(base_interval, used_percent);

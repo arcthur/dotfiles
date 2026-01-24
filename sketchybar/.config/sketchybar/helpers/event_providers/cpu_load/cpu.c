@@ -151,7 +151,7 @@ int main(int argc, char **argv) {
                  "SYS_PERCENT=%d GRAPH_VALUE=%.2f",
                  event_name, total, user, sys, graph_value);
 
-        sketchybar(message);
+        sketchybar_trigger(message);
 
         // Adaptive sleep based on current load
         int interval = get_adaptive_interval(base_interval, total);
