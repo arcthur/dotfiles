@@ -1,6 +1,7 @@
 ---
 name: tmux-autopilot
 description: "Tmux automation: read/broadcast/rescue session|window|pane. Enables AI to safely control terminals based on Arthur's dotfiles. Triggers: capture-pane, send-keys, batch inspection, swarm collaboration, stuck process rescue, keybinding lookup."
+user-invocable: false
 ---
 
 # tmux-autopilot Skill
@@ -222,11 +223,11 @@ Quick fixes (see `references/troubleshooting.md` for details):
 
 ## References
 
-- `references/index.md`: Navigation and file overview
-- `references/getting_started.md`: Terminology, minimal setup steps
-- `references/api.md`: Tmux commands and config options
-- `references/examples.md`: Swarm protocol scripts and extended examples
-- `references/troubleshooting.md`: Symptom to fix mapping
+- `./references/index.md`: Navigation and file overview
+- `./references/getting_started.md`: Terminology, minimal setup steps
+- `./references/api.md`: Tmux commands and config options
+- `./references/examples.md`: Swarm protocol scripts and extended examples
+- `./references/troubleshooting.md`: Symptom to fix mapping
 
 ## Maintenance
 
