@@ -1,6 +1,7 @@
 ---
 name: parallel-agents
 description: "Git worktree + tmux orchestration for parallel AI agents (Claude Code, Codex, OpenCode). Enables isolated development environments with status monitoring. Triggers: worktree, swarm, parallel agents, spawn, isolate, merge branch, agent status, inspect agents, rescue stuck."
+user-invocable: false
 ---
 
 # parallel-agents Skill
@@ -334,36 +335,7 @@ for feature in auth payments notifications; do
 done
 ```
 
-### Example 2: Inspect and report status
-
-```bash
-echo "=== Agent Status Report ==="
-session=$(tmux display-message -p '#S')
-
-for w in $(tmux list-windows -F '#I:#W' | grep 'wm-'); do
-  idx="${w%%:*}"; name="${w#*:}"
-  pane="$session:$idx.1"
-  content=$(tmux capture-pane -t "$pane" -p -S -30)
-
-  # Priority: error > waiting > working > done > idle
-  prompt_re='^[A-Za-z0-9_@:/~._ -]*[$>][[:space:]]*$'
-  last_line=$(echo "$content" | grep -v '^$' | tail -1)
-
-  if echo "$content" | grep -qiE '(error|exception|traceback|FAILED)'; then
-    echo "[ERROR]   $name - check logs"
-  elif echo "$content" | grep -qiE '(\(y/n\)|\[Y/n\]|approve|confirm)'; then
-    echo "[WAITING] $name - needs input"
-  elif echo "$content" | grep -qiE '(Reading|Writing|Bash\(|executing)'; then
-    echo "[WORKING] $name - in progress"
-  elif echo "$last_line" | grep -qE "$prompt_re"; then
-    echo "[DONE]    $name"
-  else
-    echo "[IDLE]    $name"
-  fi
-done
-```
-
-### Example 3: Complete workflow
+### Example 2: Complete workflow
 
 ```bash
 # 1. Create worktree
@@ -417,8 +389,8 @@ A: Use tmux scrollback: `C-a [` then scroll up, or `tmux capture-pane -t target 
 
 ## References
 
-- `references/index.md` - Navigation
-- `references/worktree-api.md` - Git worktree commands
-- `references/agent-detection.md` - Detailed detection patterns
-- `references/pane-layouts.md` - Multi-pane layouts
-- `references/examples.md` - Extended workflow examples
+- `./references/index.md` - Navigation
+- `./references/worktree-api.md` - Git worktree commands
+- `./references/agent-detection.md` - Detailed detection patterns
+- `./references/pane-layouts.md` - Multi-pane layouts
+- `./references/examples.md` - Extended workflow examples

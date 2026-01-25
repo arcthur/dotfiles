@@ -231,50 +231,7 @@ echo "unknown"
 
 ## Batch Inspection
 
-### Inspect All Worktree Windows
-
-```bash
-#!/usr/bin/env bash
-# inspect_all_agents.sh
-
-echo "=== Agent Status Report ==="
-echo ""
-session=$(tmux display-message -p '#S')
-
-for line in $(tmux list-windows -F '#I:#W' 2>/dev/null | grep 'wm-'); do
-  window_id="${line%%:*}"
-  window_name="${line#*:}"
-  pane="$session:$window_id.1"
-
-  content=$(tmux capture-pane -t "$pane" -p -S -30 2>/dev/null || echo "")
-
-# Detect status
-prompt_re='^[A-Za-z0-9_@:/~._ -]*[$>][[:space:]]*$'
-last_line=$(echo "$content" | grep -v '^$' | tail -1)
-
-  if echo "$content" | grep -qiE '(error|exception|traceback|failed)'; then
-    status="ERROR"
-    icon="X"
-  elif echo "$content" | grep -qiE '(\(y/n\)|\[Y/n\]|approve|confirm|waiting)'; then
-    status="WAITING"
-    icon="?"
-  elif echo "$content" | grep -qiE '(Reading|Writing|Bash|executing|processing)'; then
-    status="WORKING"
-    icon=">"
-  elif echo "$last_line" | grep -qE "$prompt_re"; then
-    status="DONE"
-    icon="+"
-  else
-    status="UNKNOWN"
-    icon="-"
-  fi
-
-  # Get last meaningful line
-  last_line=$(echo "$content" | grep -v '^$' | tail -1 | cut -c1-60)
-
-  printf "[%s] %-20s %s\n" "$icon" "$window_name" "$last_line"
-done
-```
+For batch inspection of all worktree windows, see [SKILL.md Core Operations: Batch Inspect All Agents](../SKILL.md#4-batch-inspect-all-agents).
 
 ## Status Update in tmux
 
