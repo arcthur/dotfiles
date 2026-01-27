@@ -102,6 +102,16 @@ local icons = {
             up   = "⇡",
             down = "⇣",
         },
+        -- Media / Spotify
+        media = {
+            spotify    = "󰓇",
+            music      = "󰎇",
+            play       = "󰐊",
+            pause      = "󰏤",
+            play_pause = "󰐎",
+            next       = "󰒭",
+            prev       = "󰒮",
+        },
     },
 }
 
