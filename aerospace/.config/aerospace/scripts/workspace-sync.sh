@@ -11,9 +11,6 @@ command -v aerospace >/dev/null 2>&1 || exit 0
 target="${1:-}"
 [[ "$target" =~ ^[0-9]+$ ]] || exit 0
 
-SYNC_LOCK="/tmp/aerospace_workspace_sync_lock"
-touch "$SYNC_LOCK"
-
 # Count monitors
 monitor_count="$(aerospace list-monitors | wc -l | tr -d ' ')"
 
@@ -28,7 +25,9 @@ else
   aerospace workspace "$target" 2>/dev/null || true
 fi
 
-# Direct update (faster than event trigger), then release lock
+# Direct update for faster response
 APP="$(lsappinfo info -only name "$(lsappinfo front)" 2>/dev/null | cut -d'"' -f4)"
 [ -n "$APP" ] && sketchybar --set front_app label="${target}::${APP}"
-rm -f "$SYNC_LOCK"
+
+# Trigger spaces update immediately (don't wait for aerospace event)
+sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE="$target" &
