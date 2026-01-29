@@ -51,3 +51,6 @@ zsh/.config/zsh/.zcompcache
 
 # Brewfile
 Brewfile.lock.json
+
+# Backup
+.backup/

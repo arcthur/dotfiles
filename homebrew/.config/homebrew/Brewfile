@@ -1,10 +1,10 @@
 # TAPS
 # ---------------
-tap "homebrew/bundle"
 tap "brewforge/chinese"
 tap "steveyegge/beads"
 tap "moonrepo/tap"
 tap "nikitabobko/tap"
+tap "FelixKratz/formulae"
 
 # BINARIES
 # ---------------
@@ -86,9 +86,8 @@ brew "lua"          # Powerful, efficient scripting language
 
 # Mac OS X
 brew "mas"          # Mac App Store command-line interface
-brew "sketchybar"   # Custom macOS statusbar
+brew "FelixKratz/formulae/sketchybar"   # Custom macOS statusbar
 brew "sleepwatcher" # Run scripts on sleep/wake events
-cask "aerospace"    # Tiling window manager
 
 # CASK
 # ---------------
@@ -107,7 +106,7 @@ cask "spotify"
 
 # Video
 cask "iina"
-cask "mkvtoolnix"
+cask "mkvtoolnix-app"
 cask "shottr"
 
 # E-books
@@ -126,10 +125,11 @@ cask "discord"
 cask "whatsapp"
 
 # Utilities
+cask "nikitabobko/tap/aerospace"    # Tiling window manager
 cask "betterdisplay"
 cask "keka"
 cask "surge"
-cask "squirrel"
+cask "squirrel-app"
 cask "bitwarden"
 
 # Development
