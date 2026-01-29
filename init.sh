@@ -86,6 +86,10 @@ backup_or_remove() {
         rm -f "$src"
     elif [[ -e "$src" ]]; then
         mkdir -p "$(dirname "$dest")"
+        # Remove existing dest if it's a non-empty directory (mv can't overwrite)
+        if [[ -d "$dest" ]]; then
+            rm -rf "$dest"
+        fi
         mv -f "$src" "$dest"
         info "Backed up: $src"
     fi
@@ -231,8 +235,14 @@ install_brew_packages() {
         return 0
     fi
 
+    local brewfile="$SCRIPT_DIR/homebrew/.config/homebrew/Brewfile"
+    if [[ ! -f "$brewfile" ]]; then
+        warn "Brewfile not found: $brewfile"
+        return 0
+    fi
+
     info "Installing Brewfile packages..."
-    if brew bundle --global; then
+    if brew bundle --file="$brewfile"; then
         success "Brew packages installed"
     else
         warn "Some brew packages failed to install"
@@ -336,11 +346,13 @@ install_sketchybar_deps() {
         info "[dry-run] Would install SbarLua"
     else
         info "Installing SbarLua..."
-        if git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua 2>/dev/null && \
-           cd /tmp/SbarLua && make install && rm -rf /tmp/SbarLua; then
+        rm -rf /tmp/SbarLua
+        if git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && \
+           (cd /tmp/SbarLua && make install) && rm -rf /tmp/SbarLua; then
             success "SbarLua installed"
         else
             warn "SbarLua installation failed"
+            rm -rf /tmp/SbarLua
         fi
     fi
 
@@ -386,6 +398,40 @@ EOF
     chmod +x "$sleep_script"
 
     success "Sleepwatcher hooks created"
+}
+
+start_services() {
+    if [[ "$DRY_RUN" == true ]]; then
+        info "[dry-run] Would start sketchybar, sleepwatcher, aerospace"
+        return 0
+    fi
+
+    # Start sketchybar as brew service
+    if command -v sketchybar &>/dev/null; then
+        info "Starting sketchybar..."
+        brew services start sketchybar 2>/dev/null || brew services restart sketchybar
+        success "sketchybar started"
+    fi
+
+    # Start sleepwatcher as brew service
+    if command -v sleepwatcher &>/dev/null; then
+        info "Starting sleepwatcher..."
+        brew services start sleepwatcher 2>/dev/null || brew services restart sleepwatcher
+        success "sleepwatcher started"
+    fi
+
+    # Start or reload aerospace
+    if command -v aerospace &>/dev/null; then
+        if pgrep -x AeroSpace &>/dev/null; then
+            info "Reloading aerospace..."
+            aerospace reload-config
+            success "aerospace reloaded"
+        else
+            info "Starting aerospace..."
+            open -a AeroSpace
+            success "aerospace started"
+        fi
+    fi
 }
 
 # ==============================================================================
@@ -554,6 +600,9 @@ main() {
 
     # Phase 5: Special symlinks
     setup_claude_symlink
+
+    # Phase 6: Start services
+    start_services
 
     echo ""
     success "=== Done ==="
