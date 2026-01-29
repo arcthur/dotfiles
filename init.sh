@@ -335,6 +335,22 @@ install_tpm() {
     success "TPM installed (run prefix+I in tmux to install plugins)"
 }
 
+install_claude_code() {
+    if command -v claude &>/dev/null; then
+        success "Claude Code already installed"
+        return 0
+    fi
+
+    if [[ "$DRY_RUN" == true ]]; then
+        info "[dry-run] Would install Claude Code"
+        return 0
+    fi
+
+    info "Installing Claude Code..."
+    curl -fsSL https://claude.ai/install.sh | bash
+    success "Claude Code installed"
+}
+
 install_sketchybar_deps() {
     local sbarlua_path="$HOME/.local/share/sketchybar_lua"
     local providers_path="$HOME/.config/sketchybar/helpers/event_providers"
@@ -589,6 +605,7 @@ main() {
     install_devbox
     install_zsh4monkey
     install_tpm
+    install_claude_code
 
     # Phase 3: Stow dotfiles
     stow_packages
