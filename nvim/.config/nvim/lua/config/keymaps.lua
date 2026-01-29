@@ -79,6 +79,11 @@ bind.load({
 
   -- === BETTER DEFAULTS ===
   ["n|<Esc>"]       = cr("nohlsearch"):with_silent():with_desc("Clear search highlight"),
+  -- Paragraph navigation without polluting jumplist
+  ["n|]}"]          = cmd("<cmd>keepjumps normal! }<CR>"):with_silent():with_desc("Next paragraph (no jump)"),
+  ["n|[{"]          = cmd("<cmd>keepjumps normal! {<CR>"):with_silent():with_desc("Prev paragraph (no jump)"),
+  ["v|]}"]          = cmd("}"):with_desc("Next paragraph"),
+  ["v|[{"]          = cmd("{"):with_desc("Prev paragraph"),
   ["v|<"]           = cmd("<gv"):with_desc("Indent left"),
   ["v|>"]           = cmd(">gv"):with_desc("Indent right"),
   ["n|J"]           = cmd("mzJ`z"):with_desc("Join lines (keep cursor)"),
