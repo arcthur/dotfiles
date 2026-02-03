@@ -96,13 +96,6 @@ local function update_network_fallback()
         [ -z "$INTERFACE" ] && INTERFACE=$(netstat -ibn 2>/dev/null | awk '$1 !~ /^lo0$/ && /Link/ {print $1; exit}')
         : "${INTERFACE:=en0}"
 
-        # WiFi status
-        if command -v ipconfig >/dev/null 2>&1; then
-            WIFI_DEV=$(networksetup -listallhardwareports 2>/dev/null | awk '/Wi-Fi/{getline; print $2}')
-            CONNECTED=$(ipconfig getsummary "$WIFI_DEV" 2>/dev/null | awk '/State : BOUND/ {print 1; exit}')
-            echo "WIFI:${CONNECTED:-0}"
-        fi
-
         # Network bytes
         read -r rx tx <<< "$(netstat -ibn 2>/dev/null | awk -v iface="$INTERFACE" '$1 == iface && /Link/ {print $7, $10; exit}')"
         echo "RX:${rx:-0}"
@@ -118,21 +111,9 @@ local function update_network_fallback()
         end
 
         -- Parse output
-        local wifi_connected = output:match("WIFI:(%d)")
         local rx = tonumber(output:match("RX:(%d+)")) or 0
         local tx = tonumber(output:match("TX:(%d+)")) or 0
         local now = tonumber(output:match("TIME:(%d+)")) or os.time()
-
-        -- Update WiFi icon
-        if wifi_connected == "1" then
-            sbar.set("wifi", {
-                icon = { string = icons.wifi, color = colors.teal }
-            })
-        else
-            sbar.set("wifi", {
-                icon = { string = icons.wifi_off, color = colors.red }
-            })
-        end
 
         -- Read previous values from cache (using safe file I/O)
         local prev_time, prev_rx, prev_tx = now, rx, tx

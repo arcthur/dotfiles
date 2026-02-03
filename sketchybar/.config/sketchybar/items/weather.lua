@@ -41,10 +41,21 @@ local function url_encode(str)
     end)
 end
 
+local function matches_any(condition, pattern)
+    if not pattern or pattern == "" then return false end
+    for token in pattern:gmatch("[^|]+") do
+        token = token:match("^%s*(.-)%s*$")
+        if token ~= "" and condition:find(token, 1, true) then
+            return true
+        end
+    end
+    return false
+end
+
 local function get_weather_icon(condition, is_day)
     condition = (condition or ""):lower()
     for _, entry in ipairs(weather_patterns) do
-        if condition:find(entry.pattern) then
+        if matches_any(condition, entry.pattern) then
             return is_day and entry.day or entry.night
         end
     end
@@ -153,7 +164,8 @@ local function update_city_weather(abbr)
         local temp, condition = output:gsub("%+", ""):match("([^|]+)|(.+)")
         if temp then
             temp = temp:gsub("[°C%s]", "")
-            local is_day = tonumber(os.date("%H")) >= 6 and tonumber(os.date("%H")) < 18
+            local hour = tonumber(os.date("%H")) or 0
+            local is_day = hour >= 6 and hour < 18
             item:set({
                 label = { string = abbr .. " " .. temp .. "°" },
                 icon  = { string = get_weather_icon(condition, is_day), color = colors.teal },

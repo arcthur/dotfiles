@@ -50,16 +50,14 @@ local function update_space_icons(space, space_index, has_windows_set)
     end
 
     -- Has windows - fetch and display app icons
-    local cmd_windows = ""
+    local cmd_windows = "aerospace list-windows"
     if has_windows_primary then
-        cmd_windows = "aerospace list-windows --workspace " .. ws_primary .. " 2>/dev/null"
+        cmd_windows = cmd_windows .. " --workspace " .. ws_primary
     end
     if has_windows_secondary then
-        if cmd_windows ~= "" then
-            cmd_windows = cmd_windows .. " && "
-        end
-        cmd_windows = cmd_windows .. "aerospace list-windows --workspace " .. ws_secondary .. " 2>/dev/null"
+        cmd_windows = cmd_windows .. " --workspace " .. ws_secondary
     end
+    cmd_windows = cmd_windows .. " 2>/dev/null"
 
     sbar.exec(cmd_windows, function(windows_output)
         local icons = {}
@@ -104,7 +102,16 @@ end
 -- Bulk Update: Update all workspaces in one efficient operation
 -- ============================================================================
 
+local update_inflight = false
+local update_pending = false
+
 local function update_all_spaces()
+    if update_inflight then
+        update_pending = true
+        return
+    end
+    update_inflight = true
+
     local cmd = [[
         visible=$(aerospace list-workspaces --monitor all --visible 2>/dev/null | tr '\n' ' ')
         echo "VISIBLE:$visible"
@@ -117,7 +124,14 @@ local function update_all_spaces()
     ]]
 
     sbar.exec(cmd, function(output)
-        if not output then return end
+        update_inflight = false
+        if not output then
+            if update_pending then
+                update_pending = false
+                update_all_spaces()
+            end
+            return
+        end
 
         -- Parse visible workspaces
         local visible_set = {}
@@ -155,44 +169,58 @@ local function update_all_spaces()
 
             local ws_color = space_colors[i] or colors.blue
 
-            -- Update state
+            local prev_state = space_states[i] or {}
+            local prev_visible = (prev_state.visible and true) or false
+            local prev_should_show = (prev_state.should_show and true) or false
+            local style_changed = prev_visible ~= is_visible or prev_should_show ~= should_show
+
+            -- Update state (keep size bounded; avoid leaking old state tables)
             space_states[i] = {
                 visible = is_visible,
                 has_windows = has_windows,
+                should_show = should_show,
             }
 
-            -- Set visibility
-            space:set({ drawing = should_show })
+            if prev_should_show ~= should_show then
+                space:set({ drawing = should_show })
+            end
 
             if should_show then
                 -- Update icons
                 update_space_icons(space, i, has_windows_set)
 
-                -- Apply vertical pill style with animation
-                sbar.animate("tanh", ANIMATION_DURATION, function()
-                    if is_visible then
-                        space:set({
-                            background = {
-                                color = ws_color,
-                                height = PILL_HEIGHT_FOCUSED,
-                            },
-                            icon = { color = colors.crust },
-                            label = { color = colors.crust },
-                        })
-                    else
-                        space:set({
-                            background = {
-                                color = colors.with_alpha(ws_color, 0.3),
-                                height = PILL_HEIGHT_UNFOCUSED,
-                            },
-                            icon = { color = colors.with_alpha(ws_color, 0.6) },
-                            label = { color = colors.with_alpha(ws_color, 0.6) },
-                        })
-                    end
-                end)
+                if style_changed then
+                    -- Apply vertical pill style with animation
+                    sbar.animate("tanh", ANIMATION_DURATION, function()
+                        if is_visible then
+                            space:set({
+                                background = {
+                                    color = ws_color,
+                                    height = PILL_HEIGHT_FOCUSED,
+                                },
+                                icon = { color = colors.crust },
+                                label = { color = colors.crust },
+                            })
+                        else
+                            space:set({
+                                background = {
+                                    color = colors.with_alpha(ws_color, 0.3),
+                                    height = PILL_HEIGHT_UNFOCUSED,
+                                },
+                                icon = { color = colors.with_alpha(ws_color, 0.6) },
+                                label = { color = colors.with_alpha(ws_color, 0.6) },
+                            })
+                        end
+                    end)
+                end
             end
 
             ::continue::
+        end
+
+        if update_pending then
+            update_pending = false
+            update_all_spaces()
         end
     end)
 end
@@ -208,7 +236,7 @@ local function create_space_item(workspace, label, sync_index)
 
     local ws_color = colors.get_rainbow(tonumber(label) or workspace)
     space_colors[workspace] = ws_color
-    space_states[workspace] = { visible = false, has_windows = false }
+    space_states[workspace] = { visible = false, has_windows = false, should_show = false }
 
     local space = sbar.add("item", space_name, {
         position = "left",

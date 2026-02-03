@@ -39,7 +39,10 @@ front_app:subscribe("front_app_switched", function(env)
 
     -- Get current workspace and format as "workspace::app_name"
     sbar.exec("aerospace list-workspaces --focused 2>/dev/null", function(output)
-        local workspace = tonumber(output:match("%d+"))
+        local workspace = nil
+        if output and output ~= "" then
+            workspace = tonumber(output:match("%d+"))
+        end
 
         -- Normalize: 11-20 → 1-10
         if workspace and workspace > 10 then
