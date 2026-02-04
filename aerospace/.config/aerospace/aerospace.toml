@@ -1,14 +1,17 @@
+config-version = 2
+
 start-at-login = true
-after-login-command = []
 after-startup-command = []
 
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
-on-focus-changed = "move-mouse window-lazy-center"
+on-focus-changed = ['move-mouse window-lazy-center']
+
+persistent-workspaces = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+    '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
 
 # Sync monitors and notify sketchybar on workspace change
 exec-on-workspace-change = ['/bin/bash', '-c',
-    '${XDG_CONFIG_HOME:-$HOME/.config}/aerospace/scripts/workspace-change-handler.sh'
-]
+    '${XDG_CONFIG_HOME:-$HOME/.config}/aerospace/scripts/workspace-change-handler.sh']
 
 # Normalizations
 enable-normalization-flatten-containers = true
