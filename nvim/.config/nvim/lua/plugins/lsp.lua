@@ -80,6 +80,7 @@ return {
         group = lsp_attach_group,
         callback = function(args)
           local bufnr = args.buf
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
           local map = function(mode, lhs, rhs, desc)
             vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
           end
@@ -95,6 +96,13 @@ return {
           map("n", "<F2>", vim.lsp.buf.rename, "Rename symbol")
           map("n", "[d", vim.diagnostic.goto_prev, "Previous diagnostic")
           map("n", "]d", vim.diagnostic.goto_next, "Next diagnostic")
+
+          if client and client.supports_method and client:supports_method("textDocument/inlayHint") then
+            map("n", "<leader>lh", function()
+              local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+              vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
+            end, "Inlay hints (toggle)")
+          end
         end,
       })
 

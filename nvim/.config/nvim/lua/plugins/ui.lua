@@ -133,6 +133,15 @@ return {
     "akinsho/bufferline.nvim",
     version = "*",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = {
+      "BufferLineCloseOthers",
+      "BufferLinePick",
+      "BufferLineCycleNext",
+      "BufferLineCyclePrev",
+      "BufferLineMoveNext",
+      "BufferLineMovePrev",
+      "BufferLineGoToBuffer",
+    },
     event = "VeryLazy",
     opts = {
       options = {

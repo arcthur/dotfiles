@@ -25,11 +25,17 @@ vim.g.maplocalleader = " "
 -- ============================================
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
-  vim.fn.system({
+  local result = vim.system({
     "git", "clone", "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
     "--branch=stable", lazypath,
-  })
+  }, { text = true }):wait()
+
+  if result.code ~= 0 then
+    vim.api.nvim_err_writeln(
+      ("Failed to clone lazy.nvim (exit=%d): %s"):format(result.code, result.stderr or "")
+    )
+  end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -37,6 +43,7 @@ vim.opt.rtp:prepend(lazypath)
 -- Load core config
 -- ============================================
 require("config.options")
+require("config.gui")
 require("config.keymaps")
 require("config.autocmds")
 

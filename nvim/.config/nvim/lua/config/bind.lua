@@ -115,6 +115,7 @@ end
 ---@return map_rhs
 function rhs_options:with_remap()
   self.options.remap = true
+  self.options.noremap = false
   return self
 end
 

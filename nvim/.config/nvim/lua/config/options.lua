@@ -43,3 +43,6 @@ opt.timeoutlen = 300
 
 -- Completion
 opt.completeopt = { "menu", "menuone", "noselect" }
+
+-- Floating windows (Neovim 0.11+)
+opt.winborder = "rounded"

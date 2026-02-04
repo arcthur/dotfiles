@@ -1,4 +1,6 @@
 -- Completion with blink.cmp
+local icons = require("config.icons")
+
 return {
   {
     "saghen/blink.cmp",
@@ -24,33 +26,7 @@ return {
       appearance = {
         use_nvim_cmp_as_default = true,
         nerd_font_variant = "mono",
-        kind_icons = {
-          Text = "󰉿",
-          Method = "󰆧",
-          Function = "󰊕",
-          Constructor = "",
-          Field = "󰜢",
-          Variable = "󰀫",
-          Class = "󰠱",
-          Interface = "",
-          Module = "",
-          Property = "󰜢",
-          Unit = "󰑭",
-          Value = "󰎠",
-          Enum = "",
-          Keyword = "󰌋",
-          Snippet = "",
-          Color = "󰏘",
-          File = "󰈙",
-          Reference = "󰈇",
-          Folder = "󰉋",
-          EnumMember = "",
-          Constant = "󰏿",
-          Struct = "󰙅",
-          Event = "",
-          Operator = "󰆕",
-          TypeParameter = "",
-        },
+        kind_icons = icons.kind,
       },
       sources = {
         default = { "lsp", "path", "snippets", "buffer" },

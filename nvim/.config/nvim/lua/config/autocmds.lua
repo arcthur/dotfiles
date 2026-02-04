@@ -60,8 +60,11 @@ autocmd("BufWritePre", {
     if event.match:match("^%w%w+://") then
       return
     end
-    local file = vim.uv.fs_realpath(event.match) or event.match
-    vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
+    local file = vim.uv.fs_realpath(event.match) or vim.fs.abspath(event.match)
+    local dir = vim.fs.dirname(file)
+    if dir and dir ~= "" then
+      vim.fn.mkdir(dir, "p")
+    end
   end,
 })
 
