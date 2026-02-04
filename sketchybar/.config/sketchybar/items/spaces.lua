@@ -6,8 +6,12 @@ local colors = require("colors")
 local settings = require("settings")
 local app_icons = require("helpers.app_icons")
 
+local SHELL_PATH = settings.shell_path or "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin"
+
 -- Register aerospace workspace change event
 sbar.add("event", "aerospace_workspace_change")
+-- Event for window open/move reconciliation (no workspace payload required)
+sbar.add("event", "aerospace_windows_changed")
 
 -- Store space items for later reference (only 1-10, representing merged workspaces)
 local space_items = {}
@@ -24,81 +28,6 @@ local PILL_Y_OFFSET = 20
 local ANIMATION_DURATION = 10
 
 -- ============================================================================
--- Helper: Update a single space's icon/label based on windows
--- ============================================================================
-
-local function update_space_icons(space, space_index, has_windows_set)
-    local ws_primary = tostring(space_index)
-    local ws_secondary = tostring(space_index + 10)
-    local has_windows_primary = has_windows_set[ws_primary]
-    local has_windows_secondary = has_windows_set[ws_secondary]
-
-    -- No windows in either workspace - just show number, hide label
-    if not has_windows_primary and not has_windows_secondary then
-        space:set({
-            icon = {
-                string = tostring(space_index),
-                font = {
-                    family = settings.font.label,
-                    style = settings.font.style.regular,
-                    size = 13.0,
-                },
-            },
-            label = { drawing = false },
-        })
-        return
-    end
-
-    -- Has windows - fetch and display app icons
-    local cmd_windows = "aerospace list-windows"
-    if has_windows_primary then
-        cmd_windows = cmd_windows .. " --workspace " .. ws_primary
-    end
-    if has_windows_secondary then
-        cmd_windows = cmd_windows .. " --workspace " .. ws_secondary
-    end
-    cmd_windows = cmd_windows .. " 2>/dev/null"
-
-    sbar.exec(cmd_windows, function(windows_output)
-        local icons = {}
-        local seen_icons = {}  -- Deduplicate icons
-        if windows_output then
-            for line in windows_output:gmatch("[^\r\n]+") do
-                local app_name = line:match("|%s*([^|]+)%s*|")
-                if app_name then
-                    app_name = app_name:match("^%s*(.-)%s*$")
-                    if app_name and app_name ~= "" then
-                        local icon = app_icons[app_name] or ":default:"
-                        if not seen_icons[icon] then
-                            seen_icons[icon] = true
-                            table.insert(icons, icon)
-                        end
-                    end
-                end
-            end
-        end
-
-        space:set({
-            icon = {
-                string = tostring(space_index),
-                font = {
-                    family = settings.font.label,
-                    style = settings.font.style.regular,
-                    size = 13.0,
-                },
-            },
-            label = {
-                drawing = true,
-                string = table.concat(icons, " "),
-                font = "sketchybar-app-font:Regular:13.0",
-                padding_left = 4,
-                padding_right = 6,
-            },
-        })
-    end)
-end
-
--- ============================================================================
 -- Bulk Update: Update all workspaces in one efficient operation
 -- ============================================================================
 
@@ -113,14 +42,10 @@ local function update_all_spaces()
     update_inflight = true
 
     local cmd = [[
+        PATH=]] .. SHELL_PATH .. [[:$PATH
         visible=$(aerospace list-workspaces --monitor all --visible 2>/dev/null | tr '\n' ' ')
         echo "VISIBLE:$visible"
-        for ws in $(aerospace list-workspaces --monitor all 2>/dev/null); do
-            windows=$(aerospace list-windows --workspace "$ws" 2>/dev/null)
-            if [ -n "$windows" ]; then
-                echo "HAS_WINDOWS:$ws"
-            fi
-        done
+        aerospace list-windows --all --format 'WIN:%{workspace}\t%{app-name}' 2>/dev/null
     ]]
 
     sbar.exec(cmd, function(output)
@@ -142,10 +67,35 @@ local function update_all_spaces()
             end
         end
 
-        -- Parse workspaces with windows
         local has_windows_set = {}
-        for ws in output:gmatch("HAS_WINDOWS:(%S+)") do
-            has_windows_set[ws] = true
+        local workspace_icons = {}
+
+        local function add_icon(workspace, icon)
+            local entry = workspace_icons[workspace]
+            if not entry then
+                entry = { list = {}, seen = {} }
+                workspace_icons[workspace] = entry
+            end
+            if not entry.seen[icon] then
+                entry.seen[icon] = true
+                table.insert(entry.list, icon)
+            end
+        end
+
+        for workspace, app_name in output:gmatch("WIN:([^\t]+)\t([^\n]+)") do
+            workspace = workspace:match("^%s*(.-)%s*$")
+            app_name = app_name:match("^%s*(.-)%s*$")
+
+            if workspace ~= "" and app_name ~= "" and workspace:match("^%d+$") then
+                has_windows_set[workspace] = true
+                local icon = app_icons[app_name] or ":default:"
+                add_icon(workspace, icon)
+            end
+        end
+
+        -- Sort icons alphabetically for consistent display across updates
+        for _, entry in pairs(workspace_icons) do
+            table.sort(entry.list)
         end
 
         -- Update each merged space (1-10, each representing N and N+10)
@@ -174,11 +124,35 @@ local function update_all_spaces()
             local prev_should_show = (prev_state.should_show and true) or false
             local style_changed = prev_visible ~= is_visible or prev_should_show ~= should_show
 
+            local merged_icons = {}
+            local merged_seen = {}
+
+            local function merge_workspace_icons(workspace)
+                local entry = workspace_icons[workspace]
+                if not entry then return end
+                for _, icon in ipairs(entry.list) do
+                    if not merged_seen[icon] then
+                        merged_seen[icon] = true
+                        table.insert(merged_icons, icon)
+                    end
+                end
+            end
+
+            if should_show and has_windows then
+                merge_workspace_icons(ws_primary)
+                merge_workspace_icons(ws_secondary)
+            end
+
+            local icons_string = table.concat(merged_icons, " ")
+            local prev_icons_string = prev_state.icons_string or ""
+            local content_changed = prev_should_show ~= should_show or prev_icons_string ~= icons_string
+
             -- Update state (keep size bounded; avoid leaking old state tables)
             space_states[i] = {
                 visible = is_visible,
                 has_windows = has_windows,
                 should_show = should_show,
+                icons_string = icons_string,
             }
 
             if prev_should_show ~= should_show then
@@ -186,8 +160,30 @@ local function update_all_spaces()
             end
 
             if should_show then
-                -- Update icons
-                update_space_icons(space, i, has_windows_set)
+                if content_changed then
+                    local label_cfg = { drawing = false }
+                    if icons_string ~= "" then
+                        label_cfg = {
+                            drawing = true,
+                            string = icons_string,
+                            font = "sketchybar-app-font:Regular:13.0",
+                            padding_left = 4,
+                            padding_right = 6,
+                        }
+                    end
+
+                    space:set({
+                        icon = {
+                            string = tostring(i),
+                            font = {
+                                family = settings.font.label,
+                                style = settings.font.style.regular,
+                                size = 13.0,
+                            },
+                        },
+                        label = label_cfg,
+                    })
+                end
 
                 if style_changed then
                     -- Apply vertical pill style with animation
@@ -265,7 +261,7 @@ local function create_space_item(workspace, label, sync_index)
             y_offset = 0,
         },
         label = { drawing = false },
-        click_script = string.format('bash "%s/scripts/workspace-sync.sh" %d', aerospace_config, sync_index),
+        click_script = string.format('/bin/bash "%s/scripts/workspace-sync.sh" %d', aerospace_config, sync_index),
     })
 
     space_items[workspace] = space
@@ -331,7 +327,7 @@ end
 -- ============================================================================
 
 local function init_spaces()
-    sbar.exec("command -v aerospace", function(output)
+    sbar.exec("PATH=" .. SHELL_PATH .. " command -v aerospace 2>/dev/null", function(output)
         if not output or output == "" then return end
 
         -- Create spaces 1-10 (they represent merged N and N+10)
@@ -348,6 +344,7 @@ local function init_spaces()
         })
 
         workspace_observer:subscribe("aerospace_workspace_change", update_all_spaces)
+        workspace_observer:subscribe("aerospace_windows_changed", update_all_spaces)
         workspace_observer:subscribe("routine", update_all_spaces)
 
         -- Initial update

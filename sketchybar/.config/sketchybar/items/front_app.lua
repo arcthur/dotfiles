@@ -4,6 +4,11 @@
 local colors = require("colors")
 local settings = require("settings")
 
+-- Ensure the event exists (spaces.lua also registers it; this is idempotent)
+sbar.add("event", "aerospace_workspace_change")
+
+local SHELL_PATH = settings.shell_path or "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin"
+
 -- Front app item - will be moved after spaces are created
 local front_app = sbar.add("item", "front_app", {
     position = "left",
@@ -21,41 +26,78 @@ local front_app = sbar.add("item", "front_app", {
     padding_left = 4,
 })
 
+local current_app_name = ""
+local current_workspace = nil
+
+local function lock_exists()
+    local f = io.open(settings.locks.workspace_sync, "r")
+    if f then f:close() return true end
+    return false
+end
+
+local function normalize_workspace(workspace)
+    if not workspace then return nil end
+    if workspace > 10 then
+        return workspace - 10
+    end
+    return workspace
+end
+
+local function set_label()
+    if current_app_name == "" then return end
+
+    local label = current_app_name
+    if current_workspace then
+        label = tostring(current_workspace) .. "::" .. current_app_name
+    end
+
+    front_app:set({ label = { string = label } })
+end
+
+local function refresh_workspace_and_label()
+    sbar.exec("PATH=" .. SHELL_PATH .. " aerospace list-workspaces --focused 2>/dev/null", function(output)
+        if output and output ~= "" then
+            local workspace = tonumber(output:match("%d+"))
+            current_workspace = normalize_workspace(workspace)
+        end
+        set_label()
+    end)
+end
+
 -- Move front_app after spaces are initialized (spaces created async)
 sbar.exec("sleep 1", function()
-    sbar.exec("sketchybar --move front_app after space.10")
+    sbar.exec("PATH=" .. SHELL_PATH .. " sketchybar --move front_app after space.10")
 end)
 
 -- Update front app on switch
 front_app:subscribe("front_app_switched", function(env)
-    -- Check for sync lock (prevents update during workspace switch)
-    local lock_file = io.open(settings.locks.workspace_sync, "r")
-    if lock_file then
-        lock_file:close()
+    current_app_name = env.INFO or ""
+    if current_app_name == "" then return end
+
+    -- Avoid reading workspace mid-sync (workspace event will update after sync completes)
+    if lock_exists() then
         return
     end
 
-    local app_name = env.INFO or ""
+    if current_workspace then
+        set_label()
+    else
+        refresh_workspace_and_label()
+    end
+end)
 
-    -- Get current workspace and format as "workspace::app_name"
-    sbar.exec("aerospace list-workspaces --focused 2>/dev/null", function(output)
-        local workspace = nil
-        if output and output ~= "" then
-            workspace = tonumber(output:match("%d+"))
-        end
+-- Update workspace prefix on workspace change
+front_app:subscribe("aerospace_workspace_change", function(env)
+    if lock_exists() then
+        return
+    end
 
-        -- Normalize: 11-20 → 1-10
-        if workspace and workspace > 10 then
-            workspace = workspace - 10
-        end
+    local workspace = tonumber(env.FOCUSED_WORKSPACE or "")
+    current_workspace = normalize_workspace(workspace)
 
-        local label = app_name
-        if workspace then
-            label = workspace .. "::" .. app_name
-        end
-
-        front_app:set({
-            label = { string = label },
-        })
-    end)
+    if current_workspace then
+        set_label()
+    else
+        refresh_workspace_and_label()
+    end
 end)

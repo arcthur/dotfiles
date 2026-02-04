@@ -29,4 +29,7 @@ return {
     locks = {
         workspace_sync = "/tmp/aerospace_workspace_sync_lock",
     },
+
+    -- Shell PATH prefix for launchd apps (Homebrew + system)
+    shell_path = "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin",
 }

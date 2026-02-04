@@ -88,7 +88,7 @@ alt-shift-8 = "exec-and-forget /bin/bash -lc \"${XDG_CONFIG_HOME:-$HOME/.config}
 alt-shift-9 = "exec-and-forget /bin/bash -lc \"${XDG_CONFIG_HOME:-$HOME/.config}/aerospace/scripts/move-to-workspace-number.sh 9\""
 
 alt-tab = 'workspace-back-and-forth'
-alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+alt-shift-tab = ['move-workspace-to-monitor --wrap-around next', 'exec-and-forget sketchybar --trigger aerospace_workspace_change']
 
 [mode.prefix.binding]
 # Exit prefix mode with escape
@@ -147,7 +147,7 @@ a = ['layout accordion horizontal vertical', 'mode main', 'exec-and-forget sketc
 # Balance windows
 b = ['balance-sizes', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 # Close all windows but current
-backspace = ['close-all-windows-but-current', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
+backspace = ['close-all-windows-but-current', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main', 'exec-and-forget sketchybar --trigger aerospace_windows_changed']
 
 # ==============================================================================
 # WINDOW TOGGLES (prefix + key)
@@ -162,12 +162,17 @@ t = ['layout floating tiling', 'mode main', 'exec-and-forget sketchybar --trigge
 # MOVE WINDOW BETWEEN MONITORS (prefix + d/f)
 # ==============================================================================
 
-d = ['move-node-to-monitor left', 'focus-monitor left', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
-f = ['move-node-to-monitor right', 'focus-monitor right', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
+d = ['move-node-to-monitor left', 'focus-monitor left', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main', 'exec-and-forget sketchybar --trigger aerospace_windows_changed']
+f = ['move-node-to-monitor right', 'focus-monitor right', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main', 'exec-and-forget sketchybar --trigger aerospace_windows_changed']
 
 # ==============================================================================
 # APP-SPECIFIC RULES
 # ==============================================================================
+
+[[on-window-detected]]
+if.during-aerospace-startup = false
+check-further-callbacks = true
+run = 'exec-and-forget sketchybar --trigger aerospace_windows_changed'
 
 [[on-window-detected]]
 if.app-id = 'com.apple.systempreferences'

@@ -6,6 +6,8 @@ local colors = require("colors")
 local settings = require("settings")
 local icons = require("icons")
 
+local SHELL_PATH = settings.shell_path or "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin"
+
 -- ============================================================================
 -- Configuration
 -- ============================================================================
@@ -94,7 +96,7 @@ sbar.add("item", "spotify.divider", {
 
 -- Move spotify after front_app (front_app moves at 1s)
 sbar.exec("sleep 1.5", function()
-    sbar.exec("sketchybar --move spotify after front_app && sketchybar --move spotify.divider after spotify")
+    sbar.exec("export PATH=" .. SHELL_PATH .. " && sketchybar --move spotify after front_app && sketchybar --move spotify.divider after spotify")
 end)
 
 -- ============================================================================
