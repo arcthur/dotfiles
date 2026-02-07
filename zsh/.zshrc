@@ -15,11 +15,20 @@ zstyle ':z4m:bindkey' keyboard  'mac'
 # Don't start tmux automatically.
 zstyle ':z4m:' start-tmux 'no'
 
+# Syntax highlighting backend (built-in vendor: fast|none).
+zstyle ':z4m:highlight' backend 'fast'
+zstyle ':z4m:highlight' theme 'catppuccin-mocha'
+
 # FZF
 zstyle ':z4m:*' fzf-theme catppuccin-mocha
 zstyle ':z4m:(fzf-complete|fzf-dir-history|fzf-history)'  fzf-flags     --no-exact
 zstyle ':z4m:(fzf-complete|fzf-dir-history)'              fzf-bindings  'tab:repeat'
 zstyle ':z4m:fzf-complete'                                find-flags    '(' -name '.git' -o -name node_modules ')' -prune -print -o -print
+
+# Autosuggestions
+zstyle ':z4m:autosuggestions' strategy 'history_pwd history'
+zstyle ':z4m:autosuggestions' case-insensitive yes
+zstyle ':z4m:autosuggestions:ai' enabled yes
 
 # Direnv
 zstyle ':z4m:direnv' enable 'yes'
@@ -43,9 +52,6 @@ z4m install MichaelAquilina/zsh-you-should-use || return
 z4m install eza bat fd rg zoxide || return
 
 z4m init || return
-
-# Syntax highlighting theme (Catppuccin Mocha)
-(( $+functions[fast-theme] )) && fast-theme -q $XDG_CONFIG_HOME/fast-theme/catppuccin-mocha.ini
 
 # =============================================================================
 # 2. SHELL OPTIONS

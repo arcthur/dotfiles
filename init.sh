@@ -29,7 +29,6 @@ STOW_PACKAGES=(
     topgrade
     tmux
     zsh
-    fast-theme
     ghostty
     codex
     claude
