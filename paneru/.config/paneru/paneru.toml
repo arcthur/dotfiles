@@ -1,0 +1,58 @@
+[options]
+preset_column_widths = [0.25, 0.33, 0.50, 0.66, 0.75]
+swipe_gesture_fingers = 4
+animation_speed = 50
+
+[bindings]
+# Focus: cmd + hjkl / arrows
+window_focus_west = ["cmd - h", "cmd - leftarrow"]
+window_focus_east = ["cmd - l", "cmd - rightarrow"]
+window_focus_north = ["cmd - k", "cmd - uparrow"]
+window_focus_south = ["cmd - j", "cmd - downarrow"]
+
+# Swap: alt + h/l
+window_swap_west = "alt - h"
+window_swap_east = "alt - l"
+
+# Jump to ends: cmd+shift + h/l
+window_focus_first = "cmd + shift - h"
+window_focus_last = "cmd + shift - l"
+
+# Swap to ends: alt+shift + h/l
+window_swap_first = "alt + shift - h"
+window_swap_last = "alt + shift - l"
+
+# Layout: alt
+window_center = "alt - c"
+window_resize = "alt - r"
+window_fullwidth = "alt - f"
+window_equalize = "alt + shift - e"
+
+# Float toggle: ctrl+alt
+window_manage = "ctrl + alt - t"
+
+# Stack: alt + ] / alt+shift + ]
+window_stack = "alt - ]"
+window_unstack = "alt + shift - ]"
+
+# Display: alt+shift / alt
+window_nextdisplay = "alt + shift - n"
+mouse_nextdisplay = "alt - n"
+
+quit = "ctrl + alt - q"
+
+[windows]
+
+[windows.pip]
+title = "Picture.*(in)?.*[Pp]icture"
+floating = true
+
+[windows.ghostty]
+title = ".*"
+bundle_id = "com.mitchellh.ghostty"
+index = 1
+
+[windows.all]
+title = ".*"
+horizontal_padding = 2
+vertical_padding = 2

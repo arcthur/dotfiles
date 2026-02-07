@@ -34,6 +34,7 @@ STOW_PACKAGES=(
     claude
     sketchybar
     aerospace
+    paneru
 )
 
 # ==============================================================================
@@ -350,6 +351,30 @@ install_claude_code() {
     success "Claude Code installed"
 }
 
+install_paneru() {
+    if command -v paneru &>/dev/null; then
+        success "Paneru already installed"
+        return 0
+    fi
+
+    if ! command -v cargo &>/dev/null; then
+        warn "cargo not found, skipping Paneru (install Rust first: https://rustup.rs)"
+        return 0
+    fi
+
+    if [[ "$DRY_RUN" == true ]]; then
+        info "[dry-run] Would install Paneru via cargo"
+        return 0
+    fi
+
+    info "Installing Paneru..."
+    if cargo install paneru; then
+        success "Paneru installed"
+    else
+        warn "Paneru installation failed"
+    fi
+}
+
 install_sketchybar_deps() {
     local sbarlua_path="$HOME/.local/share/sketchybar_lua"
     local providers_path="$HOME/.config/sketchybar/helpers/event_providers"
@@ -417,7 +442,7 @@ EOF
 
 start_services() {
     if [[ "$DRY_RUN" == true ]]; then
-        info "[dry-run] Would start sketchybar, sleepwatcher, aerospace"
+        info "[dry-run] Would start sketchybar, sleepwatcher"
         return 0
     fi
 
@@ -435,18 +460,10 @@ start_services() {
         success "sleepwatcher started"
     fi
 
-    # Start or reload aerospace
-    if command -v aerospace &>/dev/null; then
-        if pgrep -x AeroSpace &>/dev/null; then
-            info "Reloading aerospace..."
-            aerospace reload-config
-            success "aerospace reloaded"
-        else
-            info "Starting aerospace..."
-            open -a AeroSpace
-            success "aerospace started"
-        fi
-    fi
+    # Window manager: user must manually choose aerospace or paneru
+    info "Window manager not auto-started. Choose one manually:"
+    info "  aerospace: open -a AeroSpace"
+    info "  paneru:    paneru install && paneru start"
 }
 
 # ==============================================================================
@@ -605,6 +622,7 @@ main() {
     install_zsh4monkey
     install_tpm
     install_claude_code
+    install_paneru
 
     # Phase 3: Stow dotfiles
     stow_packages
