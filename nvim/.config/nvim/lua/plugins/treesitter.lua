@@ -5,7 +5,6 @@ return {
   -- Main treesitter
   {
     "nvim-treesitter/nvim-treesitter",
-    branch = "master", -- Use master branch as recommended
     lazy = false, -- Treesitter does NOT support lazy-loading
     build = ":TSUpdate",
     config = function()

@@ -19,7 +19,6 @@ bind.load({
 
   -- === QUICK ACCESS (Ctrl+) ===
   ["n|<C-p>"]       = cr("Telescope find_files"):with_desc("Find files"),
-  ["n|<C-b>"]       = cr("NvimTreeToggle"):with_desc("Toggle file tree"),
 
   -- === VISUAL SELECTION SEARCH ===
   ["v|<leader>fs"]  = cb(function()
