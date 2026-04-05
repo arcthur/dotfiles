@@ -12,7 +12,6 @@ disable = [
 ]
 
 [brew]
-greedy_cask = true
 autoremove = true
 
 [vim]

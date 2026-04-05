@@ -5,7 +5,7 @@
 # Theme
 theme = catppuccin-mocha
 background-opacity = 0.9
-background-blur-radius = 20
+background-blur = macos-glass-regular
 
 # Font
 font-family = "JetBrainsMono Nerd Font"
@@ -24,9 +24,11 @@ cursor-style-blink = false
 window-padding-balance = true
 window-save-state = always
 window-inherit-working-directory = true
+tab-inherit-working-directory = true
+split-inherit-working-directory = true
 window-inherit-font-size = true
 
-fullscreen = true
+fullscreen = false
 
 # =============================================================================
 # Behavior
@@ -35,6 +37,11 @@ fullscreen = true
 # Shell Integration
 shell-integration = zsh
 shell-integration-features = cursor,sudo,title
+
+# Notifications
+notify-on-command-finish = unfocused
+notify-on-command-finish-action = no-bell,notify
+notify-on-command-finish-after = 30s
 
 # Clipboard
 copy-on-select = clipboard
@@ -46,7 +53,6 @@ mouse-hide-while-typing = true
 
 # Performance & Experience
 confirm-close-surface = false
-scrollback-limit = 500000
 link-url = true
 
 # =============================================================================
