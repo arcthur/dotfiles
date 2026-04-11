@@ -8,25 +8,41 @@ return {
     lazy = false, -- Treesitter does NOT support lazy-loading
     build = ":TSUpdate",
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = settings.treesitter_parsers,
-        sync_install = false,
-        auto_install = true,
-        highlight = {
-          enable = true,
-          additional_vim_regex_highlighting = false,
-        },
-        indent = { enable = true },
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "<leader>v",
-            node_incremental = "<leader>v",
-            scope_incremental = false,
-            node_decremental = "<bs>",
-          },
-        },
+      local treesitter = require("nvim-treesitter")
+
+      treesitter.setup({
+        install_dir = vim.fs.joinpath(vim.fn.stdpath("data"), "site"),
+      })
+
+      local installed = {} ---@type table<string, boolean>
+      for _, lang in ipairs(treesitter.get_installed("parsers")) do
+        installed[lang] = true
+      end
+
+      local missing = vim.tbl_filter(function(lang)
+        return not installed[lang]
+      end, settings.treesitter_parsers)
+
+      if #missing > 0 then
+        treesitter.install(missing, { summary = #missing > 1 })
+      end
+
+      local group = vim.api.nvim_create_augroup("dotfiles_treesitter", { clear = true })
+
+      vim.api.nvim_create_autocmd("FileType", {
+        group = group,
+        pattern = "*",
+        callback = function(event)
+          if vim.bo[event.buf].buftype ~= "" then
+            return
+          end
+
+          if not pcall(vim.treesitter.start, event.buf) then
+            return
+          end
+
+          vim.bo[event.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end,
       })
     end,
   },
