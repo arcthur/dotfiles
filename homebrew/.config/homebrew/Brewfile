@@ -1,11 +1,9 @@
 # TAPS
 # ---------------
 tap "brewforge/chinese"
-tap "steveyegge/beads"
 tap "moonrepo/tap"
 tap "nikitabobko/tap"
 tap "FelixKratz/formulae"
-tap "oven-sh/bun"
 
 # BINARIES
 # ---------------
@@ -84,7 +82,6 @@ brew "mole"         # SSH tunnel tool
 # Programming languages
 brew "mise"         # env vars, task runner
 brew "lua"          # Powerful, efficient scripting language
-brew "bun"          # bun A fast all-in-one JavaScript runtime
 
 # Mac OS X
 brew "mas"          # Mac App Store command-line interface
