@@ -111,7 +111,7 @@ return {
     event = "VeryLazy",
     opts = {
       options = {
-        theme = "catppuccin",
+        theme = "catppuccin-" .. settings.catppuccin_flavour,
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
         globalstatus = true,
