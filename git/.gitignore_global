@@ -48,3 +48,5 @@ cscope.po.out
 
 # Claude
 .claude/settings.local.json
+
+**/.claude/settings.local.json
