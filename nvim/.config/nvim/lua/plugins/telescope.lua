@@ -15,7 +15,13 @@ return {
   keys = {
     { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find files" },
     { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
-    { "<leader>fG", function() require("telescope").extensions.live_grep_args.live_grep_args() end, desc = "Grep with args" },
+    {
+      "<leader>fG",
+      function()
+        require("telescope").extensions.live_grep_args.live_grep_args()
+      end,
+      desc = "Grep with args",
+    },
     { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
     { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Help tags" },
     { "<leader>fr", "<cmd>Telescope oldfiles<cr>", desc = "Recent files" },

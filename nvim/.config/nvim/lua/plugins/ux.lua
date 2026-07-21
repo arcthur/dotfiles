@@ -100,7 +100,13 @@ return {
         callback = function()
           local stats = require("lazy").stats()
           local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-          dashboard.section.footer.val = "  Neovim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms"
+          dashboard.section.footer.val = "  Neovim loaded "
+            .. stats.loaded
+            .. "/"
+            .. stats.count
+            .. " plugins in "
+            .. ms
+            .. "ms"
           pcall(vim.cmd.AlphaRedraw)
         end,
       })
@@ -131,8 +137,20 @@ return {
       },
     },
     keys = {
-      { "]t", function() require("todo-comments").jump_next() end, desc = "Next todo comment" },
-      { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous todo comment" },
+      {
+        "]t",
+        function()
+          require("todo-comments").jump_next()
+        end,
+        desc = "Next todo comment",
+      },
+      {
+        "[t",
+        function()
+          require("todo-comments").jump_prev()
+        end,
+        desc = "Previous todo comment",
+      },
       { "<leader>xt", "<cmd>TodoTrouble<CR>", desc = "Todo (Trouble)" },
       { "<leader>xT", "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<CR>", desc = "Todo/Fix/Fixme (Trouble)" },
       { "<leader>ft", "<cmd>TodoTelescope<CR>", desc = "Find todos" },
@@ -143,7 +161,7 @@ return {
   {
     "rachartier/tiny-inline-diagnostic.nvim",
     event = "LspAttach",
-    priority = 1000,  -- Load before other LSP plugins
+    priority = 1000, -- Load before other LSP plugins
     opts = {
       preset = "modern",
       options = {
@@ -168,5 +186,23 @@ return {
       -- Disable default virtual_text since we're using tiny-inline-diagnostic
       vim.diagnostic.config({ virtual_text = false })
     end,
+  },
+
+  -- Dropbar: IDE-like winbar breadcrumbs (symbol path), on the native 0.11 winbar.
+  {
+    "Bekaboo/dropbar.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    keys = {
+      {
+        "<leader>;",
+        function()
+          require("dropbar.api").pick()
+        end,
+        desc = "Breadcrumb: pick (dropbar)",
+      },
+    },
+    opts = {
+      icons = { ui = { bar = { separator = "  " } } },
+    },
   },
 }

@@ -19,4 +19,3 @@ if is_gui() and settings.gui_config then
     vim.opt.guifont = string.format("%s:h%d", font_name, font_size)
   end
 end
-

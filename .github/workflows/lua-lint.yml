@@ -1,0 +1,38 @@
+name: lua-lint
+
+on:
+  push:
+    paths:
+      - "nvim/.config/nvim/**"
+      - ".github/workflows/lua-lint.yml"
+  pull_request:
+    paths:
+      - "nvim/.config/nvim/**"
+
+jobs:
+  stylua:
+    name: stylua (format check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: JohnnyMorganz/stylua-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          args: --check --config-path nvim/.config/nvim/stylua.toml nvim/.config/nvim
+
+  luacheck:
+    name: luacheck (lint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lunarmodules/luacheck@v1
+        with:
+          # Undefined globals / real errors fail the build; pure-style codes are left to stylua.
+          args: >-
+            nvim/.config/nvim
+            --std luajit
+            --globals vim
+            --max-line-length 150
+            --no-config
+            --ignore 212 213 122 611 612 614 631

@@ -169,6 +169,22 @@ return {
         separator = "➜",
         group = "+",
       },
+      -- Group labels for leader prefixes, registered natively (not via empty keymaps).
+      -- which-key prepends the `group` icon ("+") automatically, so names omit it.
+      spec = {
+        { "<leader>b", group = "buffer" },
+        { "<leader>c", group = "code" },
+        { "<leader>f", group = "find" },
+        { "<leader>g", group = "git" },
+        { "<leader>l", group = "lsp" },
+        { "<leader>n", group = "filetree" },
+        { "<leader>q", group = "session" },
+        { "<leader>r", group = "rename" },
+        { "<leader>s", group = "search/replace" },
+        { "<leader>t", group = "tab" },
+        { "<leader>w", group = "window" },
+        { "<leader>x", group = "diagnostics" },
+      },
     },
   },
 }

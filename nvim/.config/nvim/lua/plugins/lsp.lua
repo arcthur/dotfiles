@@ -106,15 +106,9 @@ return {
         end,
       })
 
-      -- Default capabilities with blink.cmp enhancements
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      local ok, blink = pcall(require, "blink.cmp")
-      if ok then
-        capabilities = blink.get_lsp_capabilities(capabilities)
-      end
-
-      -- Server configs using vim.lsp.config (Neovim 0.11+)
-      -- Use function call to merge with nvim-lspconfig defaults (preserves cmd/filetypes/root_markers)
+      -- Configure + enable all servers (Neovim 0.11+ native LSP) via a small helper.
+      -- register_servers merges blink.cmp capabilities and per-server overrides, then
+      -- calls vim.lsp.config()/enable() for each. See lua/config/lsp_utils.lua.
       local server_overrides = {
         lua_ls = {
           settings = {
@@ -126,16 +120,7 @@ return {
           },
         },
       }
-
-      -- Configure each server with vim.lsp.config() function (merges with defaults)
-      for _, server in ipairs(settings.lsp_servers) do
-        local config = server_overrides[server] or {}
-        config = vim.tbl_deep_extend("force", {}, config, { capabilities = capabilities })
-        vim.lsp.config(server, config)
-      end
-
-      -- Enable all configured servers
-      vim.lsp.enable(settings.lsp_servers)
+      require("config.lsp_utils").register_servers(settings.lsp_servers, server_overrides)
 
       -- Diagnostic config (virtual_text handled by tiny-inline-diagnostic in ux.lua)
       local diag_icons = icons.diagnostics
@@ -156,21 +141,27 @@ return {
     end,
   },
 
-  -- Conform: Formatting
+  -- Conform: Formatting (format-on-save policy lives in lua/config/format.lua)
   {
     "stevearc/conform.nvim",
     event = { "BufWritePre" },
-    cmd = { "ConformInfo" },
+    cmd = { "ConformInfo", "Format", "FormatToggle" },
     keys = {
-      { "<leader>cf", function() require("conform").format({ async = true, lsp_fallback = true }) end, desc = "Format" },
+      {
+        "<leader>cf",
+        function()
+          require("config.format").format(0, { async = true, whole = true })
+        end,
+        desc = "Format buffer",
+      },
     },
     opts = {
       formatters_by_ft = settings.formatters_by_ft,
-      format_on_save = settings.format_on_save and {
-        timeout_ms = settings.format_timeout,
-        lsp_fallback = true,
-      } or nil,
     },
+    config = function(_, opts)
+      require("conform").setup(opts)
+      require("config.format").setup()
+    end,
   },
 
   -- Trouble: Better diagnostics list

@@ -28,7 +28,7 @@ function rhs_options:new()
   local instance = {
     cmd = "",
     options = {
-      noremap = true,  -- Match vim.keymap.set default
+      noremap = true, -- Match vim.keymap.set default
       silent = false,
       expr = false,
       nowait = false,

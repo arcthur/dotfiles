@@ -7,9 +7,17 @@ local augroup = vim.api.nvim_create_augroup
 autocmd("FileType", {
   group = augroup("close_with_q", { clear = true }),
   pattern = {
-    "qf", "help", "man", "notify",
-    "lspinfo", "spectre_panel", "startuptime",
-    "checkhealth", "grug-far", "grug-far-help", "grug-far-history",
+    "qf",
+    "help",
+    "man",
+    "notify",
+    "lspinfo",
+    "spectre_panel",
+    "startuptime",
+    "checkhealth",
+    "grug-far",
+    "grug-far-help",
+    "grug-far-history",
     "trouble",
   },
   callback = function(event)

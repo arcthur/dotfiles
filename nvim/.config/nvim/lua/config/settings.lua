@@ -35,6 +35,23 @@ settings.format_on_save = true
 ---@type number
 settings.format_timeout = 500
 
+-- Show a notification after formatting (off by default to avoid noise on every save).
+---@type boolean
+settings.format_notify = false
+
+-- Only format the lines changed since the last Git commit (gitsigns hunks + conform range).
+-- Falls back to whole-buffer formatting when the file is not tracked by Git.
+---@type boolean
+settings.format_modifications_only = false
+
+-- Directories where format-on-save is disabled. Entries may be vim regex; paths are normalized.
+---@type string[]
+settings.format_disabled_dirs = {}
+
+-- Filetypes to skip when formatting on save (map filetype -> true).
+---@type table<string, boolean>
+settings.formatter_block_list = {}
+
 -- ============================================
 -- LSP Servers
 -- ============================================
@@ -49,6 +66,12 @@ settings.lsp_servers = {
   "yamlls",
   "html",
   "cssls",
+  -- Match the treesitter parsers below (go/rust/c/cpp had highlight but no LSP).
+  -- Formatting for these comes for free via conform's `lsp_fallback`.
+  "gopls",
+  "clangd",
+  -- NOTE: if you later adopt rustaceanvim, remove `rust_analyzer` here to avoid a double attach.
+  "rust_analyzer",
 }
 
 -- ============================================
@@ -68,15 +91,19 @@ settings.formatters_by_ft = {
   html = { "prettier" },
   css = { "prettier" },
   python = { "black" },
+  -- `shfmt` was installed via mason_tools but never wired here, so conform never used it.
+  -- NOTE: shfmt does not support zsh (not POSIX), so only sh/bash are mapped.
+  sh = { "shfmt" },
+  bash = { "shfmt" },
 }
 
 -- Extra tools to install via mason-tool-installer (formatters are inferred from formatters_by_ft)
 ---@type string[]
 settings.mason_tools = {
-  "stylua",     -- Lua formatter
-  "prettier",   -- JS/TS/JSON/YAML/MD formatter
-  "black",      -- Python formatter
-  "shfmt",      -- Shell formatter
+  "stylua", -- Lua formatter
+  "prettier", -- JS/TS/JSON/YAML/MD formatter
+  "black", -- Python formatter
+  "shfmt", -- Shell formatter
 }
 
 -- ============================================
@@ -85,11 +112,27 @@ settings.mason_tools = {
 
 ---@type string[]
 settings.treesitter_parsers = {
-  "lua", "vim", "vimdoc", "query",
-  "javascript", "typescript", "tsx",
-  "python", "go", "rust", "c", "cpp",
-  "json", "yaml", "toml", "markdown", "markdown_inline",
-  "html", "css", "bash", "regex",
+  "lua",
+  "vim",
+  "vimdoc",
+  "query",
+  "javascript",
+  "typescript",
+  "tsx",
+  "python",
+  "go",
+  "rust",
+  "c",
+  "cpp",
+  "json",
+  "yaml",
+  "toml",
+  "markdown",
+  "markdown_inline",
+  "html",
+  "css",
+  "bash",
+  "regex",
 }
 
 -- ============================================

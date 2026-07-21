@@ -25,16 +25,19 @@ vim.g.maplocalleader = " "
 -- ============================================
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
-  local result = vim.system({
-    "git", "clone", "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", lazypath,
-  }, { text = true }):wait()
+  local result = vim
+    .system({
+      "git",
+      "clone",
+      "--filter=blob:none",
+      "https://github.com/folke/lazy.nvim.git",
+      "--branch=stable",
+      lazypath,
+    }, { text = true })
+    :wait()
 
   if result.code ~= 0 then
-    vim.api.nvim_err_writeln(
-      ("Failed to clone lazy.nvim (exit=%d): %s"):format(result.code, result.stderr or "")
-    )
+    vim.api.nvim_err_writeln(("Failed to clone lazy.nvim (exit=%d): %s"):format(result.code, result.stderr or ""))
   end
 end
 vim.opt.rtp:prepend(lazypath)
@@ -52,27 +55,27 @@ require("config.autocmds")
 -- ============================================
 require("lazy").setup("plugins", {
   defaults = {
-    lazy = true,  -- All plugins are lazy-loaded by default
+    lazy = true, -- All plugins are lazy-loaded by default
   },
   install = {
     colorscheme = { "catppuccin", "tokyonight" },
   },
   checker = {
     enabled = true,
-    notify = false,  -- Don't spam notifications
-    frequency = 3600 * 24,  -- Check once per day
+    notify = false, -- Don't spam notifications
+    frequency = 3600 * 24, -- Check once per day
   },
   change_detection = {
     enabled = true,
-    notify = false,  -- Silent reload
+    notify = false, -- Silent reload
   },
   performance = {
     cache = {
       enabled = true,
     },
-    reset_packpath = true,  -- Reset packpath for faster startup
+    reset_packpath = true, -- Reset packpath for faster startup
     rtp = {
-      reset = true,  -- Reset rtp to improve startup time
+      reset = true, -- Reset rtp to improve startup time
       disabled_plugins = {
         -- Disable unused built-in plugins
         "2html_plugin",
