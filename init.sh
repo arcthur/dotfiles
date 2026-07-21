@@ -31,7 +31,6 @@ STOW_PACKAGES=(
     zsh
     ghostty
     codex
-    claude
     sketchybar
     aerospace
     paneru
@@ -52,10 +51,10 @@ else
     COLOR_RESET='' COLOR_BLUE='' COLOR_GREEN='' COLOR_YELLOW='' COLOR_RED=''
 fi
 
-info()    { printf "%s[*]%s %s\n" "$COLOR_BLUE" "$COLOR_RESET" "$1"; }
+info() { printf "%s[*]%s %s\n" "$COLOR_BLUE" "$COLOR_RESET" "$1"; }
 success() { printf "%s[✓]%s %s\n" "$COLOR_GREEN" "$COLOR_RESET" "$1"; }
-warn()    { printf "%s[!]%s %s\n" "$COLOR_YELLOW" "$COLOR_RESET" "$1"; }
-err()     { printf "%s[✗]%s %s\n" "$COLOR_RED" "$COLOR_RESET" "$1" >&2; }
+warn() { printf "%s[!]%s %s\n" "$COLOR_YELLOW" "$COLOR_RESET" "$1"; }
+err() { printf "%s[✗]%s %s\n" "$COLOR_RED" "$COLOR_RESET" "$1" >&2; }
 
 # ==============================================================================
 # Utilities
@@ -104,11 +103,12 @@ resolve_path() {
     elif command -v perl &>/dev/null; then
         resolved=$(perl -MCwd=realpath -e 'print realpath($ARGV[0])' "$target" 2>/dev/null || true)
     elif command -v python3 &>/dev/null; then
-        resolved=$(python3 - <<'PY' "$target" 2>/dev/null || true
+        resolved=$(
+            python3 - "$target" <<'PY' 2>/dev/null || true
 import os, sys
 print(os.path.realpath(sys.argv[1]))
 PY
-)
+        )
     fi
 
     if [[ -z "$resolved" ]]; then
@@ -387,8 +387,8 @@ install_sketchybar_deps() {
     else
         info "Installing SbarLua..."
         rm -rf /tmp/SbarLua
-        if git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && \
-           (cd /tmp/SbarLua && make install) && rm -rf /tmp/SbarLua; then
+        if git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua &&
+            (cd /tmp/SbarLua && make install) && rm -rf /tmp/SbarLua; then
             success "SbarLua installed"
         else
             warn "SbarLua installation failed"
@@ -423,7 +423,7 @@ setup_sleepwatcher_hooks() {
     fi
 
     # Create .wakeup script - triggers sketchybar refresh after wake
-    cat > "$wakeup_script" << 'EOF'
+    cat >"$wakeup_script" <<'EOF'
 #!/bin/bash
 # Wait for network to recover after wake
 sleep 3
@@ -432,7 +432,7 @@ EOF
     chmod +x "$wakeup_script"
 
     # Create .sleep script - placeholder for future use
-    cat > "$sleep_script" << 'EOF'
+    cat >"$sleep_script" <<'EOF'
 #!/bin/bash
 EOF
     chmod +x "$sleep_script"
@@ -578,21 +578,21 @@ EOF
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            -n|--dry-run)
-                DRY_RUN=true
-                ;;
-            -f|--force)
-                FORCE=true
-                ;;
-            -h|--help)
-                show_help
-                exit 0
-                ;;
-            *)
-                err "Unknown option: $1"
-                show_help
-                exit 1
-                ;;
+        -n | --dry-run)
+            DRY_RUN=true
+            ;;
+        -f | --force)
+            FORCE=true
+            ;;
+        -h | --help)
+            show_help
+            exit 0
+            ;;
+        *)
+            err "Unknown option: $1"
+            show_help
+            exit 1
+            ;;
         esac
         shift
     done
