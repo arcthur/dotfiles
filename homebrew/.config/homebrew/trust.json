@@ -1,0 +1,10 @@
+{
+  "trustedformulae": [
+    "felixkratz/formulae/sketchybar",
+    "tw93/tap/mole"
+  ],
+  "trustedcasks": [
+    "brewforge/chinese/quarkclouddrive",
+    "nikitabobko/tap/aerospace"
+  ]
+}
