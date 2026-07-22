@@ -1,7 +1,28 @@
 [options]
 preset_column_widths = [0.25, 0.33, 0.50, 0.66, 0.75]
-swipe_gesture_fingers = 4
-animation_speed = 50
+animation_speed = 12
+# focus_follows_mouse / mouse_follows_focus default to true in 0.4.x.
+
+# Trackpad: 4-finger swipe slides the window strip.
+# NOTE: renamed in 0.4.x from the old top-level `swipe_gesture_fingers`.
+[swipe.gesture]
+fingers_count = 4
+# vertical = true lets a vertical swipe switch virtual workspaces (rows).
+vertical = true
+
+# Active window border (experimental in 0.4.3: uses undocumented window-server
+# APIs; may glitch on overlay windows without SIP disabled). catppuccin blue.
+[decorations.active.border]
+enabled = true
+color = "#89b4fa"
+width = 2.0
+radius = "auto"
+
+# Native macOS dimming for inactive windows (set opacity only; a negative value
+# darkens). This is the non-experimental path.
+[decorations.inactive.dim]
+opacity = -0.15
+opacity_night = -0.25
 
 [bindings]
 # Focus: cmd + hjkl / arrows
@@ -27,6 +48,7 @@ window_center = "alt - c"
 window_resize = "alt - r"
 window_fullwidth = "alt - f"
 window_equalize = "alt + shift - e"
+window_balance = "alt + shift - b"
 
 # Float toggle: ctrl+alt
 window_manage = "ctrl + alt - t"
@@ -38,6 +60,26 @@ window_unstack = "alt + shift - ]"
 # Display: alt+shift / alt
 window_nextdisplay = "alt + shift - n"
 mouse_nextdisplay = "alt - n"
+
+# Virtual workspaces (niri-style vertical rows within one macOS space).
+# Switch row: cmd+ctrl + j/k or arrows
+window_virtual_north = ["cmd + ctrl - k", "cmd + ctrl - uparrow"]
+window_virtual_south = ["cmd + ctrl - j", "cmd + ctrl - downarrow"]
+# Move window + follow: alt+ctrl + j/k
+window_virtualmove_north = "alt + ctrl - k"
+window_virtualmove_south = "alt + ctrl - j"
+# Jump to numbered workspace: cmd+ctrl + 1..5
+window_virtualnum_1 = "cmd + ctrl - 1"
+window_virtualnum_2 = "cmd + ctrl - 2"
+window_virtualnum_3 = "cmd + ctrl - 3"
+window_virtualnum_4 = "cmd + ctrl - 4"
+window_virtualnum_5 = "cmd + ctrl - 5"
+# Move window to numbered workspace + follow: alt+ctrl + 1..5
+window_virtualmovenum_1 = "alt + ctrl - 1"
+window_virtualmovenum_2 = "alt + ctrl - 2"
+window_virtualmovenum_3 = "alt + ctrl - 3"
+window_virtualmovenum_4 = "alt + ctrl - 4"
+window_virtualmovenum_5 = "alt + ctrl - 5"
 
 quit = "ctrl + alt - q"
 

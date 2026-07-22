@@ -87,6 +87,7 @@ brew "lua"          # Powerful, efficient scripting language
 brew "mas"          # Mac App Store command-line interface
 brew "FelixKratz/formulae/sketchybar"   # Custom macOS statusbar
 brew "sleepwatcher" # Run scripts on sleep/wake events
+brew "paneru"       # Sliding, tiling window manager (now in homebrew-core)
 
 # CASK
 # ---------------

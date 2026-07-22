@@ -352,26 +352,23 @@ install_claude_code() {
 }
 
 install_paneru() {
+    # Paneru is installed via Brewfile (homebrew-core). This just verifies the
+    # result and points at the manual service setup.
     if command -v paneru &>/dev/null; then
-        success "Paneru already installed"
-        return 0
-    fi
-
-    if ! command -v cargo &>/dev/null; then
-        warn "cargo not found, skipping Paneru (install Rust first: https://rustup.rs)"
+        success "Paneru installed ($(paneru --version 2>/dev/null || echo 'version unknown'))"
         return 0
     fi
 
     if [[ "$DRY_RUN" == true ]]; then
-        info "[dry-run] Would install Paneru via cargo"
+        info "[dry-run] Would install Paneru via Homebrew"
         return 0
     fi
 
-    info "Installing Paneru..."
-    if cargo install paneru; then
+    warn "Paneru not found; installing via Homebrew..."
+    if brew install paneru; then
         success "Paneru installed"
     else
-        warn "Paneru installation failed"
+        warn "Paneru installation failed (brew install paneru)"
     fi
 }
 
@@ -440,9 +437,33 @@ EOF
     success "Sleepwatcher hooks created"
 }
 
+setup_paneru_service() {
+    if ! command -v paneru &>/dev/null; then
+        warn "paneru not found, skipping service setup"
+        return 0
+    fi
+
+    if [[ "$DRY_RUN" == true ]]; then
+        info "[dry-run] Would run: paneru install && paneru start"
+        return 0
+    fi
+
+    info "Setting up paneru service..."
+    # `paneru install` registers the launchd login agent (idempotent);
+    # `paneru start` launches it now.
+    paneru install 2>/dev/null || true
+    if paneru start 2>/dev/null; then
+        success "paneru service started"
+    else
+        warn "paneru start failed; grant Accessibility permission, then: paneru start"
+    fi
+    # Accessibility permission cannot be granted from a script.
+    info "  paneru needs Accessibility: System Settings > Privacy & Security > Accessibility"
+}
+
 start_services() {
     if [[ "$DRY_RUN" == true ]]; then
-        info "[dry-run] Would start sketchybar, sleepwatcher"
+        info "[dry-run] Would start sketchybar, sleepwatcher, paneru"
         return 0
     fi
 
@@ -460,10 +481,9 @@ start_services() {
         success "sleepwatcher started"
     fi
 
-    # Window manager: user must manually choose aerospace or paneru
-    info "Window manager not auto-started. Choose one manually:"
-    info "  aerospace: open -a AeroSpace"
-    info "  paneru:    paneru install && paneru start"
+    # Window manager: paneru is set up automatically; aerospace stays manual.
+    setup_paneru_service
+    info "To use aerospace instead: stop paneru ('paneru stop'), then 'open -a AeroSpace'"
 }
 
 # ==============================================================================
