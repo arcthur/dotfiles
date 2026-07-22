@@ -4,6 +4,7 @@
 local colors = require("colors")
 local settings = require("settings")
 local utils = require("helpers.utils")
+local popup = require("helpers.popup")
 
 -- Register CPU update event (triggered by C event provider)
 sbar.add("event", "cpu_update")
@@ -61,8 +62,66 @@ local cpu_percent = sbar.add("item", "cpu.percent", {
         color = colors.white,
     },
     icon = { drawing = false },
+    popup = { align = "center" },
     click_script = "open -a 'Activity Monitor'",
 })
+
+-- CPU popup: top processes by CPU (shown on hover)
+sbar.add("item", "cpu.popup.header", {
+    position = "popup.cpu.percent",
+    icon  = { drawing = false },
+    label = {
+        string = "Top by CPU",
+        font   = { family = settings.font.label, style = settings.font.style.bold, size = 11.0 },
+        color  = colors.overlay2,
+        padding_left = 8, padding_right = 8,
+    },
+})
+
+local proc_rows = {}
+for i = 1, 5 do
+    proc_rows[i] = sbar.add("item", "cpu.popup.p" .. i, {
+        position = "popup.cpu.percent",
+        icon = {
+            string = "",
+            font   = { family = settings.font.label, style = settings.font.style.bold, size = 12.0 },
+            color  = colors.peach,
+            width  = 48,
+            align  = "right",
+            padding_left = 8, padding_right = 6,
+        },
+        label = {
+            string = "",
+            font   = { family = settings.font.label, style = settings.font.style.regular, size = 12.0 },
+            color  = colors.text,
+            padding_right = 10,
+        },
+    })
+end
+
+local function update_cpu_popup()
+    -- `-r` sorts by CPU; comm is the executable path (basename it below).
+    sbar.exec("ps -Ao pcpu,comm -r | sed -n '2,6p'", function(out)
+        local i = 0
+        for pct, name in (out or ""):gmatch("%s*([%d%.]+)%s+([^\n]+)") do
+            i = i + 1
+            local row = proc_rows[i]
+            if row then
+                name = name:match("([^/]+)$") or name
+                row:set({
+                    drawing = true,
+                    icon  = { string = pct .. "%" },
+                    label = { string = name },
+                })
+            end
+        end
+        for j = i + 1, 5 do
+            proc_rows[j]:set({ drawing = false })
+        end
+    end)
+end
+
+popup.hover(cpu_percent, update_cpu_popup)
 
 -- CPU spacer
 sbar.add("item", "cpu.spacer", {

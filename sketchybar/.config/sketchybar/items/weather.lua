@@ -3,6 +3,7 @@
 
 local colors = require("colors")
 local settings = require("settings")
+local popup = require("helpers.popup")
 
 -- ============================================================================
 -- Configuration
@@ -43,8 +44,8 @@ end
 
 local function matches_any(condition, pattern)
     if not pattern or pattern == "" then return false end
-    for token in pattern:gmatch("[^|]+") do
-        token = token:match("^%s*(.-)%s*$")
+    for raw in pattern:gmatch("[^|]+") do
+        local token = raw:match("^%s*(.-)%s*$")
         if token ~= "" and condition:find(token, 1, true) then
             return true
         end
@@ -67,6 +68,7 @@ end
 -- ============================================================================
 
 local weather_items = {}
+local weather_detail_items = {}
 local item_names = {}
 
 local function create_weather_item(abbr, index)
@@ -94,10 +96,25 @@ local function create_weather_item(abbr, index)
                 size   = 12.0,
             },
         },
+        popup = { align = "center" },
         click_script = "open -a Weather",
     })
 
     weather_items[abbr] = item
+
+    -- Popup detail row (populated from the regular poll; shown on hover)
+    weather_detail_items[abbr] = sbar.add("item", item_name .. ".popup.detail", {
+        position = "popup." .. item_name,
+        icon  = { drawing = false },
+        label = {
+            string = "…",
+            font   = { family = settings.font.label, style = settings.font.style.regular, size = 12.0 },
+            color  = colors.text,
+            padding_left = 8, padding_right = 8,
+        },
+    })
+
+    popup.hover(item)
 
     -- Divider between cities (not before the leftmost)
     if index > 1 then
@@ -147,8 +164,9 @@ local function update_city_weather(abbr)
     if not item then return end
 
     local city = city_map[abbr:upper()] or abbr
+    -- %t temp | %C condition | %f feels-like | %h humidity | %w wind
     local cmd = string.format(
-        "curl -fsSL -m %d 'wttr.in/%s?format=%%t|%%C' 2>/dev/null",
+        "curl -fsSL -m %d 'wttr.in/%s?format=%%t|%%C|%%f|%%h|%%w' 2>/dev/null",
         TIMEOUT, url_encode(city)
     )
 
@@ -161,7 +179,9 @@ local function update_city_weather(abbr)
             return
         end
 
-        local temp, condition = output:gsub("%+", ""):match("([^|]+)|(.+)")
+        output = output:gsub("%+", "")
+        local temp, condition, feels, humidity, wind =
+            output:match("([^|]+)|([^|]+)|([^|]+)|([^|]+)|(.+)")
         if temp then
             temp = temp:gsub("[°C%s]", "")
             local hour = tonumber(os.date("%H")) or 0
@@ -170,6 +190,20 @@ local function update_city_weather(abbr)
                 label = { string = abbr .. " " .. temp .. "°" },
                 icon  = { string = get_weather_icon(condition, is_day), color = colors.teal },
             })
+
+            local detail = weather_detail_items[abbr]
+            if detail then
+                feels = (feels or ""):gsub("[°C%s]", "")
+                wind  = (wind or ""):gsub("^[^%d]*", "")  -- strip leading wind-direction glyph
+                local text = string.format(
+                    "%s  ·  Feels %s°  ·  Hum %s  ·  Wind %s",
+                    (condition or ""):match("^%s*(.-)%s*$"),
+                    feels ~= "" and feels or "?",
+                    humidity or "?",
+                    wind ~= "" and wind or "?"
+                )
+                detail:set({ label = { string = text } })
+            end
         end
     end)
 end

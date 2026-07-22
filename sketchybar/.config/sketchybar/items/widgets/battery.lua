@@ -3,6 +3,7 @@
 
 local colors = require("colors")
 local settings = require("settings")
+local popup = require("helpers.popup")
 
 -- Register battery update event (triggered by C event provider)
 sbar.add("event", "battery_update")
@@ -17,6 +18,7 @@ local battery = sbar.add("item", "battery", {
             size   = 18.0,
         },
     },
+    popup = { align = "center" },
     click_script = "open 'x-apple.systempreferences:com.apple.Battery-Settings.extension'",
 })
 
@@ -150,3 +152,68 @@ end
 
 -- Subscribe to forced and power events for fallback
 battery:subscribe({ "forced", "system_woke", "power_source_change" }, update_battery_fallback)
+
+-- ============================================================================
+-- Popup: charging state + battery health (shown on hover)
+-- ============================================================================
+
+local popup_font = {
+    family = settings.font.label,
+    style  = settings.font.style.regular,
+    size   = 12.0,
+}
+
+local popup_status = sbar.add("item", "battery.popup.status", {
+    position = "popup.battery",
+    icon  = { string = "󱐋", font = { family = settings.font.text, style = settings.font.style.bold, size = 13.0 }, color = colors.peach, padding_left = 8, padding_right = 6 },
+    label = { string = "…", font = popup_font, color = colors.text, padding_right = 8 },
+})
+
+local popup_health = sbar.add("item", "battery.popup.health", {
+    position = "popup.battery",
+    icon  = { string = "󰗐", font = { family = settings.font.text, style = settings.font.style.bold, size = 13.0 }, color = colors.green, padding_left = 8, padding_right = 6 },
+    label = { string = "…", font = popup_font, color = colors.text, padding_right = 8 },
+})
+
+local function capitalize(s)
+    if not s or s == "" then return s end
+    return s:sub(1, 1):upper() .. s:sub(2)
+end
+
+local function update_battery_popup()
+    -- pmset gives live state + time estimate; system_profiler gives slow-changing
+    -- health data. Both are cheap enough to run on demand (hover).
+    local cmd = [[
+        pmset -g batt | sed -n '2p'
+        echo "---"
+        system_profiler SPPowerDataType 2>/dev/null | grep -E 'Cycle Count|Condition|Maximum Capacity'
+    ]]
+    sbar.exec(cmd, function(out)
+        out = out or ""
+        local batt_line = out:match("(.-)\n%-%-%-") or out
+        local state = batt_line:match(";%s*([%a%s]-);")
+        local time  = batt_line:match("(%d+:%d+)%s*remaining")
+
+        local status_str
+        if state and state:find("charg") and not state:find("dis") then
+            status_str = time and ("Charging · " .. time .. " to full") or "Charging"
+        elseif state and state:find("discharg") then
+            status_str = time and ("On battery · " .. time .. " left") or "On battery"
+        else
+            status_str = capitalize(state) or "Plugged in"
+        end
+
+        local cycles    = out:match("Cycle Count:%s*(%d+)")
+        local condition = out:match("Condition:%s*(%w+)")
+        local maxcap    = out:match("Maximum Capacity:%s*(%d+%%)")
+        local health_str = string.format(
+            "Health %s · %s cycles · %s",
+            maxcap or "?", cycles or "?", condition or "Normal"
+        )
+
+        popup_status:set({ label = { string = status_str } })
+        popup_health:set({ label = { string = health_str } })
+    end)
+end
+
+popup.hover(battery, update_battery_popup)

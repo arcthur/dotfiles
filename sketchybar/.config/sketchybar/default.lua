@@ -6,8 +6,9 @@ local settings = require("settings")
 
 sbar.default({
     -- Performance optimizations
-    updates = "when_shown",  -- Only update when item is visible
-    scroll_texts = true,      -- Enable text scrolling for long labels
+    updates = "when_shown",   -- Only update when item is visible
+    scroll_texts = true,      -- Enable text scrolling for long labels (needs max_chars)
+    scroll_duration = 120,    -- Scroll speed for max_chars-truncated text (default 100; higher = slower)
 
     icon = {
         font = {
