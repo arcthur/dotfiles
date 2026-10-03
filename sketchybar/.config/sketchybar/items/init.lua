@@ -6,6 +6,8 @@ local wm = require("helpers.wm")
 -- Left side items (WM-aware space indicators)
 if wm.type == "aerospace" then
     require("items.spaces")
+elseif wm.type == "paneru" then
+    require("items.spaces_paneru")
 end
 require("items.front_app")
 require("items.spotify")

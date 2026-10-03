@@ -6,7 +6,7 @@ return {
   -- Mason: Package manager for LSP servers
   -- Lazy-loaded, will be triggered by mason-lspconfig
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     cmd = "Mason",
     build = ":MasonUpdate",
     opts = {
@@ -24,10 +24,10 @@ return {
   -- Bridge between mason and lspconfig
   -- Loaded as dependency of lspconfig
   {
-    "williamboman/mason-lspconfig.nvim",
+    "mason-org/mason-lspconfig.nvim",
     opts = {
       ensure_installed = settings.lsp_servers,
-      automatic_installation = true,
+      automatic_enable = false, -- Server activation is owned by config.lsp_utils.
     },
   },
 
@@ -35,7 +35,7 @@ return {
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     event = "VeryLazy",
-    dependencies = { "williamboman/mason.nvim" },
+    dependencies = { "mason-org/mason.nvim" },
     config = function()
       local tool_set = {}
       local function add_tool(tool)
@@ -70,8 +70,8 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
+      "mason-org/mason.nvim",
+      "mason-org/mason-lspconfig.nvim",
     },
     config = function()
       -- LSP keymaps on attach
@@ -94,8 +94,12 @@ return {
           map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
           -- Note: <leader>cf handled by Conform plugin (respects formatters_by_ft)
           map("n", "<F2>", vim.lsp.buf.rename, "Rename symbol")
-          map("n", "[d", vim.diagnostic.goto_prev, "Previous diagnostic")
-          map("n", "]d", vim.diagnostic.goto_next, "Next diagnostic")
+          map("n", "[d", function()
+            vim.diagnostic.jump({ count = -1, float = true })
+          end, "Previous diagnostic")
+          map("n", "]d", function()
+            vim.diagnostic.jump({ count = 1, float = true })
+          end, "Next diagnostic")
 
           if client and client.supports_method and client:supports_method("textDocument/inlayHint") then
             map("n", "<leader>lh", function()

@@ -31,14 +31,15 @@ If Nix is newly installed, restart your shell and re-run `./init.sh` to complete
 - Devbox
 - zsh4monkey (zsh framework)
 - TPM (Tmux Plugin Manager)
+- Claude Code (native installer)
 
 **Phase 3: Stow Dotfiles**
 - homebrew, bat, git, nvim, topgrade, tmux, zsh
-- fast-theme, ghostty
-- codex, claude, sketchybar, aerospace
+- ghostty, codex, sketchybar, aerospace, paneru
 
 **Phase 4: Post-install Setup**
 - Neovim plugins (`Lazy sync`)
+- Sketchybar, sleepwatcher, and Paneru services (AeroSpace is started manually)
 
 **Phase 5: Special Symlinks**
 - `~/.claude/CLAUDE.md` → codex config (cross-directory mapping)
@@ -56,12 +57,11 @@ If Nix is newly installed, restart your shell and re-run `./init.sh` to complete
 | `topgrade` | System upgrade tool |
 | `tmux` | Terminal multiplexer |
 | `zsh` | Shell config with zsh4monkey |
-| `fast-theme` | Zsh theme |
 | `ghostty` | Terminal emulator |
-| `codex` | OpenAI Codex config |
-| `claude` | Claude Code skills |
+| `codex` | Shared engineering instructions (`AGENTS.md`, also linked as Claude `CLAUDE.md`) |
 | `sketchybar` | macOS status bar |
 | `aerospace` | macOS tiling window manager |
+| `paneru` | macOS scrolling tiling window manager (default) |
 
 ## Manual Setup
 
@@ -114,9 +114,7 @@ XDG_DATA_HOME    ~/.local/share # Application data (e.g., TPM plugins)
 
 ### Nix
 
-```bash
-/nix/nix-installer uninstall
-```
+The bootstrap uses the official Nix installer. Follow the [official macOS uninstall instructions](https://nix.dev/manual/nix/stable/installation/uninstall#macos); `/nix/nix-installer uninstall` applies only to installations that provide that separate installer.
 
 ### Homebrew
 

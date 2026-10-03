@@ -156,20 +156,42 @@ my-ctrl-z() {
 }
 zle -N my-ctrl-z
 
-# Git worktree helpers (optional). Uncomment to enable:
+# Git worktree helpers. Git metadata is authoritative; directory names are not.
 ga() {
-  [[ -z "$1" ]] && { echo "Usage: ga <branch>"; return 1; }
-  local branch=$1 base=${PWD:t} path=../${base}-${branch}
-  git worktree add -b "$branch" "$path" && cd "$path"
-  (( $+commands[mise] )) && mise trust "$path"
+  [[ $# -eq 1 && -n $1 ]] || { echo "Usage: ga <branch>"; return 1; }
+  local branch=$1 repo_root worktree_dir
+  repo_root=$(git rev-parse --show-toplevel) || return 1
+  worktree_dir="${repo_root:h}/${repo_root:t}-${branch//\//-}"
+  git worktree add -b "$branch" "$worktree_dir" || return 1
+  cd -- "$worktree_dir" || return 1
+  if (( $+commands[mise] )); then
+    mise trust "$worktree_dir"
+  fi
 }
 
 gd() {
-  read -q "?Remove worktree and branch? [y/N] " || { echo; return 0; }
+  local worktree_dir common_dir primary_dir branch
+  worktree_dir=$(git rev-parse --show-toplevel) || return 1
+  common_dir=$(git rev-parse --path-format=absolute --git-common-dir) || return 1
+  primary_dir=${common_dir:h}
+  [[ ${worktree_dir:A} != ${primary_dir:A} && -d "$primary_dir/.git" ]] || {
+    echo "Run gd from a linked worktree of a non-bare repository."
+    return 1
+  }
+  branch=$(git symbolic-ref --quiet --short HEAD) || branch=''
+  read -q "?Remove this worktree and delete its branch if merged? [y/N] " || { echo; return 0; }
   echo
-  local wt=${PWD:t} root=${wt%-*} branch=${wt#*-}
-  [[ $root == $wt ]] && { echo "Not in a worktree"; return 1; }
-  cd ../$root && git worktree remove $wt --force && git branch -D $branch
+  cd -- "$primary_dir" || return 1
+  if ! git worktree remove -- "$worktree_dir"; then
+    cd -- "$worktree_dir"
+    return 1
+  fi
+  if [[ -n $branch ]]; then
+    git branch -d -- "$branch" || {
+      echo "Worktree removed; branch '$branch' retained."
+      return 0
+    }
+  fi
 }
 
 # =============================================================================

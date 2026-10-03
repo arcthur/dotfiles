@@ -542,10 +542,32 @@ sync_nvim_plugins() {
 # Special Symlinks
 # ==============================================================================
 
+# Retire only the override symlink managed by this repository.
+remove_legacy_agent_override() {
+    local legacy="$HOME/.codex/AGENTS.override.md"
+    local old_source="$SCRIPT_DIR/codex/.codex/AGENTS.override.md"
+    local target
+
+    [[ -L "$legacy" ]] || return 0
+    target=$(readlink "$legacy")
+    [[ "$target" == /* ]] || target="$(dirname "$legacy")/$target"
+    if [[ "$(resolve_path "$target")" != "$(resolve_path "$old_source")" ]]; then
+        warn "Unmanaged AGENTS.override.md retained; it takes precedence over AGENTS.md"
+        return 0
+    fi
+
+    if [[ "$DRY_RUN" == true ]]; then
+        info "[dry-run] Would retire managed override symlink: $legacy"
+    else
+        rm "$legacy"
+        success "Retired managed AGENTS.override.md symlink"
+    fi
+}
+
 # Links codex config to claude's CLAUDE.md - cross-directory mapping that stow cannot handle
 # (stow maps codex/.codex/* -> ~/.codex/*, but we need ~/.codex/... -> ~/.claude/CLAUDE.md)
 setup_claude_symlink() {
-    local src="$SCRIPT_DIR/codex/.codex/AGENTS.override.md"
+    local src="$SCRIPT_DIR/codex/.codex/AGENTS.md"
     local dest="$HOME/.claude/CLAUDE.md"
 
     if [[ ! -f "$src" ]]; then
@@ -653,6 +675,7 @@ main() {
     setup_sleepwatcher_hooks
 
     # Phase 5: Special symlinks
+    remove_legacy_agent_override
     setup_claude_symlink
 
     # Phase 6: Start services
