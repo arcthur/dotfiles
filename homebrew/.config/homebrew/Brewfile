@@ -2,7 +2,6 @@
 # ---------------
 tap "brewforge/chinese"
 tap "nikitabobko/tap"
-tap "FelixKratz/formulae"
 tap "xoshbin/asyar"
 
 # BINARIES
@@ -82,8 +81,6 @@ brew "lua"          # Powerful, efficient scripting language
 
 # Mac OS X
 brew "mas"          # Mac App Store command-line interface
-# brew "FelixKratz/formulae/sketchybar"   # Custom macOS statusbar
-# brew "sleepwatcher" # Run scripts on sleep/wake events
 # brew "paneru"       # Sliding, tiling window manager (now in homebrew-core)
 
 # CASK
@@ -132,7 +129,6 @@ cask "bitwarden"
 # Development
 cask "font-hack-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
-cask "font-sketchybar-app-font"
 cask "ghostty"
 cask "visual-studio-code"
 cask "cursor"

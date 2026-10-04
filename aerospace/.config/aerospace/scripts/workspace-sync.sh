@@ -53,16 +53,3 @@ else
   # Single monitor: just switch workspace
   aerospace workspace "$target" 2>/dev/null || true
 fi
-
-# Release lock before notifying sketchybar to avoid UI skipping updates
-rm -rf "$LOCK_DIR"
-trap - EXIT
-
-# Direct update for faster response
-if command -v sketchybar >/dev/null 2>&1; then
-  APP="$(lsappinfo info -only name "$(lsappinfo front)" 2>/dev/null | cut -d'\"' -f4)"
-  [ -n "$APP" ] && sketchybar --set front_app label="${target}::${APP}" 2>/dev/null || true
-
-  # Trigger spaces update immediately (don't wait for aerospace event)
-  sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE="$target" 2>/dev/null || true
-fi

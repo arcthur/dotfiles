@@ -66,13 +66,8 @@ if [ "$monitor_count" -eq 2 ]; then
       aerospace focus-monitor "$focused_monitor" 2>/dev/null || true
     fi
 
-    # Release lock before notifying sketchybar to avoid UI skipping updates
+    # Release the workspace sync lock
     rm -rf "$LOCK_DIR"
     trap - EXIT
   fi
-fi
-
-# Notify sketchybar
-if command -v sketchybar >/dev/null 2>&1; then
-  sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE="$base_workspace" 2>/dev/null || true
 fi

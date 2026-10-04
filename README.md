@@ -17,8 +17,6 @@ Opinionated dotfiles for a macOS development workstation.
 ./init.sh --force
 ```
 
-If Nix is newly installed, restart your shell and re-run `./init.sh` to complete setup.
-
 ## What init.sh Does
 
 **Phase 1: System Prerequisites**
@@ -27,7 +25,6 @@ If Nix is newly installed, restart your shell and re-run `./init.sh` to complete
 
 **Phase 2: Package Managers & Frameworks**
 - `brew bundle` (installs packages from the default Brewfile location)
-- Nix (official installer)
 - Devbox
 - zsh4monkey (zsh framework)
 - TPM (Tmux Plugin Manager)
@@ -35,11 +32,11 @@ If Nix is newly installed, restart your shell and re-run `./init.sh` to complete
 
 **Phase 3: Stow Dotfiles**
 - homebrew, bat, git, nvim, topgrade, tmux, zsh
-- ghostty, codex, sketchybar, aerospace, paneru
+- ghostty, codex, aerospace, paneru
 
 **Phase 4: Post-install Setup**
 - Neovim plugins (`Lazy sync`)
-- Sketchybar, sleepwatcher, and Paneru services (AeroSpace is started manually)
+- Paneru service (AeroSpace is started manually)
 
 **Phase 5: Special Symlinks**
 - `~/.claude/CLAUDE.md` → codex config (cross-directory mapping)
@@ -59,7 +56,6 @@ If Nix is newly installed, restart your shell and re-run `./init.sh` to complete
 | `zsh` | Shell config with zsh4monkey |
 | `ghostty` | Terminal emulator |
 | `codex` | Shared engineering instructions (`AGENTS.md`, also linked as Claude `CLAUDE.md`) |
-| `sketchybar` | macOS status bar |
 | `aerospace` | macOS tiling window manager |
 | `paneru` | macOS scrolling tiling window manager (default) |
 
@@ -114,7 +110,7 @@ XDG_DATA_HOME    ~/.local/share # Application data (e.g., TPM plugins)
 
 ### Nix
 
-The bootstrap uses the official Nix installer. Follow the [official macOS uninstall instructions](https://nix.dev/manual/nix/stable/installation/uninstall#macos); `/nix/nix-installer uninstall` applies only to installations that provide that separate installer.
+The bootstrap no longer installs Nix. For existing installations, follow the [official macOS uninstall instructions](https://nix.dev/manual/nix/stable/installation/uninstall#macos); `/nix/nix-installer uninstall` applies only to installations that provide that separate installer.
 
 ### Homebrew
 

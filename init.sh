@@ -31,7 +31,6 @@ STOW_PACKAGES=(
     zsh
     ghostty
     codex
-    sketchybar
     aerospace
     paneru
 )
@@ -249,40 +248,7 @@ install_brew_packages() {
     fi
 }
 
-install_nix() {
-    if [[ -d "/nix/store" ]]; then
-        success "Nix already installed"
-        return 0
-    fi
-
-    if [[ "$DRY_RUN" == true ]]; then
-        info "[dry-run] Would install Nix"
-        return 0
-    fi
-
-    info "Installing Nix..."
-    sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install)
-
-    # Try to source nix for this session
-    if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
-        # shellcheck source=/dev/null
-        source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-        success "Nix installed and sourced"
-    else
-        NEEDS_SHELL_RESTART=true
-        warn "Nix installed (shell restart required for full functionality)"
-    fi
-}
-
 install_devbox() {
-    # Source nix if not in PATH
-    if ! command -v nix &>/dev/null; then
-        if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
-            # shellcheck source=/dev/null
-            source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-        fi
-    fi
-
     if command -v devbox &>/dev/null; then
         success "Devbox already installed"
         return 0
@@ -372,71 +338,6 @@ install_paneru() {
     fi
 }
 
-install_sketchybar_deps() {
-    local sbarlua_path="$HOME/.local/share/sketchybar_lua"
-    local providers_path="$HOME/.config/sketchybar/helpers/event_providers"
-
-    # Install SbarLua (Lua API for SketchyBar)
-    if [[ -f "$sbarlua_path/sketchybar.so" ]]; then
-        success "SbarLua already installed"
-    elif [[ "$DRY_RUN" == true ]]; then
-        info "[dry-run] Would install SbarLua"
-    else
-        info "Installing SbarLua..."
-        rm -rf /tmp/SbarLua
-        if git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua &&
-            (cd /tmp/SbarLua && make install) && rm -rf /tmp/SbarLua; then
-            success "SbarLua installed"
-        else
-            warn "SbarLua installation failed"
-            rm -rf /tmp/SbarLua
-        fi
-    fi
-
-    # Compile C event providers (cpu/memory/network/battery)
-    if [[ -d "$providers_path" ]]; then
-        if [[ "$DRY_RUN" == true ]]; then
-            info "[dry-run] Would compile sketchybar event providers"
-        else
-            info "Compiling sketchybar event providers..."
-            if (cd "$providers_path" && make all 2>/dev/null); then
-                success "Sketchybar event providers compiled"
-            else
-                warn "Sketchybar event providers compilation failed"
-            fi
-        fi
-    fi
-}
-
-setup_sleepwatcher_hooks() {
-    # sleepwatcher triggers scripts on sleep/wake events
-    # Used to refresh sketchybar weather after wake (network needs time to recover)
-    local wakeup_script="$HOME/.wakeup"
-    local sleep_script="$HOME/.sleep"
-
-    if [[ "$DRY_RUN" == true ]]; then
-        info "[dry-run] Would create sleepwatcher hooks (~/.wakeup, ~/.sleep)"
-        return 0
-    fi
-
-    # Create .wakeup script - triggers sketchybar refresh after wake
-    cat >"$wakeup_script" <<'EOF'
-#!/bin/bash
-# Wait for network to recover after wake
-sleep 3
-/opt/homebrew/bin/sketchybar --trigger system_woke
-EOF
-    chmod +x "$wakeup_script"
-
-    # Create .sleep script - placeholder for future use
-    cat >"$sleep_script" <<'EOF'
-#!/bin/bash
-EOF
-    chmod +x "$sleep_script"
-
-    success "Sleepwatcher hooks created"
-}
-
 setup_paneru_service() {
     if ! command -v paneru &>/dev/null; then
         warn "paneru not found, skipping service setup"
@@ -463,22 +364,8 @@ setup_paneru_service() {
 
 start_services() {
     if [[ "$DRY_RUN" == true ]]; then
-        info "[dry-run] Would start sketchybar, sleepwatcher, paneru"
+        info "[dry-run] Would start paneru"
         return 0
-    fi
-
-    # Start sketchybar as brew service
-    if command -v sketchybar &>/dev/null; then
-        info "Starting sketchybar..."
-        brew services start sketchybar 2>/dev/null || brew services restart sketchybar
-        success "sketchybar started"
-    fi
-
-    # Start sleepwatcher as brew service
-    if command -v sleepwatcher &>/dev/null; then
-        info "Starting sleepwatcher..."
-        brew services start sleepwatcher 2>/dev/null || brew services restart sleepwatcher
-        success "sleepwatcher started"
     fi
 
     # Window manager: paneru is set up automatically; aerospace stays manual.
@@ -605,7 +492,7 @@ show_help() {
     cat <<EOF
 Usage: $(basename "$0") [OPTIONS]
 
-Initialize dotfiles: install Nix, Devbox, and stow configurations.
+Initialize dotfiles: install Homebrew, Devbox, and stow configurations.
 
 Options:
     -n, --dry-run    Show what would be done without making changes
@@ -659,7 +546,6 @@ main() {
 
     # Phase 2: Package managers & frameworks
     install_brew_packages
-    install_nix
     install_devbox
     install_zsh4monkey
     install_tpm
@@ -671,8 +557,6 @@ main() {
 
     # Phase 4: Post-install setup
     sync_nvim_plugins
-    install_sketchybar_deps
-    setup_sleepwatcher_hooks
 
     # Phase 5: Special symlinks
     remove_legacy_agent_override
