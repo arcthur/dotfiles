@@ -1,6 +1,8 @@
 {
+  "trustedtaps": [
+    "xoshbin/asyar"
+  ],
   "trustedformulae": [
-    "felixkratz/formulae/sketchybar",
     "tw93/tap/mole"
   ],
   "trustedcasks": [

@@ -1,9 +1,9 @@
 # TAPS
 # ---------------
 tap "brewforge/chinese"
-tap "moonrepo/tap"
 tap "nikitabobko/tap"
 tap "FelixKratz/formulae"
+tap "xoshbin/asyar"
 
 # BINARIES
 # ---------------
@@ -54,7 +54,6 @@ brew "direnv"       # Load and unload environment variables
 brew "nexttrace"    # Visual route tracking
 brew "ast-grep"     # Code structural search
 brew "carapace"     # Multi-shell argument completer
-brew "aichat"       # All-in-one AI CLI tool
 
 # Editor
 brew "vim"          # Vi 'workalike' with many additional features
@@ -71,9 +70,7 @@ brew "lazygit"      # Simple terminal UI for git commands
 brew "gh"           # Interact with GitHub PRs, issues, repos
 brew "tokei"        # Count code (better cloc)
 brew "stow"         # Symlink farm manager
-brew "bd"           # A memory upgrade for your coding agent
 brew "lefthook"     # Git hooks manager
-brew "moon"         # Monorepo
 brew "jq"           # Command-line JSON processor
 brew "just"         # Just a command runner
 brew "docker"       # Docker CLI client
@@ -85,9 +82,9 @@ brew "lua"          # Powerful, efficient scripting language
 
 # Mac OS X
 brew "mas"          # Mac App Store command-line interface
-brew "FelixKratz/formulae/sketchybar"   # Custom macOS statusbar
-brew "sleepwatcher" # Run scripts on sleep/wake events
-brew "paneru"       # Sliding, tiling window manager (now in homebrew-core)
+# brew "FelixKratz/formulae/sketchybar"   # Custom macOS statusbar
+# brew "sleepwatcher" # Run scripts on sleep/wake events
+# brew "paneru"       # Sliding, tiling window manager (now in homebrew-core)
 
 # CASK
 # ---------------
@@ -125,7 +122,7 @@ cask "discord"
 cask "whatsapp"
 
 # Utilities
-cask "nikitabobko/tap/aerospace"    # Tiling window manager
+# cask "nikitabobko/tap/aerospace"    # Tiling window manager
 cask "betterdisplay"
 cask "keka"
 cask "surge"
