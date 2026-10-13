@@ -50,11 +50,13 @@ function rhs_options:map_cmd(cmd_string)
   return self
 end
 
----Map a command with <CR> suffix (e.g., ":Telescope find_files<CR>")
+---Map an Ex command via <Cmd> (e.g., "<cmd>Telescope find_files<CR>").
+---Unlike ":cmd<CR>" it never enters cmdline mode: no cmdline flash, no implicit
+---visual range, and the current mode is preserved.
 ---@param cmd_string string
 ---@return map_rhs
 function rhs_options:map_cr(cmd_string)
-  self.cmd = (":%s<CR>"):format(cmd_string)
+  self.cmd = ("<cmd>%s<CR>"):format(cmd_string)
   return self
 end
 
@@ -138,7 +140,7 @@ end
 -- Module exports
 local bind = {}
 
----Create a command mapping with <CR>
+---Create a <cmd>...<CR> command mapping
 ---@param cmd_string string
 ---@return map_rhs
 function bind.map_cr(cmd_string)

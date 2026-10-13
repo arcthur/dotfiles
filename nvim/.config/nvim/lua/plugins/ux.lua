@@ -160,8 +160,7 @@ return {
   -- Tiny-inline-diagnostic: Better inline diagnostics
   {
     "rachartier/tiny-inline-diagnostic.nvim",
-    event = "LspAttach",
-    priority = 1000, -- Load before other LSP plugins
+    event = "VeryLazy",
     opts = {
       preset = "modern",
       options = {

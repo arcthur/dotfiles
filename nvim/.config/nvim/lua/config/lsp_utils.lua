@@ -1,40 +1,16 @@
--- Thin wrappers over Neovim 0.11+ native LSP (vim.lsp.config / vim.lsp.enable).
--- Keeps lsp.lua declarative as the server list grows.
+-- Thin wrapper over Neovim 0.11+ native LSP (vim.lsp.config / vim.lsp.enable).
+-- Capabilities are not handled here: blink.cmp merges its own into vim.lsp.config("*")
+-- when it loads (it is a dependency of nvim-lspconfig, so that happens first).
 local M = {}
 
--- Default client capabilities, merged with blink.cmp's if it is available.
----@return lsp.ClientCapabilities
-function M.get_capabilities()
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-  local ok, blink = pcall(require, "blink.cmp")
-  if ok then
-    capabilities = blink.get_lsp_capabilities(capabilities)
-  end
-  return capabilities
-end
-
--- Configure and enable a single server in one call.
--- `config` is merged on top of the shared capabilities and nvim-lspconfig defaults.
--- `capabilities` may be passed in to avoid recomputing it per server.
----@param server string
----@param config? table
----@param capabilities? lsp.ClientCapabilities
-function M.register_server(server, config, capabilities)
-  capabilities = capabilities or M.get_capabilities()
-  vim.lsp.config(server, vim.tbl_deep_extend("force", { capabilities = capabilities }, config or {}))
-  vim.lsp.enable(server)
-end
-
--- Configure + enable many servers, applying optional per-server overrides.
--- Capabilities are computed once and shared across all servers.
+-- Apply optional per-server overrides on top of nvim-lspconfig's defaults, then enable all.
 ---@param servers string[]
----@param overrides? table<string, table>
+---@param overrides? table<string, vim.lsp.Config>
 function M.register_servers(servers, overrides)
-  overrides = overrides or {}
-  local capabilities = M.get_capabilities()
-  for _, server in ipairs(servers) do
-    M.register_server(server, overrides[server], capabilities)
+  for server, config in pairs(overrides or {}) do
+    vim.lsp.config(server, config)
   end
+  vim.lsp.enable(servers)
 end
 
 return M

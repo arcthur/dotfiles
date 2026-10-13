@@ -25,6 +25,20 @@ return {
           loops = { "bold" },
           booleans = { "bold", "italic" },
         },
+        lsp_styles = {
+          virtual_text = {
+            errors = { "italic" },
+            hints = { "italic" },
+            warnings = { "italic" },
+            information = { "italic" },
+          },
+          underlines = {
+            errors = { "underline" },
+            hints = { "underline" },
+            warnings = { "underline" },
+            information = { "underline" },
+          },
+        },
         integrations = {
           blink_cmp = true,
           flash = true,
@@ -33,21 +47,6 @@ return {
           indent_blankline = { enabled = true, colored_indent_levels = false },
           mason = true,
           mini = { enabled = true },
-          native_lsp = {
-            enabled = true,
-            virtual_text = {
-              errors = { "italic" },
-              hints = { "italic" },
-              warnings = { "italic" },
-              information = { "italic" },
-            },
-            underlines = {
-              errors = { "underline" },
-              hints = { "underline" },
-              warnings = { "underline" },
-              information = { "underline" },
-            },
-          },
           nvimtree = true,
           telescope = { enabled = true },
           treesitter = true,

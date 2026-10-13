@@ -1,7 +1,7 @@
 -- Telescope - Fuzzy finder
 return {
   "nvim-telescope/telescope.nvim",
-  branch = "0.1.x",
+  version = "*",
   cmd = "Telescope",
   dependencies = {
     "nvim-lua/plenary.nvim",
@@ -49,14 +49,14 @@ return {
             ["<CR>"] = actions.select_default,
           },
         },
-        file_ignore_patterns = { "node_modules", ".git/", "%.lock" },
+        file_ignore_patterns = { "node_modules/", "%.git/", "%.lock$" }, -- Lua patterns
       },
       pickers = {
         find_files = { hidden = true },
       },
     })
 
-    telescope.load_extension("fzf")
+    pcall(telescope.load_extension, "fzf") -- absent when `make` is unavailable
     telescope.load_extension("live_grep_args")
   end,
 }

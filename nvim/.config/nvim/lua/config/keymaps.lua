@@ -2,7 +2,7 @@
 local bind = require("config.bind")
 
 -- Shorthand aliases
-local cr = bind.map_cr -- :cmd<CR>
+local cr = bind.map_cr -- <cmd>cmd<CR>
 local cmd = bind.map_cmd -- raw command
 local cu = bind.map_cu -- :<C-u>cmd<CR>
 local cb = bind.map_callback -- Lua function
@@ -78,11 +78,6 @@ bind.load({
 
   -- === BETTER DEFAULTS ===
   ["n|<Esc>"] = cr("nohlsearch"):with_silent():with_desc("Clear search highlight"),
-  -- Paragraph navigation without polluting jumplist
-  ["n|]}"] = cmd("<cmd>keepjumps normal! }<CR>"):with_silent():with_desc("Next paragraph (no jump)"),
-  ["n|[{"] = cmd("<cmd>keepjumps normal! {<CR>"):with_silent():with_desc("Prev paragraph (no jump)"),
-  ["v|]}"] = cmd("}"):with_desc("Next paragraph"),
-  ["v|[{"] = cmd("{"):with_desc("Prev paragraph"),
   ["v|<"] = cmd("<gv"):with_desc("Indent left"),
   ["v|>"] = cmd(">gv"):with_desc("Indent right"),
   ["n|J"] = cmd("mzJ`z"):with_desc("Join lines (keep cursor)"),
@@ -90,16 +85,15 @@ bind.load({
   ["n|N"] = cmd("Nzzzv"):with_desc("Prev match (centered)"),
   ["n|<C-d>"] = cmd("<C-d>zz"):with_desc("Half page down (centered)"),
   ["n|<C-u>"] = cmd("<C-u>zz"):with_desc("Half page up (centered)"),
-  ["n|Y"] = cmd("y$"):with_desc("Yank to EOL"),
-  ["n|D"] = cmd("d$"):with_desc("Delete to EOL"),
 
   -- === FILETREE (leader+n) ===
   ["n|<leader>nf"] = cr("NvimTreeFindFile"):with_desc("filetree: Find file"),
   ["n|<leader>nr"] = cr("NvimTreeRefresh"):with_desc("filetree: Refresh"),
 
   -- === LSP (leader+l) ===
-  ["n|<leader>li"] = cr("LspInfo"):with_desc("lsp: Info"),
-  ["n|<leader>lr"] = cr("LspRestart"):with_desc("lsp: Restart"),
+  -- nvim-lspconfig skips :LspInfo/:LspRestart on Nvim 0.12+, where the native `:lsp` command exists.
+  ["n|<leader>li"] = cr("checkhealth vim.lsp"):with_desc("lsp: Info"),
+  ["n|<leader>lr"] = cr("lsp restart"):with_desc("lsp: Restart"),
   ["n|gK"] = cb(function()
     local ok, blink = pcall(require, "blink.cmp")
     if not ok then

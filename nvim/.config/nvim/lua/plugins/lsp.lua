@@ -57,11 +57,14 @@ return {
       local ensure_installed = vim.tbl_keys(tool_set)
       table.sort(ensure_installed)
 
-      require("mason-tool-installer").setup({
+      local mti = require("mason-tool-installer")
+      mti.setup({
         ensure_installed = ensure_installed,
         auto_update = false,
         run_on_start = true,
       })
+      -- The plugin hooks `run_on_start` to VimEnter, which has already fired by VeryLazy.
+      mti.run_on_start()
     end,
   },
 
@@ -72,6 +75,9 @@ return {
     dependencies = {
       "mason-org/mason.nvim",
       "mason-org/mason-lspconfig.nvim",
+      -- Loading blink first runs its plugin/ file, which merges its completion
+      -- capabilities into vim.lsp.config("*") before any server is enabled.
+      "saghen/blink.cmp",
     },
     config = function()
       -- LSP keymaps on attach
@@ -85,11 +91,11 @@ return {
             vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
           end
 
+          -- Nvim 0.11+ defaults cover the rest: K (hover), grr (references), gri (implementation),
+          -- grt (type definition), grn (rename), gra (code action), gO (symbols), <C-s> in insert.
+          -- Do not map `gr`/`gi`: `gr` would stall on the gr* defaults and `gi` shadows a builtin.
           map("n", "gd", vim.lsp.buf.definition, "Go to definition")
           map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
-          map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
-          map("n", "gr", vim.lsp.buf.references, "Go to references")
-          map("n", "K", vim.lsp.buf.hover, "Hover documentation")
           map("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
           map("n", "<leader>ca", vim.lsp.buf.code_action, "Code action")
           -- Note: <leader>cf handled by Conform plugin (respects formatters_by_ft)
@@ -101,7 +107,7 @@ return {
             vim.diagnostic.jump({ count = 1, float = true })
           end, "Next diagnostic")
 
-          if client and client.supports_method and client:supports_method("textDocument/inlayHint") then
+          if client and client:supports_method("textDocument/inlayHint") then
             map("n", "<leader>lh", function()
               local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
               vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
@@ -111,13 +117,11 @@ return {
       })
 
       -- Configure + enable all servers (Neovim 0.11+ native LSP) via a small helper.
-      -- register_servers merges blink.cmp capabilities and per-server overrides, then
-      -- calls vim.lsp.config()/enable() for each. See lua/config/lsp_utils.lua.
+      -- register_servers applies per-server overrides, then vim.lsp.enable()s them all.
       local server_overrides = {
         lua_ls = {
           settings = {
             Lua = {
-              diagnostics = { globals = { "vim" } },
               workspace = { checkThirdParty = false },
               telemetry = { enable = false },
             },
@@ -171,7 +175,7 @@ return {
   -- Trouble: Better diagnostics list
   {
     "folke/trouble.nvim",
-    cmd = { "Trouble", "TroubleToggle" },
+    cmd = "Trouble",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     keys = {
       { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Trouble)" },

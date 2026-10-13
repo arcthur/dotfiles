@@ -1,46 +1,15 @@
 -- Editor enhancements
 return {
-  -- Bigfile: Disable features for large files
+  -- Snacks: only the bigfile module. Must load at startup (not lazy) so it sees the
+  -- first file; big files get filetype "bigfile", so LSP/treesitter never attach.
   {
-    "lunarvim/bigfile.nvim",
+    "folke/snacks.nvim",
+    priority = 1000,
     lazy = false,
     opts = {
-      filesize = 5, -- size in MiB
-      features = {
-        {
-          name = "ibl",
-          disable = function(bufnr)
-            local function apply()
-              if not vim.api.nvim_buf_is_valid(bufnr) then
-                return
-              end
-              local ok, ibl = pcall(require, "ibl")
-              if ok then
-                ibl.setup_buffer(bufnr, { enabled = false })
-              end
-            end
-
-            if package.loaded["ibl"] then
-              apply()
-              return
-            end
-
-            vim.api.nvim_create_autocmd("User", {
-              pattern = "LazyLoad",
-              callback = function(event)
-                if event.data == "indent-blankline.nvim" then
-                  apply()
-                end
-              end,
-              once = true,
-            })
-          end,
-        },
-        "lsp",
-        "treesitter",
-        "syntax",
-        "matchparen",
-        "vimopts",
+      bigfile = {
+        enabled = true,
+        size = 5 * 1024 * 1024, -- bytes
       },
     },
   },
@@ -73,7 +42,7 @@ return {
         },
         filters = {
           dotfiles = false,
-          custom = { ".git", "node_modules", ".cache" },
+          custom = { "^\\.git$", "^node_modules$", "^\\.cache$" }, -- vim regex; ".git" would also hide .github
         },
         git = {
           enable = true,
@@ -91,13 +60,6 @@ return {
 
   -- Icons
   { "nvim-tree/nvim-web-devicons", lazy = true },
-
-  -- Comment
-  {
-    "numToStr/Comment.nvim",
-    event = { "BufReadPost", "BufNewFile" },
-    config = true,
-  },
 
   -- Surround
   {

@@ -37,7 +37,11 @@ if not vim.uv.fs_stat(lazypath) then
     :wait()
 
   if result.code ~= 0 then
-    vim.api.nvim_err_writeln(("Failed to clone lazy.nvim (exit=%d): %s"):format(result.code, result.stderr or ""))
+    vim.api.nvim_echo(
+      { { ("Failed to clone lazy.nvim (exit=%d): %s"):format(result.code, result.stderr or ""), "ErrorMsg" } },
+      true,
+      { err = true }
+    )
   end
 end
 vim.opt.rtp:prepend(lazypath)
@@ -56,6 +60,9 @@ require("config.autocmds")
 require("lazy").setup("plugins", {
   defaults = {
     lazy = true, -- All plugins are lazy-loaded by default
+  },
+  rocks = {
+    enabled = false, -- No plugin here needs luarocks; avoids hererocks health errors.
   },
   install = {
     colorscheme = { "catppuccin", "tokyonight" },
@@ -76,38 +83,16 @@ require("lazy").setup("plugins", {
     reset_packpath = true, -- Reset packpath for faster startup
     rtp = {
       reset = true, -- Reset rtp to improve startup time
+      -- Only names that exist under $VIMRUNTIME/plugin/ have any effect here.
       disabled_plugins = {
-        -- Disable unused built-in plugins
-        "2html_plugin",
-        "tohtml",
-        "getscript",
-        "getscriptPlugin",
         "gzip",
-        "logipat",
-        "netrw",
-        "netrwPlugin",
-        "netrwSettings",
-        "netrwFileHandlers",
-        "matchit",
-        "matchparen",
-        "tar",
+        "matchit", -- replaced by vim-matchup
+        "matchparen", -- replaced by vim-matchup
+        "netrwPlugin", -- replaced by nvim-tree
+        "rplugin", -- remote plugins unused (providers disabled above)
         "tarPlugin",
-        "rrhelper",
-        "spellfile_plugin",
-        "vimball",
-        "vimballPlugin",
-        "zip",
-        "zipPlugin",
         "tutor",
-        "rplugin",
-        "syntax",
-        "synmenu",
-        "optwin",
-        "compiler",
-        "bugreport",
-        "ftplugin",
-        -- Keep these if needed:
-        -- "editorconfig",  -- Useful for project settings
+        "zipPlugin",
       },
     },
   },

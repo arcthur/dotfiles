@@ -10,9 +10,7 @@ return {
     config = function()
       local treesitter = require("nvim-treesitter")
 
-      treesitter.setup({
-        install_dir = vim.fs.joinpath(vim.fn.stdpath("data"), "site"),
-      })
+      treesitter.setup()
 
       local installed = {} ---@type table<string, boolean>
       for _, lang in ipairs(treesitter.get_installed("parsers")) do
@@ -33,6 +31,7 @@ return {
         group = group,
         pattern = "*",
         callback = function(event)
+          -- Big files get filetype "bigfile" from snacks.bigfile, which has no parser.
           if vim.bo[event.buf].buftype ~= "" then
             return
           end
@@ -64,9 +63,13 @@ return {
       {
         "[c",
         function()
-          require("treesitter-context").go_to_context()
+          if vim.wo.diff then
+            vim.cmd.normal({ vim.v.count1 .. "[c", bang = true })
+          else
+            require("treesitter-context").go_to_context(vim.v.count1)
+          end
         end,
-        desc = "Go to context",
+        desc = "Go to context (prev change in diff)",
       },
     },
   },
@@ -92,7 +95,7 @@ return {
             "grug-far-help",
             "grug-far-history",
             "qf",
-            "lspinfo",
+            "bigfile",
           },
         },
       })

@@ -35,8 +35,8 @@ return {
       "mikavilpas/blink-ripgrep.nvim",
       { "xzbdmw/colorful-menu.nvim", opts = {} },
     },
-    version = "*",
-    event = "InsertEnter",
+    version = "1.*",
+    event = "InsertEnter", -- also loaded earlier as a dependency of nvim-lspconfig
     opts = {
       keymap = {
         preset = "default",

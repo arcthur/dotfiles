@@ -21,7 +21,7 @@ return {
       },
       {
         "S",
-        mode = { "n", "x", "o" },
+        mode = { "n", "o" }, -- visual `S` belongs to nvim-surround
         function()
           require("flash").treesitter()
         end,
@@ -90,10 +90,7 @@ return {
   {
     "folke/persistence.nvim",
     event = "BufReadPre",
-    opts = {
-      dir = vim.fn.stdpath("state") .. "/sessions/",
-      options = { "buffers", "curdir", "tabpages", "winsize" },
-    },
+    opts = {},
     keys = {
       {
         "<leader>qs",

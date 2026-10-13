@@ -11,8 +11,6 @@ autocmd("FileType", {
     "help",
     "man",
     "notify",
-    "lspinfo",
-    "spectre_panel",
     "startuptime",
     "checkhealth",
     "grug-far",
@@ -42,22 +40,29 @@ autocmd("BufReadPost", {
 autocmd("TextYankPost", {
   group = augroup("highlight_yank", { clear = true }),
   callback = function()
-    vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
+    vim.hl.on_yank({ higroup = "IncSearch", timeout = 200 })
   end,
 })
 
 -- Check if file changed when focused
 autocmd("FocusGained", {
   group = augroup("checktime", { clear = true }),
-  pattern = "*",
-  command = "checktime",
+  callback = function()
+    -- :checktime errors in the command-line window (E11).
+    if vim.o.buftype ~= "nofile" then
+      vim.cmd.checktime()
+    end
+  end,
 })
 
 -- Resize splits when window resized
 autocmd("VimResized", {
   group = augroup("resize_splits", { clear = true }),
   callback = function()
+    -- `tabdo` leaves the last tab focused; restore the current one afterwards.
+    local current_tab = vim.fn.tabpagenr()
     vim.cmd("tabdo wincmd =")
+    vim.cmd("tabnext " .. current_tab)
   end,
 })
 
