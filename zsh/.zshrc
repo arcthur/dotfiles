@@ -44,14 +44,19 @@ zstyle ':completion:*:scp:argument-rest:'    tag-order hosts files users
 # History search: use text before cursor as search pattern
 HISTORY_SUBSTRING_SEARCH_CURSOR_AWARE=1
 
-# Plugins
-z4m install MichaelAquilina/zsh-auto-notify || return
-z4m install MichaelAquilina/zsh-you-should-use || return
+# Plugins (pinned: exact commit + SHA-256 of github.com/<repo>/archive/<commit>.tar.gz)
+zstyle ':z4m:MichaelAquilina/zsh-auto-notify'   sha256 '070d55c032c78a30c820e74b2231447c3db3c546c35518ef102388b15f60df0f'
+zstyle ':z4m:MichaelAquilina/zsh-you-should-use' sha256 '273907a3529525834b434071d3d761479ff393b1869fbd41c971cf2cd620b65e'
+z4m install MichaelAquilina/zsh-auto-notify@b51c934d88868e56c1d55d0a2a36d559f21cb2ee || return
+z4m install MichaelAquilina/zsh-you-should-use@5f3d129864ee4505043d88c3486224f1d75b692e || return
 
 # CLI tools (eza, bat, zoxide auto-configured)
 z4m install eza bat fd rg zoxide || return
 
 z4m init || return
+
+# Load plugins installed above (install only downloads them).
+z4m load MichaelAquilina/zsh-auto-notify MichaelAquilina/zsh-you-should-use
 
 # =============================================================================
 # 2. SHELL OPTIONS
