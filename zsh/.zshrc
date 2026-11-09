@@ -100,13 +100,6 @@ zle -N edit-command-line
 
 typeset -U path fpath
 path=(
-  # GNU utilities (override BSD versions)
-  ${HOMEBREW_PREFIX:-/opt/homebrew}/opt/coreutils/libexec/gnubin(N)
-  ${HOMEBREW_PREFIX:-/opt/homebrew}/opt/findutils/libexec/gnubin(N)
-  ${HOMEBREW_PREFIX:-/opt/homebrew}/opt/gnu-sed/libexec/gnubin(N)
-  ${HOMEBREW_PREFIX:-/opt/homebrew}/opt/gnu-tar/libexec/gnubin(N)
-  ${HOMEBREW_PREFIX:-/opt/homebrew}/opt/grep/libexec/gnubin(N)
-  ${HOMEBREW_PREFIX:-/opt/homebrew}/opt/gawk/libexec/gnubin(N)
   # Homebrew
   ${HOMEBREW_PREFIX:-/opt/homebrew}/bin(N)
   ${HOMEBREW_PREFIX:-/opt/homebrew}/sbin(N)

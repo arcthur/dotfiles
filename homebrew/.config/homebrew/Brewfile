@@ -6,24 +6,8 @@ tap "xoshbin/asyar"
 
 # BINARIES
 # ---------------
-# Updated built-in GNU utilities
-brew "coreutils"    # GNU file, shell, and text utilities
-brew "binutils"     # GNU binary tools for native development
-brew "diffutils"    # GNU file comparison utilities
-brew "findutils"    # GNU find, xargs, and locate
-brew "grep"         # GNU grep, egrep and fgrep
-brew "gawk"         # GNU awk utility
-brew "gnu-sed"      # GNU implementation of the famous stream editor
-brew "gnu-tar"      # GNU version of the tar archiving utility
-brew "gnu-which"    # GNU implementation of which utility
-brew "gnutls"       # GNU transport layer security (TLS)
-brew "gzip"         # Data compression program
-brew "watch"        # Run commands periodically
-brew "difftastic"   # Structural diff tool
-brew "wget"         # Resuming download util
-
 # Terminal
-brew "bash"         # Bourne-Again SHell (modern version)
+brew "bash"         # Bourne-Again Shell (modern version)
 brew "zsh"          # Z shell
 brew "tmux"         # terminal workspace
 
@@ -109,9 +93,9 @@ cask "calibre"
 
 # Productivity
 cask "raycast"
-#cask "eudic"
 cask "obsidian"
-cask "zotero"
+#cask "eudic"
+#cask "zotero"
 
 # IM
 cask "wechat"
@@ -130,10 +114,10 @@ cask "bitwarden"
 cask "font-hack-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
 cask "ghostty"
-cask "visual-studio-code"
 cask "cursor"
 cask "codex"
 cask "orbstack"
+cask "zed"
 
 # Invest
 cask "futubull"
